@@ -22,7 +22,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configurati
 
 This republishes the application, copies and hash-verifies application files, and preserves the USB database, logs and music. Run the USB self-tests after updating. Database/settings edits in one installation are local to that installation; they are not silently synchronized over another installation's data.
 
-The interface uses an 18-pixel base font, with larger headings and 14–16-pixel supporting labels. The main workspace keeps its readable design size instead of shrinking its text to fit the window; scroll to reach the player/footer or other content on smaller displays. Administration and log grids have larger rows and columns. These settings remain editable in XAML.
+The interface uses an 18-pixel base font, with larger headings and 14–16-pixel supporting labels. The main workspace fits the window and reserves bottom rows for the player, volume and status, so those controls stay visible. The song list scrolls within its panel; very small windows can scroll navigation or editor content independently. System settings use three columns, and Email settings use two columns. Group play times display as HH:mm:ss without fractional seconds. These settings and layouts remain editable in XAML.
 
 Playback logs retain `Played Song:` entries and no longer add a separate `Playback completed` entry. Historical logs are preserved. The initialized USB music collection includes `Music`, `Random_songs`, `Random_songs-2`, and `Songs`, updated from the authorized F: source. Keep all four inside the v9 folder when copying the installation; seasonal rotation and random playback resolve there. Updating music does not change the scheduled play times.
 

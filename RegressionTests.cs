@@ -79,7 +79,9 @@ public static class RegressionTests
             repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
             var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
             check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
+            using(var connection=repository.Open()) { using var command=connection.CreateCommand(); command.CommandText="UPDATE seasonalgroups SET PLAY_TIME='10:00:01.000'"; command.ExecuteNonQuery(); }
             var dateWindow=new AdministrationWindow(runtime,"System");
+            check("Group time display omits fractions without changing storage",dateWindow.Groups.Rows[0]["PLAY_TIME"].ToString()=="10:00:01"&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="10:00:01.000");
             check("Administration shows slash dates without pending changes",dateWindow.Groups.Rows[0]["PLAY_DATE_FROM"].ToString()=="01/02/2027"&&dateWindow.Groups.GetChanges() is null);
             var dateSettings=(System.Data.DataTable)typeof(AdministrationWindow).GetField("settings",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic)!.GetValue(dateWindow)!;
             check("System dates display U.S. format with blanks retained",dateSettings.Rows[0]["ash_wed_begin"].ToString()=="01/02/2027"&&dateSettings.Rows[0].IsNull("other_silence_begin_date")&&dateSettings.GetChanges() is null);

@@ -29,6 +29,7 @@ public partial class AdministrationWindow : Window
         loading=true;
         Groups=runtime.Repository.Table("seasonalgroups"); RandomDirectories=runtime.Repository.Table("PL_RAND_DIR_ROTATION"); Silence=runtime.Repository.Table("silence_schedule"); settings=runtime.Repository.Table("PL_SETTINGS");
         // Format only the editable view; repository writes keep ISO dates.
+        foreach(DataRow row in Groups.Rows) row["PLAY_TIME"]=(object?)DataFormats.Time(row["PLAY_TIME"])?.ToString("HH:mm:ss",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
         foreach(var table in new[]{Groups,RandomDirectories,settings})
         {
             foreach(DataColumn column in table.Columns)

@@ -46,6 +46,7 @@ PASS Played count ignores checkpoints
 PASS Logging disabled respected
 PASS Log trim preserves malformed lines
 PASS U.S. month-first input persists as ISO
+PASS Group time display omits fractions without changing storage
 PASS Administration shows slash dates without pending changes
 PASS System dates display U.S. format with blanks retained
 PASS Legacy ISO and U.S. log dates parse
