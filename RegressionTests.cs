@@ -1,4 +1,7 @@
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 namespace Carillon;
 public static class RegressionTests
 {
@@ -37,6 +40,26 @@ public static class RegressionTests
             Check("Legacy drive letter follows relocated EXE",DataFormats.PortablePath(@"E:\Copied9",@"C:\Songs\bell.mp3")==@"E:\Copied9\Songs\bell.mp3");
             Check("Rooted audio follows EXE folder",DataFormats.PortablePath(@"E:\Copied9",@"\Music\bell.mp3")==@"E:\Copied9\Music\bell.mp3");
             foreach(var escaped in new[]{@"..\outside.mp3",@"C:outside.mp3",@"\\server\share\bell.mp3"}) { var rejected=false; try { DataFormats.PortablePath(baseDirectory,escaped); } catch(ArgumentException) { rejected=true; } Check("Reject nonportable audio "+escaped,rejected); }
+            var palettes=(CarillonPalette[])Application.Current.FindResource("ThemeCatalog");
+            var cardStyle=(Style)Application.Current.FindResource("Card");
+            foreach(var palette in palettes)
+            {
+                ThemeManager.Apply(palette);
+                var card=new Border {Style=cardStyle};
+                var tint=((SolidColorBrush)card.Background).Color;
+                Check($"{palette.Name} cards use a tint separate from the canvas and controls",
+                    tint==(Color)ColorConverter.ConvertFromString(palette.CardSurface!) &&
+                    tint!=((SolidColorBrush)Application.Current.Resources["Canvas"]).Color &&
+                    tint!=((SolidColorBrush)Application.Current.Resources["Surface"]).Color);
+            }
+            foreach(var background in new[]{"#F0F0F0","#252525"})
+            {
+                ThemeManager.Apply(new CarillonPalette {Canvas=background,Surface=background});
+                var card=new Border {Style=cardStyle};
+                Check($"Custom canvas {background} gets a distinct card tint",
+                    ((SolidColorBrush)card.Background).Color!=((SolidColorBrush)Application.Current.Resources["Canvas"]).Color);
+            }
+            ThemeManager.Apply(palettes[0]);
             TestDatabase(baseDirectory,Check);
             File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 0;
         } catch(Exception error) { results.Add("FAIL "+error.Message); File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 1; }

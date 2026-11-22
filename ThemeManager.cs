@@ -20,6 +20,7 @@ public sealed class CarillonPalette
     public string Canvas { get; set; } = "#EFF3F6";
     public string Ink { get; set; } = "#173650";
     public string Surface { get; set; } = "#FFFFFF";
+    public string? CardSurface { get; set; }
 }
 public static class ThemeManager
 {
@@ -34,6 +35,13 @@ public static class ThemeManager
         CurrentPalette=palette;
         var resources=Application.Current.Resources;
         foreach(var (key,value) in new[]{("Canvas",palette.Canvas),("Ink",palette.Ink),("Surface",palette.Surface),("Accent",palette.Accent)}) resources[key]=new SolidColorBrush(Parse(value));
+        var canvas=Parse(palette.Canvas);
+        // Custom themes store the canvas and text colors. Give their cards a subtle shade of the canvas.
+        var shade=0.2126*canvas.R+0.7152*canvas.G+0.0722*canvas.B<128?255:0;
+        var cardColor=palette.CardSurface is { } tint
+            ? Parse(tint)
+            : Color.FromArgb(canvas.A,(byte)((canvas.R*9+shade)/10),(byte)((canvas.G*9+shade)/10),(byte)((canvas.B*9+shade)/10));
+        resources["CardSurface"]=new SolidColorBrush(cardColor);
         resources["Muted"]=new SolidColorBrush(Parse(palette.Ink));
         resources[SystemColors.WindowBrushKey]=new SolidColorBrush(Parse(palette.Surface));resources[SystemColors.WindowTextBrushKey]=new SolidColorBrush(Parse(palette.Ink));resources[SystemColors.ControlBrushKey]=new SolidColorBrush(Parse(palette.Surface));resources[SystemColors.ControlTextBrushKey]=new SolidColorBrush(Parse(palette.Ink));
         if(repository is not null) { var values=repository.Settings(); values["form_bgcolor"]=Vcl(Parse(palette.Canvas)); values["form_fontcolor"]=Vcl(Parse(palette.Ink)); repository.SaveSettings(values,["form_bgcolor","form_fontcolor"]); }

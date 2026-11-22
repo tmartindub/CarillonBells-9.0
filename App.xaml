@@ -8,6 +8,7 @@
   <SolidColorBrush x:Key="Accent" Color="#D87732"/>
   <SolidColorBrush x:Key="Line" Color="#DCE5EB"/>
   <SolidColorBrush x:Key="Surface" Color="#FFFFFF"/>
+  <SolidColorBrush x:Key="CardSurface" Color="#E3EDF5"/>
   <SolidColorBrush x:Key="Canvas" Color="#EFF3F6"/>
   <BooleanToVisibilityConverter x:Key="BoolVisibility"/>
   <Style TargetType="TextBlock">
@@ -72,7 +73,7 @@
    <Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="#DDEBF5"/><Setter Property="Foreground" Value="#173650"/></Trigger></Style.Triggers>
   </Style>
   <Style x:Key="Card" TargetType="Border">
-   <Setter Property="CornerRadius" Value="12"/><Setter Property="Background" Value="{DynamicResource Surface}"/>
+   <Setter Property="CornerRadius" Value="12"/><Setter Property="Background" Value="{DynamicResource CardSurface}"/>
    <Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/>
    <Setter Property="Padding" Value="22"/>
   </Style>
