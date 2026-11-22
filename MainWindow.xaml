@@ -14,15 +14,10 @@
   <Grid.ColumnDefinitions><ColumnDefinition Width="198"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
   <Border Background="#15354F" Margin="8,0,0,0">
    <Grid Margin="12">
-    <Grid.RowDefinitions><RowDefinition Height="86"/><RowDefinition Height="*"/><RowDefinition Height="76"/></Grid.RowDefinitions>
-    <StackPanel>
-     <Border Width="26" Height="26" Background="#D87732" CornerRadius="7" HorizontalAlignment="Left" Margin="0,0,0,4"><TextBlock Text="C" Foreground="White" FontFamily="Georgia" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
-     <TextBlock Text="CARILLON" Foreground="White" FontSize="22" FontWeight="SemiBold"/>
-     <TextBlock Text="BELLS &amp; CHIMES" Foreground="#AFC4D6" FontSize="14" Margin="0,2,0,0"/>
-    </StackPanel>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="76"/></Grid.RowDefinitions>
+    <TextBlock Text="Playlist" Foreground="White" FontSize="19" Margin="8,0,0,12"/>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
      <StackPanel>
-      <TextBlock Text="Playlist" Foreground="White" FontSize="19" Margin="8,0,0,4"/>
       <Button Content="Today's schedule" Click="ScheduleClick" Background="Transparent" Foreground="#C8D8E5" BorderThickness="0" Margin="0,2" Padding="3,3"/>
       <Separator Background="#36556D" Margin="0,3"/>
       <Button Content="Silence windows" Tag="Silence" Click="AdminClick" Margin="0,1" Padding="6,3"/>
