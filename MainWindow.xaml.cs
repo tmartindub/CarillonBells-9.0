@@ -18,7 +18,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private string originalFingerprint="";
     private bool editSession,resumeSchedule,selecting,volumeUpdating;
     private ClockWindow? clock;
-    public ObservableCollection<Song> Songs { get; } = [];
+    public ObservableCollection<Song> Songs { get; private set; } = [];
     public ObservableCollection<string> ScheduleRows { get; } = [];
     public Song? SelectedSong
     {
@@ -60,9 +60,17 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     {
         key??=selectedSong?.Key; var expansion=Descendants<Expander>(SongGrid).Where(x=>x.DataContext is CollectionViewGroup).ToDictionary(x=>((CollectionViewGroup)x.DataContext).Name.ToString()!,x=>x.IsExpanded);
         var scroll=Descendants<ScrollViewer>(SongGrid).FirstOrDefault(); var offset=scroll?.VerticalOffset??0;
-        selecting=true; Songs.Clear(); foreach(var song in runtime.Songs) Songs.Add(song); selecting=false;
+        selecting=true;
+        try
+        {
+            // Bind a complete snapshot so grouped containers and columns rebuild together.
+            Songs=new(runtime.Songs); Notify(nameof(Songs));
+            var view=CollectionViewSource.GetDefaultView(SongGrid.ItemsSource);
+            if(view is not null) view.Filter=item=>item is Song song&&(song.Title.Contains(SearchBox.Text,StringComparison.OrdinalIgnoreCase)||song.Group.Contains(SearchBox.Text,StringComparison.OrdinalIgnoreCase));
+        }
+        finally { selecting=false; }
         selectedSong=null; SelectedSong=Songs.FirstOrDefault(s=>s.Key==key)??Songs.FirstOrDefault(); Notify(nameof(LibraryLabel));
-        Dispatcher.BeginInvoke(()=>{ foreach(var group in Descendants<Expander>(SongGrid)) if(group.DataContext is CollectionViewGroup data&&expansion.TryGetValue(data.Name.ToString()!,out var open)) group.IsExpanded=open; scroll?.ScrollToVerticalOffset(offset); });
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded,new Action(()=>{ foreach(var group in Descendants<Expander>(SongGrid)) if(group.DataContext is CollectionViewGroup data&&expansion.TryGetValue(data.Name.ToString()!,out var open)) group.IsExpanded=open; Descendants<ScrollViewer>(SongGrid).FirstOrDefault()?.ScrollToVerticalOffset(offset); }));
     }
     private static IEnumerable<T> Descendants<T>(DependencyObject root) where T:DependencyObject
     {

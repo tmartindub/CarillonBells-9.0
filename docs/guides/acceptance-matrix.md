@@ -126,3 +126,13 @@ Manual UI checks covered the private development copy opening 120 songs, compute
 ## Remaining production gates
 
 Authorized SMTP delivery, real hardware device removal/storage disconnect, multiple actual monitor DPI settings, and extended soak testing require their respective environment or user acceptance. USB relocation on H: and a different working directory passed. Public production release and replacing 8.1 downloads remain unapproved.
+
+## Import display repair — November 21, 2026
+
+Reproduced the reported failure in an isolated x64 portable copy: create a blank database, import the Downloads reference database, and close Administration. The library contained 120 songs but showed one group and blank song cells until restart. Accessibility exposed the records even while their visual layout was incomplete.
+
+`MainWindow.LoadSongs` now replaces the library with a complete observable collection snapshot instead of clearing and adding individual records to the live grouped view. It reapplies the current search and restores expansion and scroll state at dispatcher Loaded priority, after binding and layout. All controls remain defined in XAML; no runtime UI construction or database schema changes were added.
+
+Manual x64 checks passed: imported song names and lengths display immediately without restart; collapse and expand; collapsed groups remain collapsed after Refresh; search results remain filtered after Refresh; selecting another filtered song updates its schedule; Cancel restores an edited repeat count and resumes scheduling; Save preserves selection, search, and visible song rows; reopening displays the imported library. The isolated database was the only database edited during these checks. The original Downloads database SHA-256 remained unchanged.
+
+Release development build and self-contained x64/x86 publishes succeeded. Existing 41 domain/database regression checks passed for each architecture. This repair did not repeat the earlier audio, SMTP, hardware, or soak checks. The pre-change tracked-source ZIP is `H:\CarillonBells v 9_0\CarillonBells_9_0_pre-import-refresh-fix_20261121.zip`.
