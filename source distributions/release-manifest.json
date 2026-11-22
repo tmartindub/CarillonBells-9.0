@@ -3,18 +3,18 @@
   "packages": [
     {
       "file": "CarillonBells_9_0_Evaluation_win-x64.zip",
-      "bytes": 70616378,
-      "sha256": "E82AB17B47382AFBAEA115B8F1E76A5666D4EF3BA7D8AF1EFD0BDFF3948848E5",
-      "sourceCommit": "916aeb029544ba3ff4e706ddc4dbaa7dbc726733",
+      "bytes": 70617784,
+      "sha256": "A8712FC4E56C800ED9E8F03D2101A1CEBFE432FE8C8AFF3557B78ED3BC5A2A80",
+      "sourceCommit": "f09c9df508b61e5796ea0463b93087aa702e33ba",
       "runtime": "win-x64",
       "fileCount": 435,
       "verification": "PASS all manifest hashes and no private database/music/log files"
     },
     {
       "file": "CarillonBells_9_0_Evaluation_win-x86.zip",
-      "bytes": 65906206,
-      "sha256": "7A660FB95F35EFD3C6F6D5CDDB1A576AD6DB628763FEA28B195DF4B90CAED631",
-      "sourceCommit": "916aeb029544ba3ff4e706ddc4dbaa7dbc726733",
+      "bytes": 65907614,
+      "sha256": "55CCD81A7D1EB16AA03FE945CC51A04A876CCBF3D445F60AF0089BBE8D2E2378",
+      "sourceCommit": "f09c9df508b61e5796ea0463b93087aa702e33ba",
       "runtime": "win-x86",
       "fileCount": 434,
       "verification": "PASS all manifest hashes and no private database/music/log files"
