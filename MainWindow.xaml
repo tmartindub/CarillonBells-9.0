@@ -155,7 +155,7 @@
    </Grid>
    <Border Grid.Row="3" Style="{StaticResource Card}" MinHeight="84" Margin="0,8,0,4" Padding="12,8">
     <Grid>
-     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="286"/><ColumnDefinition Width="48"/></Grid.ColumnDefinitions>
+     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="300"/><ColumnDefinition Width="48"/></Grid.ColumnDefinitions>
      <Grid Margin="0,0,20,0">
       <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions>
       <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
@@ -173,7 +173,7 @@
       <StackPanel VerticalAlignment="Center">
        <TextBlock Text="SYSTEM VOLUME" FontSize="14" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
        <Grid>
-        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition Width="105"/></Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="32"/><ColumnDefinition Width="105"/></Grid.ColumnDefinitions>
         <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="35" ValueChanged="VolumeChanged" VerticalAlignment="Center"/>
         <Button Grid.Column="2" x:Name="MuteButton" Content="Mute" Click="MuteClick" Padding="12,6"/>
        </Grid>
