@@ -18,7 +18,7 @@ Manual UI checks covered the private development copy opening 120 songs, compute
 | Add single/multiple MP3/WAV files; duplicate detection and duration work. | Implemented; source review completed. Full scenario acceptance remains pending. |
 | Edit all twelve play times, dates, weekdays, group and repeats. | Implemented; source review completed. Full scenario acceptance remains pending. |
 | Save/Cancel preserve the selected song, group state and scroll position. | UI Save persisted a disposable repeat edit and Cancel restored its saved value; stable-key/group state logic reviewed. |
-| Delete, Refresh and navigation do not post into the wrong record. | Implemented; source review completed. Full scenario acceptance remains pending. |
+| Delete, automatic reload and navigation do not post into the wrong record. | Stable-key Save/Cancel and changed-group selection checks pass; manual playlist Refresh was removed by user instruction. Full add/delete scenario acceptance remains pending. |
 | Pending edits are handled when closing/navigating. | Implemented; source review completed. Full scenario acceptance remains pending. |
 | Save System first, then Email, then System again: no stale-update conflict. | System / Email / System owned-field sequence passes database tests. |
 | Both older wide and current row-based rotation databases are handled safely. | Wide migration and seven-slot resolver pass isolated database tests. |
@@ -136,3 +136,13 @@ Reproduced the reported failure in an isolated x64 portable copy: create a blank
 Manual x64 checks passed: imported song names and lengths display immediately without restart; collapse and expand; collapsed groups remain collapsed after Refresh; search results remain filtered after Refresh; selecting another filtered song updates its schedule; Cancel restores an edited repeat count and resumes scheduling; Save preserves selection, search, and visible song rows; reopening displays the imported library. The isolated database was the only database edited during these checks. The original Downloads database SHA-256 remained unchanged.
 
 Release development build and self-contained x64/x86 publishes succeeded. Existing 41 domain/database regression checks passed for each architecture. This repair did not repeat the earlier audio, SMTP, hardware, or soak checks. The pre-change tracked-source ZIP is `H:\CarillonBells v 9_0\CarillonBells_9_0_pre-import-refresh-fix_20261121.zip`.
+
+## Automatic playlist reload and schedule restoration — November 21, 2026
+
+Removed the playlist Refresh button and handler. Save, adding songs, deletion, and returning from data administration reload automatically. Reload preserves the composite song key, search, group expansion and scroll position. A saved group change selects the edited key; deleting the selected record selects a neighboring record. Selection restoration preserves the XAML binding, and the grid does not synchronize selection to the collection view's current position.
+
+Playlist editing restores the schedule state captured when the edit session began. Administration now restores its prior state instead of always enabling scheduling. Add and Delete pause scheduling during mutation and restore the prior state afterward. Administration performs one reload on return. A failed save retains the edit session; Cancel discards the clone without a needless playlist reload.
+
+Release build and both self-contained publishes passed. All 55 regression checks passed per architecture, including enabled/paused Save and Cancel, stable selection, changed-group identity, and retained grid selection binding after dispatcher layout. Manual x64 checks confirmed the Refresh button is absent, a nonfirst song remains selected after Administration, initially enabled scheduling resumes on close, and initially paused scheduling stays paused. Add/delete completion and import were source-reviewed for the same restoration paths; those dialogs were not repeated manually in this change. No SMTP, audio, hardware or soak checks were repeated.
+
+Help and both editable/PDF guides were updated; rendered guide pages were reviewed. The pre-change tracked-source ZIP is `H:\CarillonBells v 9_0\CarillonBells_9_0_pre-automatic-refresh_20261121.zip`. Delphi 8.1 and its releases remain untouched.

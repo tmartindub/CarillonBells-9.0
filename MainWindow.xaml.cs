@@ -26,7 +26,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         set
         {
             if(selecting||ReferenceEquals(value,selectedSong)) return;
-            if(!ConfirmEdits()) { Dispatcher.BeginInvoke(()=>{ selecting=true; SongGrid.SelectedItem=selectedSong; selecting=false; }); return; }
+            if(!ConfirmEdits()) { Dispatcher.BeginInvoke(()=>{ selecting=true; try { SongGrid.SetCurrentValue(DataGrid.SelectedItemProperty,selectedSong); } finally { selecting=false; } }); return; }
             selectedSong=value is null?null:Songs.FirstOrDefault(song=>song.Key==value.Key)??value; editingSong=selectedSong?.Clone(); originalFingerprint=editingSong?.Fingerprint??""; Notify(); Notify(nameof(EditingSong));
         }
     }
@@ -69,8 +69,10 @@ public partial class MainWindow : Window,INotifyPropertyChanged
             if(view is not null) view.Filter=item=>item is Song song&&(song.Title.Contains(SearchBox.Text,StringComparison.OrdinalIgnoreCase)||song.Group.Contains(SearchBox.Text,StringComparison.OrdinalIgnoreCase));
         }
         finally { selecting=false; }
-        selectedSong=null; SelectedSong=Songs.FirstOrDefault(s=>s.Key==key)??Songs.FirstOrDefault(); Notify(nameof(LibraryLabel));
-        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded,new Action(()=>{ foreach(var group in Descendants<Expander>(SongGrid)) if(group.DataContext is CollectionViewGroup data&&expansion.TryGetValue(data.Name.ToString()!,out var open)) group.IsExpanded=open; Descendants<ScrollViewer>(SongGrid).FirstOrDefault()?.ScrollToVerticalOffset(offset); }));
+        selectedSong=Songs.FirstOrDefault(s=>s.Key==key)??Songs.FirstOrDefault();
+        editingSong=selectedSong?.Clone(); originalFingerprint=editingSong?.Fingerprint??"";
+        Notify(nameof(SelectedSong)); Notify(nameof(EditingSong)); Notify(nameof(PlayerTitle)); Notify(nameof(LibraryLabel));
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded,new Action(()=>{ selecting=true; try { SongGrid.SetCurrentValue(DataGrid.SelectedItemProperty,selectedSong); } finally { selecting=false; } foreach(var group in Descendants<Expander>(SongGrid)) if(group.DataContext is CollectionViewGroup data&&expansion.TryGetValue(data.Name.ToString()!,out var open)) group.IsExpanded=open; Descendants<ScrollViewer>(SongGrid).FirstOrDefault()?.ScrollToVerticalOffset(offset); }));
     }
     private static IEnumerable<T> Descendants<T>(DependencyObject root) where T:DependencyObject
     {
@@ -84,12 +86,13 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     }
     private void EndEdit()
     {
-        var resume=editSession&&resumeSchedule; editSession=false; resumeSchedule=false; if(resume) runtime.SetSchedule(true);
+        var restore=editSession; var enabled=resumeSchedule; editSession=false; resumeSchedule=false;
+        if(restore&&runtime.ScheduleEnabled!=enabled) runtime.SetSchedule(enabled);
     }
     private bool Save()
     {
         if(EditingSong is null||SelectedSong is null) { EndEdit(); return true; }
-        try { foreach(var box in Descendants<TextBox>(this)) { var binding=box.GetBindingExpression(TextBox.TextProperty);binding?.UpdateSource();if(Validation.GetHasError(box))throw new ArgumentException("Correct the invalid field before saving."); } EditingSong.Validate(); runtime.Repository.SaveSong(EditingSong,SelectedSong); originalFingerprint=EditingSong.Fingerprint; var key=EditingSong.Key; EndEdit(); runtime.Reload(); if(runtime.ScheduleEnabled) runtime.Rebuild(DateTime.Now); LoadSongs(key); return true; }
+        try { foreach(var box in Descendants<TextBox>(this)) { var binding=box.GetBindingExpression(TextBox.TextProperty);binding?.UpdateSource();if(Validation.GetHasError(box))throw new ArgumentException("Correct the invalid field before saving."); } EditingSong.Validate(); runtime.Repository.SaveSong(EditingSong,SelectedSong); originalFingerprint=EditingSong.Fingerprint; var key=EditingSong.Key; runtime.Reload(); if(!editSession&&runtime.ScheduleEnabled) runtime.Rebuild(DateTime.Now); EndEdit(); LoadSongs(key); return true; }
         catch(Exception error) { MessageBox.Show(this,error.Message,"Cannot save song"); return false; }
     }
     private bool ConfirmEdits()
@@ -103,8 +106,9 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void CancelClick(object sender,RoutedEventArgs e) { editingSong=selectedSong?.Clone(); originalFingerprint=editingSong?.Fingerprint??""; Notify(nameof(EditingSong)); EndEdit(); }
     private void ToggleSchedule(object sender,RoutedEventArgs e)
     {
+        var enabled=ScheduleToggle.IsChecked==true;
         if(!ConfirmEdits()) { UpdateStatus(); return; }
-        try { runtime.SetSchedule(ScheduleToggle.IsChecked==true); LoadSongs(); } catch(Exception error) { ShowError(error); }
+        try { runtime.SetSchedule(enabled); LoadSongs(); } catch(Exception error) { ShowError(error); }
     }
     private void SearchChanged(object sender,TextChangedEventArgs e)
     {
@@ -126,16 +130,16 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false);
         try { foreach(var path in dialog.FileNames) { var duration=await Task.Run(()=>AudioPlayback.ReadDuration(path)); var relative=Path.GetRelativePath(runtime.BaseDirectory,path); var stored=relative.StartsWith("..")?path:".\\"+relative; var song=new Song {Path=stored,Duration=DataFormats.DurationText(duration),From=DateTime.Today,To=DateTime.Today.AddYears(1)}; runtime.Repository.SaveSong(song); } }
         catch(Exception error) { ShowError(error); }
-        finally { runtime.Reload(); if(enabled) runtime.SetSchedule(true); LoadSongs(); }
+        finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(); } catch(Exception error) { ShowError(error); } }
     }
     private void DeleteClick(object sender,RoutedEventArgs e)
     {
         if(!ConfirmEdits()||SelectedSong is null) return;
         if(MessageBox.Show(this,"Delete "+SelectedSong.Title+" from the playlist? The audio file is kept.","Delete song",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) return;
-        var index=Songs.IndexOf(SelectedSong);
-        try { runtime.Repository.DeleteSong(SelectedSong); runtime.Reload(); if(runtime.ScheduleEnabled) runtime.Rebuild(DateTime.Now); LoadSongs(runtime.Songs.ElementAtOrDefault(Math.Min(index,runtime.Songs.Count-1))?.Key); } catch(Exception error) { ShowError(error); }
+        var index=Songs.IndexOf(SelectedSong); var key=SelectedSong.Key; var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false);
+        try { runtime.Repository.DeleteSong(SelectedSong); key=null; } catch(Exception error) { ShowError(error); }
+        finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(key??runtime.Songs.ElementAtOrDefault(Math.Min(index,runtime.Songs.Count-1))?.Key); } catch(Exception error) { ShowError(error); } }
     }
-    private void RefreshClick(object sender,RoutedEventArgs e) { if(!ConfirmEdits()) return; try { runtime.Reload(); LoadSongs(); } catch(Exception error) { ShowError(error); } }
     private void PlayClick(object sender,RoutedEventArgs e) { if(SelectedSong is null) return; try { runtime.Play(SelectedSong); } catch(Exception error) { ShowError(error); } }
     private void PauseClick(object sender,RoutedEventArgs e)=>runtime.Player.PauseResume();
     private void StopClick(object sender,RoutedEventArgs e)=>runtime.Player.Stop();
@@ -150,12 +154,12 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     }
     private void AdminClick(object sender,RoutedEventArgs e)
     {
-        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not "Themes";
+        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not "Themes"; var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
         if(pauses) runtime.SetSchedule(false);
         AdministrationWindow? administration=null;
-        try { administration=new AdministrationWindow(runtime,page){Owner=this};administration.ShowDialog(); runtime.Reload(); LoadSongs(); }
+        try { administration=new AdministrationWindow(runtime,page){Owner=this};administration.ShowDialog(); }
         catch(Exception error) { ShowError(error); }
-        finally { if(pauses||administration?.RequiresScheduleResume==true) {runtime.SetSchedule(true);LoadSongs();} }
+        finally { if(pauses||administration?.RequiresScheduleResume==true) { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(key); } catch(Exception error) { ShowError(error); } } }
     }
     private void ClockClick(object sender,RoutedEventArgs e) { if(clock is null) { clock=new ClockWindow(); clock.Closed+=(_,_)=>clock=null; clock.Show(); } else clock.Activate(); }
     private void LogClick(object sender,RoutedEventArgs e)=>new LogWindow(runtime.Log){Owner=this}.Show();

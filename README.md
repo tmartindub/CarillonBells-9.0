@@ -44,7 +44,7 @@ The guides have title pages, last-changed dates and changeable TOC fields. In Li
 
 ## Behavioral decisions
 
-Missed events after sleep or clock jumps are skipped. A persisted dispatch ledger prevents replay of an already dispatched local-date occurrence. Full-day reports do not consume the live queue. The source distinction between inclusive compile-time silence ends and exclusive live silence ends is preserved. Opening administration disables scheduling; closing it re-enables and rebuilds, as in the source. Main playlist editing resumes only when it previously paused an enabled schedule.
+Missed events after sleep or clock jumps are skipped. A persisted dispatch ledger prevents replay of an already dispatched local-date occurrence. Full-day reports do not consume the live queue. The source distinction between inclusive compile-time silence ends and exclusive live silence ends is preserved. Playlist edits and administration restore the previous schedule state when finished; an already paused schedule stays paused. The playlist reloads automatically after changes and import, preserving the selected song by its stable key, current search, and group expansion. There is no manual playlist Refresh button.
 
 ## Release status
 

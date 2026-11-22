@@ -69,6 +69,33 @@ public static class RegressionTests
             repository.DeleteSong(repository.Songs().Single());check("Song deletion",repository.Songs().Count==0);
             var log=new CarillonLog(scratch){Enabled=true};log.Append("Played Song: one");log.Append("Daily play count checkpoint: 45");check("Played count ignores checkpoints",log.Count(DateTime.Today)==1);log.Enabled=false;log.Append("Played Song: hidden");check("Logging disabled respected",log.Count(DateTime.Today)==1);
             File.AppendAllLines(log.FilePath,["2/29/2026 12:00:00 PM - malformed",DateTime.Now.AddDays(-31).ToString("yyyy-MM-dd HH:mm:ss")+" - old"]);log.Trim(DateTime.Now);check("Log trim preserves malformed lines",log.Read().Any(l=>l.Timestamp is null)&&!log.Read().Any(l=>l.Event=="old"));
+            repository.SaveSong(new Song {Group="Custom",Path="first.mp3",From=DateTime.Today,To=DateTime.Today});
+            repository.SaveSong(new Song {Group="Custom",Path="second.mp3",From=DateTime.Today,To=DateTime.Today});
+            using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true);
+            var window=new MainWindow(runtime);
+            try
+            {
+                var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                var begin=typeof(MainWindow).GetMethod("BeginEdit",flags)!; var save=typeof(MainWindow).GetMethod("Save",flags)!; var cancel=typeof(MainWindow).GetMethod("CancelClick",flags)!;
+                foreach(var enabled in new[]{false,true})
+                {
+                    runtime.SetSchedule(enabled); window.SelectedSong=window.Songs.Single(s=>s.Path=="second.mp3"); var key=window.SelectedSong.Key;
+                    begin.Invoke(window,[null,null]); check($"Edit pauses scheduling (previously {enabled})",!runtime.ScheduleEnabled);
+                    window.EditingSong!.Repeats=2; cancel.Invoke(window,[null,null]);
+                    check($"Cancel restores state and selection ({enabled})",runtime.ScheduleEnabled==enabled&&window.SelectedSong.Key==key&&window.EditingSong!.Repeats==1);
+                    begin.Invoke(window,[null,null]); window.EditingSong!.Repeats=3;
+                    check($"Save succeeds ({enabled})",(bool)save.Invoke(window,null)!);
+                    window.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                    var grid=(System.Windows.Controls.DataGrid)window.FindName("SongGrid");
+                    check($"Reload keeps grid selection bound ({enabled})",ReferenceEquals(grid.SelectedItem,window.SelectedSong)&&System.Windows.Data.BindingOperations.IsDataBound(grid,System.Windows.Controls.DataGrid.SelectedItemProperty));
+                    check($"Save restores state and stable selection ({enabled})",runtime.ScheduleEnabled==enabled&&window.SelectedSong!.Key==key&&window.EditingSong!.Repeats==3&&repository.Songs().Single(s=>s.Key==key).Repeats==3);
+                    begin.Invoke(window,[null,null]); window.EditingSong!.Group="Changed Custom";
+                    check($"Save changed identity succeeds ({enabled})",(bool)save.Invoke(window,null)!);
+                    check($"Changed identity remains selected ({enabled})",runtime.ScheduleEnabled==enabled&&window.SelectedSong!.Path=="second.mp3"&&window.SelectedSong.Group=="Changed Custom");
+                    begin.Invoke(window,[null,null]); window.EditingSong!.Repeats=1; window.EditingSong.Group="Custom"; save.Invoke(window,null);
+                }
+            }
+            finally { window.Close(); }
         }
         finally { Directory.Delete(scratch,true); }
     }
