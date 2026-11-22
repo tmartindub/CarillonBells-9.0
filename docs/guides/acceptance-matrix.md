@@ -103,7 +103,7 @@ Manual UI checks covered the private development copy opening 120 songs, compute
 | Handoff requirement | Verification |
 |---|---|
 | Clean x86/x64 Debug and Release builds where required. | Implemented; source review completed. Full scenario acceptance remains pending. |
-| Portable runtime test from a different drive letter/working directory. | Implemented; source review completed. Full scenario acceptance remains pending. |
+| Portable runtime test from a different drive letter/working directory. | The extracted self-contained x64 ZIP passed all 41 domain/database and 100 audio/runtime/endpoint checks on USB H: while launched with a different working directory. |
 | All native dependencies match architecture and are included. | Clean self-contained x86/x64 packages pass SQLite and real audio/runtime tests with native dependencies included. |
 | No credentials, private DB/logs/dumps, Songs or old_Songs in public packages. | Implemented; source review completed. Full scenario acceptance remains pending. |
 | ZIP structure and launch scripts correct. | Implemented; source review completed. Full scenario acceptance remains pending. |
@@ -125,4 +125,4 @@ Manual UI checks covered the private development copy opening 120 songs, compute
 
 ## Remaining production gates
 
-Authorized SMTP delivery, real hardware device removal, physical USB relocation/disconnect, multiple actual monitor DPI settings, and extended soak testing require their respective environment or user acceptance. Public production release and replacing 8.1 downloads remain unapproved.
+Authorized SMTP delivery, real hardware device removal/storage disconnect, multiple actual monitor DPI settings, and extended soak testing require their respective environment or user acceptance. USB relocation on H: and a different working directory passed. Public production release and replacing 8.1 downloads remain unapproved.

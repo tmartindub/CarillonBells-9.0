@@ -44,6 +44,7 @@ automated.update({
  'Windows tray':'External endpoint notifications and application-to-Windows volume changes pass on x86/x64; actual tray UI was not automated.',
  'Manual mute before/during':'Preexisting manual mute and a manual mute selected during silence are retained; original endpoint state restored after tests.',
  'All native dependencies':'Clean self-contained x86/x64 packages pass SQLite and real audio/runtime tests with native dependencies included.',
+ 'Portable runtime test from a different drive':'The extracted self-contained x64 ZIP passed all 41 domain/database and 100 audio/runtime/endpoint checks on USB H: while launched with a different working directory.',
  'No duplicate dispatch':'Persistent ledger, schedule re-enable and injected forward/backward discontinuity tests pass.',
  'X and File/Exit':'Shared close path reviewed; X was exercised without hangs or remaining application windows.',
  'Save/Cancel preserve':'UI Save persisted a disposable repeat edit and Cancel restored its saved value; stable-key/group state logic reviewed.',
@@ -73,6 +74,6 @@ lines+=['## Decisions and deliberate changes','',
 '- Evaluation mode suppresses automatic email. No real SMTP delivery was attempted.',
 '- Optional legacy shutdown/restart was commented out in the source and is not advertised as an implemented feature.','',
 '## Remaining production gates','',
-'Authorized SMTP delivery, real hardware device removal, physical USB relocation/disconnect, multiple actual monitor DPI settings, and extended soak testing require their respective environment or user acceptance. Public production release and replacing 8.1 downloads remain unapproved.','']
+'Authorized SMTP delivery, real hardware device removal/storage disconnect, multiple actual monitor DPI settings, and extended soak testing require their respective environment or user acceptance. USB relocation on H: and a different working directory passed. Public production release and replacing 8.1 downloads remain unapproved.','']
 (root/'docs/guides/acceptance-matrix.md').write_text('\n'.join(lines),encoding='utf-8')
 print('Recorded',sum(len(items) for _,items in groups),'handoff acceptance items without claiming unperformed checks.')

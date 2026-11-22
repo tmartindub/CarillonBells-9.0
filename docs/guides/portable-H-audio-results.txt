@@ -1,0 +1,100 @@
+PASS .mp3 duration cycle 1
+PASS .mp3 decoding cycle 1
+PASS .mp3 duration cycle 2
+PASS .mp3 decoding cycle 2
+PASS .mp3 duration cycle 3
+PASS .mp3 decoding cycle 3
+PASS .mp3 duration cycle 4
+PASS .mp3 decoding cycle 4
+PASS .mp3 duration cycle 5
+PASS .mp3 decoding cycle 5
+PASS .mp3 duration cycle 6
+PASS .mp3 decoding cycle 6
+PASS .mp3 duration cycle 7
+PASS .mp3 decoding cycle 7
+PASS .mp3 duration cycle 8
+PASS .mp3 decoding cycle 8
+PASS .mp3 duration cycle 9
+PASS .mp3 decoding cycle 9
+PASS .mp3 duration cycle 10
+PASS .mp3 decoding cycle 10
+PASS .mp3 duration cycle 11
+PASS .mp3 decoding cycle 11
+PASS .mp3 duration cycle 12
+PASS .mp3 decoding cycle 12
+PASS .mp3 duration cycle 13
+PASS .mp3 decoding cycle 13
+PASS .mp3 duration cycle 14
+PASS .mp3 decoding cycle 14
+PASS .mp3 duration cycle 15
+PASS .mp3 decoding cycle 15
+PASS .mp3 duration cycle 16
+PASS .mp3 decoding cycle 16
+PASS .mp3 duration cycle 17
+PASS .mp3 decoding cycle 17
+PASS .mp3 duration cycle 18
+PASS .mp3 decoding cycle 18
+PASS .mp3 duration cycle 19
+PASS .mp3 decoding cycle 19
+PASS .mp3 duration cycle 20
+PASS .mp3 decoding cycle 20
+PASS .wav duration cycle 1
+PASS .wav decoding cycle 1
+PASS .wav duration cycle 2
+PASS .wav decoding cycle 2
+PASS .wav duration cycle 3
+PASS .wav decoding cycle 3
+PASS .wav duration cycle 4
+PASS .wav decoding cycle 4
+PASS .wav duration cycle 5
+PASS .wav decoding cycle 5
+PASS .wav duration cycle 6
+PASS .wav decoding cycle 6
+PASS .wav duration cycle 7
+PASS .wav decoding cycle 7
+PASS .wav duration cycle 8
+PASS .wav decoding cycle 8
+PASS .wav duration cycle 9
+PASS .wav decoding cycle 9
+PASS .wav duration cycle 10
+PASS .wav decoding cycle 10
+PASS .wav duration cycle 11
+PASS .wav decoding cycle 11
+PASS .wav duration cycle 12
+PASS .wav decoding cycle 12
+PASS .wav duration cycle 13
+PASS .wav decoding cycle 13
+PASS .wav duration cycle 14
+PASS .wav decoding cycle 14
+PASS .wav duration cycle 15
+PASS .wav decoding cycle 15
+PASS .wav duration cycle 16
+PASS .wav decoding cycle 16
+PASS .wav duration cycle 17
+PASS .wav decoding cycle 17
+PASS .wav duration cycle 18
+PASS .wav decoding cycle 18
+PASS .wav duration cycle 19
+PASS .wav decoding cycle 19
+PASS .wav duration cycle 20
+PASS .wav decoding cycle 20
+PASS MP3 pause does not advance
+PASS MP3 stop releases player
+PASS WAV repeats and completion event
+PASS Scheduled file plays while analog Clock is open
+PASS Re-enable does not duplicate played occurrence
+PASS Injected clock builds future queue
+PASS Forward clock jump skips missed events
+PASS Backward clock jump retains dispatched ledger
+PASS Overlapping legacy silence reasons
+PASS Legacy liturgical end boundary
+PASS Funeral silence spans midnight
+PASS January 2 background liturgical maintenance
+PASS January 3 background group maintenance
+PASS Clock reopens
+PASS Windows MPEG decoder not loaded
+PASS External endpoint volume notifies application
+PASS Application volume updates Windows endpoint
+PASS Preexisting manual mute restored
+PASS Manual mute during silence retained
+PASS Audio backend: NLayer managed MP3 / PCM WAV → NAudio waveOut

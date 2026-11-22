@@ -1,0 +1,24 @@
+{
+  "version": "9.0.0-evaluation",
+  "packages": [
+    {
+      "file": "CarillonBells_9_0_Evaluation_win-x64.zip",
+      "bytes": 70615544,
+      "sha256": "3DB60FEF6DCE81D430302170B1AABB6EE19D77116110554F3C7A8FDB4A4C630D",
+      "sourceCommit": "7bc390134d008511a10c0e210ae096cef21162ce",
+      "runtime": "win-x64",
+      "fileCount": 435,
+      "verification": "PASS all manifest hashes and no private database/music/log files"
+    },
+    {
+      "file": "CarillonBells_9_0_Evaluation_win-x86.zip",
+      "bytes": 65905361,
+      "sha256": "77D8C92D99529D6F14E84A1F36D86FC2D94431E12D65A012D3FE987FAEACB22E",
+      "sourceCommit": "7bc390134d008511a10c0e210ae096cef21162ce",
+      "runtime": "win-x86",
+      "fileCount": 434,
+      "verification": "PASS all manifest hashes and no private database/music/log files"
+    }
+  ],
+  "productionPromotionApproved": false
+}

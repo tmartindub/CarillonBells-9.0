@@ -48,6 +48,6 @@ Missed events after sleep or clock jumps are skipped. A persisted dispatch ledge
 
 ## Release status
 
-Source backup publication does not authorize replacing the live 8.1 release. Physical USB relocation, multiple actual DPI settings, device removal, authorized SMTP delivery and extended soak testing remain deployment acceptance checks. See the acceptance matrix. Do not label this evaluation as production-approved.
+Source backup publication does not authorize replacing the live 8.1 release. Multiple actual DPI settings, storage disconnection, device removal, authorized SMTP delivery and extended soak testing remain deployment acceptance checks. See the acceptance matrix. Do not label this evaluation as production-approved.
 
 New code is Apache License 2.0. `NOTICE` retains the MIT notice for reused reference material. `third-party-notices` contains dependency notices. Private databases, credentials, logs, dumps and music must never enter public Git or packages.

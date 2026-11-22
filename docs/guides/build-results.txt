@@ -9,3 +9,5 @@ PASS Release win-x64 self-contained: zero errors, zero warnings
 PASS ordinary local Release: zero errors, zero warnings
 PASS source/private credential audit
 No production release published; no live SMTP messages sent.
+PASS extracted x64 package on USB H: from a different working directory: 41 domain/database + 100 audio/runtime/endpoint checks
+PASS every internal package file hash and private-data exclusions for both ZIPs
