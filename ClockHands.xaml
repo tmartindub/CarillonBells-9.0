@@ -1,0 +1,259 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Carillon">
+ <!-- Each drawing uses a 460 by 460 tile centered at 230,230 with the hand facing twelve. -->
+ <SolidColorBrush x:Key="ClockHandInk" Color="#16354E"/>
+ <SolidColorBrush x:Key="ClockHandFacet" Color="#45677F"/>
+ <DrawingBrush x:Key="ClockHandCap" Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+  <DrawingBrush.Drawing>
+   <DrawingGroup>
+    <DrawingGroup.Children>
+     <GeometryDrawing Brush="{StaticResource ClockHandInk}">
+      <GeometryDrawing.Geometry><EllipseGeometry Center="230,230" RadiusX="16.71" RadiusY="16.71"/></GeometryDrawing.Geometry>
+     </GeometryDrawing>
+     <GeometryDrawing Brush="#B8CAD7">
+      <GeometryDrawing.Geometry><EllipseGeometry Center="230,230" RadiusX="6.18" RadiusY="6.18"/></GeometryDrawing.Geometry>
+     </GeometryDrawing>
+    </DrawingGroup.Children>
+   </DrawingGroup>
+  </DrawingBrush.Drawing>
+ </DrawingBrush>
+
+ <local:ClockHandStyle x:Key="OriginalClockHands" Id="0" Name="Original">
+  <local:ClockHandStyle.Hour>
+   <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+    <DrawingBrush.Drawing>
+     <GeometryDrawing Brush="Black" Geometry="M230,230 L220,230 230,60 240,230 Z"/>
+    </DrawingBrush.Drawing>
+   </DrawingBrush>
+  </local:ClockHandStyle.Hour>
+  <local:ClockHandStyle.Minute>
+   <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+    <DrawingBrush.Drawing>
+     <GeometryDrawing Brush="Black" Geometry="M230,230 L220,230 230,13 240,230 Z"/>
+    </DrawingBrush.Drawing>
+   </DrawingBrush>
+  </local:ClockHandStyle.Minute>
+  <local:ClockHandStyle.Cap>
+   <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+    <DrawingBrush.Drawing>
+     <GeometryDrawing Brush="Black">
+      <GeometryDrawing.Geometry><EllipseGeometry Center="230,230" RadiusX="15" RadiusY="15"/></GeometryDrawing.Geometry>
+     </GeometryDrawing>
+    </DrawingBrush.Drawing>
+   </DrawingBrush>
+  </local:ClockHandStyle.Cap>
+ </local:ClockHandStyle>
+
+ <x:Array x:Key="ClockHandCatalog" Type="{x:Type local:ClockHandStyle}">
+  <StaticResource ResourceKey="OriginalClockHands"/>
+  <local:ClockHandStyle Id="1" Name="1 Baton" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M215.03,238.59 L215.03,76.88 L244.97,76.88 L244.97,238.59 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M218.54,241.94 L218.54,17.34 L241.46,17.34 L241.46,241.94 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="2" Name="2 Arrow" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M222.76,238.59 L222.76,126.88 L200.8,126.88 L230,73.76 L230,73.76 L259.2,126.88 L237.24,126.88 L237.24,238.59 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M224.46,241.94 L224.46,86.78 L207.66,86.78 L230,13 L230,13 L252.34,86.78 L235.54,86.78 L235.54,241.94 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="3" Name="3 Sword" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M221.02,238.59 L220.77,210.47 L204.55,184.69 L205.54,111.26 L230,73.76 L230,73.76 L254.46,111.26 L255.45,184.69 L239.23,210.47 L238.98,238.59 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M223.13,241.94 L222.93,202.88 L210.52,167.07 L211.29,65.08 L230,13 L230,13 L248.71,65.08 L249.48,167.07 L237.07,202.88 L236.87,241.94 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="4" Name="4 Dauphine" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <DrawingGroup>
+       <DrawingGroup.Children>
+        <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M230,242.5 L205.04,194.06 L230,73.76 L230,73.76 L254.96,194.06 L230,242.5 Z"/>
+        <GeometryDrawing Brush="{StaticResource ClockHandFacet}" Geometry="M230,242.5 L254.96,194.06 L230,73.76 Z"/>
+       </DrawingGroup.Children>
+      </DrawingGroup>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <DrawingGroup>
+       <DrawingGroup.Children>
+        <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M230,247.36 L210.9,180.09 L230,13 L230,13 L249.1,180.09 L230,247.36 Z"/>
+        <GeometryDrawing Brush="{StaticResource ClockHandFacet}" Geometry="M230,247.36 L249.1,180.09 L230,13 Z"/>
+       </DrawingGroup.Children>
+      </DrawingGroup>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="5" Name="5 Leaf" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M230,233.91 C216.27,215.94 204.55,184.69 204.55,158.13 C204.55,125.32 222.01,89.38 230,73.76 C237.99,89.38 255.45,125.32 255.45,158.13 C255.45,184.69 243.73,215.94 230,233.91 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M230,235.43 C219.5,210.47 210.52,167.07 210.52,130.18 C210.52,84.61 223.89,34.7 230,13 C236.11,34.7 249.48,84.61 249.48,130.18 C249.48,167.07 240.5,210.47 230,235.43 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="6" Name="6 Spade" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M223.26,237.03 L223.01,165.94 L219.27,155 L210.04,153.44 L202.8,145.63 L200.3,133.13 L201.55,120.63 L207.04,109.7 L215.53,98.76 L224.26,87.82 L230,73.76 L230,73.76 L235.74,87.82 L244.47,98.76 L252.96,109.7 L258.45,120.63 L259.7,133.13 L257.2,145.63 L249.96,153.44 L240.73,155 L236.99,165.94 L236.74,237.03 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M224.84,239.76 L224.65,141.03 L221.79,125.84 L214.72,123.67 L209.19,112.82 L207.28,95.46 L208.23,78.1 L212.43,62.91 L218.92,47.72 L225.61,32.53 L230,13 L230,13 L234.39,32.53 L241.08,47.72 L247.57,62.91 L251.77,78.1 L252.72,95.46 L250.81,112.82 L245.28,123.67 L238.21,125.84 L235.35,141.03 L235.16,239.76 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="7" Name="7 Breguet" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}">
+       <GeometryDrawing.Geometry>
+        <CombinedGeometry GeometryCombineMode="Exclude">
+         <CombinedGeometry.Geometry1>
+          <CombinedGeometry GeometryCombineMode="Union" Geometry1="M223.76,237.03 L225.26,115.94 L226.26,76.88 L230,73.76 L230,73.76 L233.74,76.88 L234.74,115.94 L236.24,237.03 Z">
+           <CombinedGeometry.Geometry2>
+            <EllipseGeometry Center="230,115.94" RadiusX="27.95" RadiusY="27.95"/>
+           </CombinedGeometry.Geometry2>
+          </CombinedGeometry>
+         </CombinedGeometry.Geometry1>
+         <CombinedGeometry.Geometry2>
+          <EllipseGeometry Center="230,115.94" RadiusX="17.33" RadiusY="17.33"/>
+         </CombinedGeometry.Geometry2>
+        </CombinedGeometry>
+       </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}">
+       <GeometryDrawing.Geometry>
+        <CombinedGeometry GeometryCombineMode="Exclude">
+         <CombinedGeometry.Geometry1>
+          <CombinedGeometry GeometryCombineMode="Union" Geometry1="M225.23,239.76 L226.37,71.59 L227.14,17.34 L230,13 L230,13 L232.86,17.34 L233.63,71.59 L234.77,239.76 Z">
+           <CombinedGeometry.Geometry2>
+            <EllipseGeometry Center="230,71.59" RadiusX="21.39" RadiusY="21.39"/>
+           </CombinedGeometry.Geometry2>
+          </CombinedGeometry>
+         </CombinedGeometry.Geometry1>
+         <CombinedGeometry.Geometry2>
+          <EllipseGeometry Center="230,71.59" RadiusX="13.26" RadiusY="13.26"/>
+         </CombinedGeometry.Geometry2>
+        </CombinedGeometry>
+       </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="8" Name="8 Cathedral" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="F0 M222.26,237.81 L222.01,203.44 L215.78,187.82 L216.03,167.5 L200.55,155 L202.8,123.76 L212.53,103.45 L221.52,94.07 L230,73.76 L230,73.76 L238.48,94.07 L247.47,103.45 L257.2,123.76 L259.45,155 L243.97,167.5 L244.22,187.82 L237.99,203.44 L237.74,237.81 Z M230,178.44 L217.02,151.88 L218.02,130.01 L230,103.45 L230,103.45 L241.98,130.01 L242.98,151.88 L230,178.44 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="F0 M224.08,240.85 L223.89,193.11 L219.12,171.41 L219.31,143.2 L207.47,125.84 L209.19,82.44 L216.63,54.23 L223.51,41.21 L230,13 L230,13 L236.49,41.21 L243.37,54.23 L250.81,82.44 L252.53,125.84 L240.69,143.2 L240.88,171.41 L236.11,193.11 L235.92,240.85 Z M230,158.39 L220.07,121.5 L220.83,91.12 L230,54.23 L230,54.23 L239.17,91.12 L239.93,121.5 L230,158.39 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="9" Name="9 Syringe" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M212.28,238.59 L212.28,140.94 L220.27,130.01 L225.01,130.01 L225.76,76.1 L230,73.76 L230,73.76 L234.24,76.1 L234.99,130.01 L239.73,130.01 L247.72,140.94 L247.72,238.59 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="M216.44,241.94 L216.44,106.31 L222.55,91.12 L226.18,91.12 L226.75,16.25 L230,13 L230,13 L233.25,16.25 L233.82,91.12 L237.45,91.12 L243.56,106.31 L243.56,241.94 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+
+  <local:ClockHandStyle Id="10" Name="10 Skeleton" Cap="{StaticResource ClockHandCap}">
+   <local:ClockHandStyle.Hour>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="F0 M218.02,237.03 L204.55,201.88 L206.79,128.44 L214.78,105.01 L230,73.76 L230,73.76 L245.22,105.01 L253.21,128.44 L255.45,201.88 L241.98,237.03 Z M223.26,207.35 L213.53,195.63 L215.53,133.13 L221.76,111.26 L230,94.85 L230,94.85 L238.24,111.26 L244.47,133.13 L246.47,195.63 L236.74,207.35 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Hour>
+   <local:ClockHandStyle.Minute>
+    <DrawingBrush Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill">
+     <DrawingBrush.Drawing>
+      <GeometryDrawing Brush="{StaticResource ClockHandInk}" Geometry="F0 M220.83,239.76 L210.52,190.94 L212.24,88.95 L218.35,56.4 L230,13 L230,13 L241.65,56.4 L247.76,88.95 L249.48,190.94 L239.17,239.76 Z M224.84,198.53 L217.4,182.26 L218.92,95.46 L223.7,65.08 L230,42.3 L230,42.3 L236.3,65.08 L241.08,95.46 L242.6,182.26 L235.16,198.53 Z"/>
+     </DrawingBrush.Drawing>
+    </DrawingBrush>
+   </local:ClockHandStyle.Minute>
+  </local:ClockHandStyle>
+ </x:Array>
+</ResourceDictionary>

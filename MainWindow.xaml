@@ -27,6 +27,7 @@
       <Button Content="System" Tag="System" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Email / reports" Tag="Email" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Clock" Click="ClockClick" Margin="0,1" Padding="6,3"/>
+      <Button Content="Clock hands" Tag="ClockHands" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Log" Click="LogClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Themes" Tag="Themes" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Database import" Tag="Database" Click="AdminClick" Margin="0,1" Padding="6,3"/>

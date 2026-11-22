@@ -4,9 +4,16 @@
   <Menu DockPanel.Dock="Top"><MenuItem Header="_File"><MenuItem Header="_Close" Click="CloseClick"/></MenuItem></Menu>
   <Viewbox Stretch="Uniform"><Canvas Width="1680" Height="864">
    <Image Source="images and icons/ClockFace.png" Width="1680" Height="864"/>
-   <Polygon Points="840,430 830,430 840,213 850,430" Fill="Black"><Polygon.RenderTransform><RotateTransform x:Name="MinuteRotation" CenterX="840" CenterY="430"/></Polygon.RenderTransform></Polygon>
-   <Polygon Points="840,430 830,430 840,260 850,430" Fill="Black"><Polygon.RenderTransform><RotateTransform x:Name="HourRotation" CenterX="840" CenterY="430"/></Polygon.RenderTransform></Polygon>
-   <Ellipse Canvas.Left="825" Canvas.Top="415" Width="30" Height="30" Fill="Black"/>
+   <Canvas Canvas.Left="610" Canvas.Top="200" Width="460" Height="460" DataContext="{DynamicResource SelectedClockHands}">
+    <Canvas.Style><Style TargetType="Canvas"><Setter Property="DataContext" Value="{StaticResource OriginalClockHands}"/></Style></Canvas.Style>
+    <Rectangle Width="460" Height="460" Fill="{Binding Minute}">
+     <Rectangle.RenderTransform><RotateTransform x:Name="MinuteRotation" CenterX="230" CenterY="230"/></Rectangle.RenderTransform>
+    </Rectangle>
+    <Rectangle Width="460" Height="460" Fill="{Binding Hour}">
+     <Rectangle.RenderTransform><RotateTransform x:Name="HourRotation" CenterX="230" CenterY="230"/></Rectangle.RenderTransform>
+    </Rectangle>
+    <Rectangle Width="460" Height="460" Fill="{Binding Cap}"/>
+   </Canvas>
   </Canvas></Viewbox>
  </DockPanel>
 </Window>

@@ -15,6 +15,9 @@ public sealed class CarillonRuntime : IDisposable
     public string BaseDirectory { get; }
     public bool Evaluation { get; }
     public DateTime Started { get; }
+    public int ClockHandStyleId { get; private set; }
+    private const int LastClockHandStyleId = 10;
+    private string ClockHandsFile => Path.Combine(BaseDirectory, "data", "clock-hands.txt");
     public string UptimeLabel
     {
         get
@@ -63,6 +66,15 @@ public sealed class CarillonRuntime : IDisposable
     {
         Repository=repository; BaseDirectory=baseDirectory; Evaluation=evaluation; this.currentTime=currentTime??(()=>DateTime.Now);
         Started=Now;
+        try
+        {
+            if (File.Exists(ClockHandsFile) && int.TryParse(File.ReadAllText(ClockHandsFile), out var id) && id is >= 0 and <= LastClockHandStyleId)
+                ClockHandStyleId = id;
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            // A missing or inaccessible display preference leaves the clock on Original.
+        }
         Log=new(baseDirectory); Player=new(dispatcher); Audio=new(dispatcher);
         Reload(); repository.EnsureRuntimeTables();
         foreach(var id in repository.Dispatched(Now.Date)) dispatched.Add(id);
@@ -74,6 +86,24 @@ public sealed class CarillonRuntime : IDisposable
         Log.Append("Application initialized — Carillon Bells 9.0; "+AudioPlayback.Backend);
         timer=new DispatcherTimer(TimeSpan.FromSeconds(1),DispatcherPriority.Background,Tick,dispatcher);
         SetSchedule(true); Tick(null,EventArgs.Empty);
+    }
+    public void SaveClockHandStyle(int styleId)
+    {
+        if (styleId is < 0 or > LastClockHandStyleId) throw new ArgumentOutOfRangeException(nameof(styleId));
+        if (styleId == ClockHandStyleId) return;
+        var path = ClockHandsFile;
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        var temporary = path + ".tmp";
+        try
+        {
+            File.WriteAllText(temporary, styleId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            File.Move(temporary, path, overwrite: true);
+            ClockHandStyleId = styleId;
+        }
+        finally
+        {
+            if (File.Exists(temporary)) File.Delete(temporary);
+        }
     }
     public string Setting(string name)=>Settings.TryGetValue(name,out var v)&&v is not DBNull?Convert.ToString(v,System.Globalization.CultureInfo.InvariantCulture)??"":"";
     public bool Flag(string name)=>Setting(name)=="1";

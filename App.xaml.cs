@@ -33,6 +33,8 @@ public partial class App : Application
             var splash=new SplashWindow(); splash.Show();
             await Task.Delay(900);
             var runtime=new CarillonRuntime(repository,root,Dispatcher,e.Args.Contains("--evaluation"));
+            var handStyles = (ClockHandStyle[])FindResource("ClockHandCatalog");
+            Resources["SelectedClockHands"] = handStyles.FirstOrDefault(style => style.Id == runtime.ClockHandStyleId) ?? handStyles[0];
             var window=new MainWindow(runtime); MainWindow=window; window.Show(); splash.Close();
         }
         catch(Exception error) { MessageBox.Show("Carillon could not start: "+error.Message+"\n\nCheck that the portable folder is writable and another instance is not using it.","Carillon startup"); Shutdown(1); }

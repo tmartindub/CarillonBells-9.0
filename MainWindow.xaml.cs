@@ -172,7 +172,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     }
     private void AdminClick(object sender,RoutedEventArgs e)
     {
-        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not "Themes"; var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
+        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not ("Themes" or "ClockHands"); var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
         if(pauses) runtime.SetSchedule(false);
         AdministrationWindow? administration=null;
         try { administration=new AdministrationWindow(runtime,page){Owner=this};administration.ShowDialog(); }

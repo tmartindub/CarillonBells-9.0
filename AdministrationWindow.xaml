@@ -79,6 +79,89 @@
     </DataGrid.Columns></DataGrid>
    </DockPanel></TabItem>
    <TabItem Header="Themes" Tag="Themes"><StackPanel Margin="22"><TextBlock Text="Color palette" FontSize="22"/><ComboBox x:Name="ThemeList" ItemsSource="{StaticResource ThemeCatalog}" Style="{StaticResource PalettePicker}" SelectionChanged="ThemeChanged" Width="330" HorizontalAlignment="Left" Margin="0,15"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Name}" Foreground="{DynamicResource Ink}" Padding="8,5"/></DataTemplate></ComboBox.ItemTemplate></ComboBox><TextBlock Text="Custom background / text colors (#RRGGBB)"/><StackPanel Orientation="Horizontal" Margin="0,10"><TextBox x:Name="CustomBackground" Text="#EFF3F6" Width="190"/><TextBox x:Name="CustomText" Text="#173650" Width="190" Margin="10,0"/><Button Content="Apply and save custom colors" Click="CustomThemeClick"/></StackPanel><TextBlock Text="Palette changes apply immediately to every window and are saved separately."/></StackPanel></TabItem>
+   <TabItem Header="Clock hands" Tag="ClockHands">
+    <Grid Margin="18">
+     <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1.45*"/><ColumnDefinition Width="20"/><ColumnDefinition/>
+     </Grid.ColumnDefinitions>
+     <ListBox x:Name="ClockHandPicker" ItemsSource="{StaticResource ClockHandCatalog}" SelectedValuePath="Id" SelectedIndex="0"
+      AutomationProperties.Name="Clock hand styles" Background="Transparent" BorderThickness="0" Padding="0"
+      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+      ScrollViewer.CanContentScroll="False">
+      <ListBox.ItemsPanel>
+       <ItemsPanelTemplate><UniformGrid Columns="4" VerticalAlignment="Top"/></ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.ItemContainerStyle>
+       <Style TargetType="ListBoxItem">
+        <Setter Property="AutomationProperties.Name" Value="{Binding Name}"/>
+        <Setter Property="Margin" Value="0,0,8,8"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+         <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+           <Border x:Name="Tile" Background="{DynamicResource Surface}" BorderBrush="{DynamicResource Line}"
+            BorderThickness="2" CornerRadius="8" Padding="6,8">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+           </Border>
+           <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+             <Setter TargetName="Tile" Property="Background" Value="{DynamicResource CardSurface}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+             <Setter TargetName="Tile" Property="Background" Value="{DynamicResource CardSurface}"/>
+             <Setter TargetName="Tile" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+             <Setter TargetName="Tile" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+            </Trigger>
+           </ControlTemplate.Triggers>
+          </ControlTemplate>
+         </Setter.Value>
+        </Setter>
+       </Style>
+      </ListBox.ItemContainerStyle>
+      <ListBox.ItemTemplate>
+       <DataTemplate>
+        <StackPanel>
+         <Viewbox Height="88" HorizontalAlignment="Center">
+          <Grid Width="460" Height="460">
+           <Ellipse Fill="#F7FBFD" Stroke="#BCD0DE" StrokeThickness="5"/>
+           <Path Stroke="#7690A2" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+            Data="M 230,17 L 230,43 M 336,46 L 323,68 M 414,124 L 392,137 M 443,230 L 417,230 M 414,336 L 392,323 M 336,414 L 323,392 M 230,443 L 230,417 M 124,414 L 137,392 M 46,336 L 68,323 M 17,230 L 43,230 M 46,124 L 68,137 M 124,46 L 137,68"/>
+           <Rectangle Fill="{Binding Hour}"><Rectangle.RenderTransform><RotateTransform Angle="305" CenterX="230" CenterY="230"/></Rectangle.RenderTransform></Rectangle>
+           <Rectangle Fill="{Binding Minute}"><Rectangle.RenderTransform><RotateTransform Angle="60" CenterX="230" CenterY="230"/></Rectangle.RenderTransform></Rectangle>
+           <Rectangle Fill="{Binding Cap}"/>
+          </Grid>
+         </Viewbox>
+         <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+        </StackPanel>
+       </DataTemplate>
+      </ListBox.ItemTemplate>
+     </ListBox>
+     <Border Grid.Column="2" Style="{StaticResource Card}" Padding="14"
+      DataContext="{Binding SelectedItem, ElementName=ClockHandPicker}">
+      <Grid>
+       <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions>
+       <DockPanel Margin="0,0,0,10">
+        <TextBlock DockPanel.Dock="Right" Text="Preview at 10:10" FontSize="15" VerticalAlignment="Center"
+         Foreground="{DynamicResource Muted}" Margin="8,0,0,0"/>
+        <TextBlock Text="{Binding Name}" FontSize="22" FontWeight="SemiBold"/>
+       </DockPanel>
+       <Viewbox Grid.Row="1" MaxWidth="410" MaxHeight="410" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <Canvas Width="620" Height="620" ClipToBounds="True" AutomationProperties.Name="Preview on the Carillon clock face">
+         <Image Source="images and icons/ClockFace.png" Width="1680" Height="864" Canvas.Left="-530" Canvas.Top="-120"/>
+         <Grid Width="460" Height="460" Canvas.Left="80" Canvas.Top="80">
+          <Rectangle Fill="{Binding Hour}"><Rectangle.RenderTransform><RotateTransform Angle="305" CenterX="230" CenterY="230"/></Rectangle.RenderTransform></Rectangle>
+          <Rectangle Fill="{Binding Minute}"><Rectangle.RenderTransform><RotateTransform Angle="60" CenterX="230" CenterY="230"/></Rectangle.RenderTransform></Rectangle>
+          <Rectangle Fill="{Binding Cap}"/>
+         </Grid>
+        </Canvas>
+       </Viewbox>
+      </Grid>
+     </Border>
+    </Grid>
+   </TabItem>
    <TabItem Header="Database" Tag="Database">
     <Grid Margin="24">
      <Grid.RowDefinitions>

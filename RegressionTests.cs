@@ -36,6 +36,15 @@ public static class RegressionTests
             Check("Legacy log timestamp",CarillonLog.Parse("11/23/2026 12:00:00 PM - Played Song: test").Timestamp==now);
             Check("Invalid historical date retained",CarillonLog.Parse("2/29/2026 12:00:00 PM - test").Timestamp is null);
             Check("Hour and minute geometry",((11%12)*30+59*0.5)==359.5);
+            var handStyles = (ClockHandStyle[])Application.Current.FindResource("ClockHandCatalog");
+            Check("All eleven clock hand styles have numbered, renderable geometry",
+                handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 11)) &&
+                handStyles.All(style => style.Hour.Drawing is not null && style.Minute.Drawing is not null && style.Cap.Drawing is not null));
+            var originalHands = handStyles[0];
+            Check("Original clock hand proportions and pivot match the previous clock",
+                originalHands.Minute.Drawing.Bounds == new Rect(220, 13, 20, 217) &&
+                originalHands.Hour.Drawing.Bounds == new Rect(220, 60, 20, 170) &&
+                originalHands.Cap.Drawing.Bounds == new Rect(215, 215, 30, 30));
             Check("Portable relative audio follows EXE folder",DataFormats.PortablePath(@"D:\Carillon9",@".\Songs\bell.mp3")==@"D:\Carillon9\Songs\bell.mp3");
             Check("Legacy drive letter follows relocated EXE",DataFormats.PortablePath(@"E:\Copied9",@"C:\Songs\bell.mp3")==@"E:\Copied9\Songs\bell.mp3");
             Check("Rooted audio follows EXE folder",DataFormats.PortablePath(@"E:\Copied9",@"\Music\bell.mp3")==@"E:\Copied9\Music\bell.mp3");
@@ -111,12 +120,38 @@ public static class RegressionTests
             var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
             check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
             using(var connection=repository.Open()) { using var command=connection.CreateCommand(); command.CommandText="UPDATE seasonalgroups SET PLAY_TIME='10:00:01.000'"; command.ExecuteNonQuery(); }
-            var dateWindow=new AdministrationWindow(runtime,"System");
+            var dateWindow=new AdministrationWindow(runtime,"ClockHands");
             check("Group time display omits fractions without changing storage",dateWindow.Groups.Rows[0]["PLAY_TIME"].ToString()=="10:00:01"&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="10:00:01.000");
             check("Administration shows slash dates without pending changes",dateWindow.Groups.Rows[0]["PLAY_DATE_FROM"].ToString()=="01/02/2027"&&dateWindow.Groups.GetChanges() is null);
             var dateSettings=(System.Data.DataTable)typeof(AdministrationWindow).GetField("settings",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic)!.GetValue(dateWindow)!;
             check("System dates display U.S. format with blanks retained",dateSettings.Rows[0]["ash_wed_begin"].ToString()=="01/02/2027"&&dateSettings.Rows[0].IsNull("other_silence_begin_date")&&dateSettings.GetChanges() is null);
-            dateWindow.Close();
+            var adminFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            var cancelHands = typeof(AdministrationWindow).GetMethod("CancelClick", adminFlags)!;
+            try
+            {
+                var picker = (ListBox)dateWindow.FindName("ClockHandPicker");
+                var preference = Path.Combine(scratch, "data", "clock-hands.txt");
+                check("Clock hands opens on Original without pausing scheduling",
+                    Equals(picker.SelectedValue, 0) && !dateWindow.RequiresScheduleResume && runtime.ScheduleEnabled);
+                picker.SelectedValue = 7;
+                check("Previewing a clock style leaves the saved preference alone",
+                    Equals(picker.SelectedValue, 7) && runtime.ClockHandStyleId == 0 && !File.Exists(preference));
+
+                var saveHands = typeof(AdministrationWindow).GetMethod("Save", adminFlags)!;
+                check("Saving a clock style stores its ID and updates the analog clock resource",
+                    (bool)saveHands.Invoke(dateWindow, null)! && runtime.ClockHandStyleId == 7 &&
+                    File.ReadAllText(preference) == "7" && ((ClockHandStyle)Application.Current.Resources["SelectedClockHands"]).Id == 7);
+                picker.SelectedValue = 10;
+                cancelHands.Invoke(dateWindow, [null, new RoutedEventArgs()]);
+                check("Cancel returns the preview to the saved style and keeps scheduling enabled",
+                    Equals(picker.SelectedValue, 7) && File.ReadAllText(preference) == "7" && runtime.ScheduleEnabled);
+            }
+            finally
+            {
+                cancelHands.Invoke(dateWindow, [null, new RoutedEventArgs()]);
+                dateWindow.Close();
+                Application.Current.Resources.Remove("SelectedClockHands");
+            }
             check("Legacy ISO and U.S. log dates parse",CarillonLog.Parse("2026-01-02 12:00:00 - legacy").Timestamp==new DateTime(2026,1,2,12,0,0)&&CarillonLog.Parse("01/02/2026 12:00:00 - current").Timestamp==new DateTime(2026,1,2,12,0,0));
             var report=EmailReports.Build(runtime);check("Report dates use U.S. slash format",report.Contains(DateTime.Now.ToString("MM/dd/yyyy"))&&report.Contains(DateTime.Now.AddDays(-1).ToString("MM/dd/yyyy")));
             var missingPath=System.IO.Path.Combine(scratch,"Music","missing.mp3"); var missingReported=false;

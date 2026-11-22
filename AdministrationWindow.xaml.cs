@@ -21,7 +21,7 @@ public partial class AdministrationWindow : Window
     public bool RequiresScheduleResume { get; private set; }
     public AdministrationWindow(CarillonRuntime runtime,string page)
     {
-        this.runtime=runtime; RequiresScheduleResume=page!="Themes"; loading=true; InitializeComponent(); LoadData();
+        this.runtime=runtime; RequiresScheduleResume=page is not ("Themes" or "ClockHands"); loading=true; InitializeComponent(); LoadData();
         loading=true;ThemeList.SelectedItem=((CarillonPalette[])FindResource("ThemeCatalog")).FirstOrDefault(p=>p.Name==ThemeManager.CurrentPalette.Name);CustomBackground.Text=ThemeManager.CurrentPalette.Canvas;CustomText.Text=ThemeManager.CurrentPalette.Ink;
         Pages.SelectedItem=Pages.Items.OfType<TabItem>().FirstOrDefault(t=>t.Tag?.ToString()==page); loading=false;
     }
@@ -45,6 +45,7 @@ public partial class AdministrationWindow : Window
         SystemFieldsPanel.DataContext=settings.DefaultView[0]; EmailFieldsPanel.DataContext=settings.DefaultView[0];
         originalPassword=CarillonRepository.Text(settings.Rows[0],"email_password"); EmailPassword.Password=originalPassword; VisiblePassword.Text=originalPassword;
         DatabaseLabel.Text="Current local database: "+runtime.Repository.DatabasePath;
+        ClockHandPicker.SelectedValue = runtime.ClockHandStyleId;
         loading=false;
     }
     private void CommitEditors()
@@ -53,17 +54,29 @@ public partial class AdministrationWindow : Window
         settings.DefaultView[0].EndEdit();
     }
     private string Password=>ShowPassword.IsChecked==true?VisiblePassword.Text:EmailPassword.Password;
-    private bool Dirty=>Groups.GetChanges() is not null||RandomDirectories.GetChanges() is not null||Silence.GetChanges() is not null||settings.GetChanges() is not null||Password!=originalPassword;
+    private bool SettingsDirty=>Groups.GetChanges() is not null||RandomDirectories.GetChanges() is not null||Silence.GetChanges() is not null||settings.GetChanges() is not null||Password!=originalPassword;
+    private bool ClockHandsDirty=>ClockHandPicker.SelectedItem is ClockHandStyle style && style.Id != runtime.ClockHandStyleId;
+    private bool Dirty=>SettingsDirty || ClockHandsDirty;
     private bool Save()
     {
         try
         {
-            CommitEditors(); Validate();
-            runtime.Repository.SaveTable(Groups,"SEASONALGROUP"); runtime.Repository.SaveTable(RandomDirectories,"slot_no"); runtime.Repository.SaveTable(Silence,"silence_id");
-            var row=settings.Rows[0]; var values=settings.Columns.Cast<DataColumn>().ToDictionary(c=>c.ColumnName,c=>row[c],StringComparer.OrdinalIgnoreCase); values["email_password"]=Password;
-            var changed=CarillonRepository.SystemFields.Concat(CarillonRepository.EmailFields).Where(f=>!Equals(row[f],row[f,DataRowVersion.Original])||f=="email_password"&&Password!=originalPassword).ToArray();
-            if(changed.Length>0) runtime.Repository.SaveSettings(values,changed);
-            runtime.Repository.SyncGroups(); runtime.Reload(); LoadData(); ResultLabel.Text="Saved"; return true;
+            CommitEditors();
+            if (SettingsDirty)
+            {
+                Validate();
+                runtime.Repository.SaveTable(Groups,"SEASONALGROUP"); runtime.Repository.SaveTable(RandomDirectories,"slot_no"); runtime.Repository.SaveTable(Silence,"silence_id");
+                var row=settings.Rows[0]; var values=settings.Columns.Cast<DataColumn>().ToDictionary(c=>c.ColumnName,c=>row[c],StringComparer.OrdinalIgnoreCase); values["email_password"]=Password;
+                var changed=CarillonRepository.SystemFields.Concat(CarillonRepository.EmailFields).Where(f=>!Equals(row[f],row[f,DataRowVersion.Original])||f=="email_password"&&Password!=originalPassword).ToArray();
+                if(changed.Length>0) runtime.Repository.SaveSettings(values,changed);
+                runtime.Repository.SyncGroups(); runtime.Reload();
+            }
+            if (ClockHandPicker.SelectedItem is ClockHandStyle style && style.Id != runtime.ClockHandStyleId)
+            {
+                runtime.SaveClockHandStyle(style.Id);
+                Application.Current.Resources["SelectedClockHands"] = style;
+            }
+            LoadData(); ResultLabel.Text="Saved"; return true;
         }
         catch(Exception error) { MessageBox.Show(this,error.Message,"Cannot save settings"); return false; }
     }
@@ -110,7 +123,7 @@ public partial class AdministrationWindow : Window
     }
     private void AddGroupClick(object sender,RoutedEventArgs e) {Pages.SelectedItem=Pages.Items.OfType<TabItem>().First(t=>t.Tag?.ToString()=="Groups");var row=Groups.NewRow();row["SEASONALGROUP"]="New Group "+DateTime.Now.ToString("HHmmss");Groups.Rows.Add(row);GroupsGrid.SelectedIndex=Groups.Rows.Count-1;GroupsGrid.ScrollIntoView(GroupsGrid.SelectedItem);}
     private void DeleteGroupClick(object sender,RoutedEventArgs e) {if(GroupsGrid.SelectedItem is DataRowView row&&MessageBox.Show(this,"Delete the selected group? Playlist songs are retained.","Delete group",MessageBoxButton.YesNo)==MessageBoxResult.Yes)row.Delete();}
-    private void PageChanged(object sender,SelectionChangedEventArgs e) { if(loading||e.Source!=Pages) return; ResultLabel.Text="";if((Pages.SelectedItem as TabItem)?.Tag?.ToString()!="Themes"&&!RequiresScheduleResume){runtime.SetSchedule(false);RequiresScheduleResume=true;} }
+    private void PageChanged(object sender,SelectionChangedEventArgs e) { if(loading||e.Source!=Pages) return; ResultLabel.Text="";if((Pages.SelectedItem as TabItem)?.Tag?.ToString() is not ("Themes" or "ClockHands")&&!RequiresScheduleResume){runtime.SetSchedule(false);RequiresScheduleResume=true;} }
     private void RecalculateGroupsClick(object sender,RoutedEventArgs e)
     {
         try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From.ToString("MM/dd/yyyy");row["PLAY_DATE_TO"]=dates.To.ToString("MM/dd/yyyy");} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
