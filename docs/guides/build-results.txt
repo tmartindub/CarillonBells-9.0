@@ -1,0 +1,11 @@
+Carillon Bells 9.0 evaluation build verification
+Date: November 21, 2026
+SDK: 10.0.404 (project-local); target net10.0-windows
+Runtime packs: 10.0.15
+PASS Debug win-x86: zero errors, zero warnings
+PASS Debug win-x64: zero errors, zero warnings
+PASS Release win-x86 self-contained: zero errors, zero warnings
+PASS Release win-x64 self-contained: zero errors, zero warnings
+PASS ordinary local Release: zero errors, zero warnings
+PASS source/private credential audit
+No production release published; no live SMTP messages sent.

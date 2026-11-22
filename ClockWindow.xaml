@@ -1,0 +1,12 @@
+<Window x:Class="Carillon.ClockWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Carillon Clock" Width="1200" Height="750" WindowState="Maximized" Background="#A72A29" Icon="images and icons/Carillon.ico" Closed="ClockClosed">
+ <DockPanel>
+  <Menu DockPanel.Dock="Top"><MenuItem Header="_File"><MenuItem Header="_Close" Click="CloseClick"/></MenuItem></Menu>
+  <Viewbox Stretch="Uniform"><Canvas Width="1680" Height="864">
+   <Image Source="images and icons/ClockFace.png" Width="1680" Height="864"/>
+   <Polygon Points="840,430 830,430 840,213 850,430" Fill="Black"><Polygon.RenderTransform><RotateTransform x:Name="MinuteRotation" CenterX="840" CenterY="430"/></Polygon.RenderTransform></Polygon>
+   <Polygon Points="840,430 830,430 840,260 850,430" Fill="Black"><Polygon.RenderTransform><RotateTransform x:Name="HourRotation" CenterX="840" CenterY="430"/></Polygon.RenderTransform></Polygon>
+   <Ellipse Canvas.Left="825" Canvas.Top="415" Width="30" Height="30" Fill="Black"/>
+  </Canvas></Viewbox>
+ </DockPanel>
+</Window>

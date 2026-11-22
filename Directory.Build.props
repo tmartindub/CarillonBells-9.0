@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)dcu\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);dcu\**;bin\**;tools\dotnet\**;private\**;export\**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,587 @@
+[
+  {
+    "type": "index",
+    "name": "idx_pl_settings_settings_id",
+    "sql": "CREATE UNIQUE INDEX idx_pl_settings_settings_id ON PL_SETTINGS(settings_id)"
+  },
+  {
+    "type": "table",
+    "name": "PL_RAND_DIR_ROTATION",
+    "sql": "CREATE TABLE PL_RAND_DIR_ROTATION (slot_no INTEGER PRIMARY KEY CHECK (slot_no BETWEEN 1 AND 7), rand_music_dir TEXT CHECK (LENGTH(rand_music_dir) <= 150), frm_date DATE, to_date DATE)",
+    "count": 7,
+    "types": {
+      "slot_no": [
+        [
+          "integer",
+          7
+        ]
+      ],
+      "rand_music_dir": [
+        [
+          "text",
+          7
+        ]
+      ],
+      "frm_date": [
+        [
+          "null",
+          2
+        ],
+        [
+          "text",
+          5
+        ]
+      ],
+      "to_date": [
+        [
+          "null",
+          2
+        ],
+        [
+          "text",
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "type": "table",
+    "name": "PL_RAND_DIR_ROTATION_WIDE_BACKUP",
+    "sql": "CREATE TABLE \"PL_RAND_DIR_ROTATION_WIDE_BACKUP\" ( id INTEGER PRIMARY KEY CHECK (id = 1), rand_music_dir1 TEXT CHECK (LENGTH(rand_music_dir1) <= 150), frm_date1 DATE, to_date1 DATE, rand_music_dir2 TEXT CHECK (LENGTH(rand_music_dir2) <= 150), frm_date2 DATE, to_date2 DATE, rand_music_dir3 TEXT CHECK (LENGTH(rand_music_dir3) <= 150), frm_date3 DATE, to_date3 DATE, rand_music_dir4 TEXT CHECK (LENGTH(rand_music_dir4) <= 150), frm_date4 DATE, to_date4 DATE, rand_music_dir5 TEXT CHECK (LENGTH(rand_music_dir5) <= 150), frm_date5 DATE, to_date5 DATE, rand_music_dir6 TEXT CHECK (LENGTH(rand_music_dir6) <= 150), frm_date6 DATE, to_date6 DATE, rand_music_dir7 TEXT CHECK (LENGTH(rand_music_dir7) <= 150), frm_date7 DATE, to_date7 DATE )",
+    "count": 0,
+    "types": {
+      "id": [],
+      "rand_music_dir1": [],
+      "frm_date1": [],
+      "to_date1": [],
+      "rand_music_dir2": [],
+      "frm_date2": [],
+      "to_date2": [],
+      "rand_music_dir3": [],
+      "frm_date3": [],
+      "to_date3": [],
+      "rand_music_dir4": [],
+      "frm_date4": [],
+      "to_date4": [],
+      "rand_music_dir5": [],
+      "frm_date5": [],
+      "to_date5": [],
+      "rand_music_dir6": [],
+      "frm_date6": [],
+      "to_date6": [],
+      "rand_music_dir7": [],
+      "frm_date7": [],
+      "to_date7": []
+    }
+  },
+  {
+    "type": "table",
+    "name": "PL_SETTINGS",
+    "sql": "CREATE TABLE \"PL_SETTINGS\" (\n    ORGANIZATION_NAME TEXT CHECK (LENGTH(ORGANIZATION_NAME) <= 100),\n    RAND_SONGS_DIRECTORY TEXT CHECK (LENGTH(RAND_SONGS_DIRECTORY) <= 150)\n, LOGGING_STATUS INTEGER DEFAULT 0 CHECK (LOGGING_STATUS IN (0, 1)), form_bgcolor TEXT, form_fontcolor TEXT, all_souls_day DATE, other_silence_begin_date DATE, other_silence_end_date DATE, silence_enabled INTEGER DEFAULT 1, ash_wed_begin DATE, ash_wed_end DATE, holy_thu_begin DATE, holy_sat_end DATE, other_silence_begin_time TIME, other_silence_end_time TIME, email_enabled INTEGER DEFAULT 0, email_recipients TEXT, email_user TEXT, email_password TEXT, smtp_host TEXT, smtp_port INTEGER, from_address TEXT, test_recipient TEXT, morning_report_recipients TEXT, settings_id INTEGER NOT NULL DEFAULT 1)",
+    "count": 1,
+    "types": {
+      "ORGANIZATION_NAME": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "RAND_SONGS_DIRECTORY": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "LOGGING_STATUS": [
+        [
+          "integer",
+          1
+        ]
+      ],
+      "form_bgcolor": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "form_fontcolor": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "all_souls_day": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "other_silence_begin_date": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "other_silence_end_date": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "silence_enabled": [
+        [
+          "integer",
+          1
+        ]
+      ],
+      "ash_wed_begin": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "ash_wed_end": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "holy_thu_begin": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "holy_sat_end": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "other_silence_begin_time": [
+        [
+          "null",
+          1
+        ]
+      ],
+      "other_silence_end_time": [
+        [
+          "null",
+          1
+        ]
+      ],
+      "email_enabled": [
+        [
+          "integer",
+          1
+        ]
+      ],
+      "email_recipients": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "email_user": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "email_password": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "smtp_host": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "smtp_port": [
+        [
+          "integer",
+          1
+        ]
+      ],
+      "from_address": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "test_recipient": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "morning_report_recipients": [
+        [
+          "text",
+          1
+        ]
+      ],
+      "settings_id": [
+        [
+          "integer",
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "type": "table",
+    "name": "playlist",
+    "sql": "CREATE TABLE playlist (\n    playlist_name TEXT NOT NULL,\n    song_name TEXT NOT NULL,\n    season TEXT,\n    play_date_from DATE,\n    play_date_to DATE,\n    scheduled_time1 TIME,\n    scheduled_time2 TIME,\n    scheduled_time3 TIME,\n    scheduled_time4 TIME,\n    scheduled_time5 TIME,\n    scheduled_time6 TIME,\n    scheduled_time7 TIME,\n    scheduled_time8 TIME,\n    scheduled_time9 TIME,\n    scheduled_time10 TIME,\n    scheduled_time11 TIME,\n    scheduled_time12 TIME,\n    play_monday INTEGER DEFAULT 1,\n    play_tuesday INTEGER DEFAULT 1,\n    play_wednesday INTEGER DEFAULT 1,\n    play_thursday INTEGER DEFAULT 1,\n    play_friday INTEGER DEFAULT 1,\n    play_saturday INTEGER DEFAULT 1,\n    play_sunday INTEGER DEFAULT 1,\n    num_times_to_play INTEGER DEFAULT 1,\n    song_duration TEXT,\n    PRIMARY KEY (playlist_name, song_name)\n)",
+    "count": 120,
+    "types": {
+      "playlist_name": [
+        [
+          "text",
+          120
+        ]
+      ],
+      "song_name": [
+        [
+          "text",
+          120
+        ]
+      ],
+      "season": [
+        [
+          "text",
+          120
+        ]
+      ],
+      "play_date_from": [
+        [
+          "null",
+          30
+        ],
+        [
+          "text",
+          90
+        ]
+      ],
+      "play_date_to": [
+        [
+          "null",
+          30
+        ],
+        [
+          "text",
+          90
+        ]
+      ],
+      "scheduled_time1": [
+        [
+          "null",
+          4
+        ],
+        [
+          "text",
+          116
+        ]
+      ],
+      "scheduled_time2": [
+        [
+          "null",
+          108
+        ],
+        [
+          "text",
+          12
+        ]
+      ],
+      "scheduled_time3": [
+        [
+          "null",
+          115
+        ],
+        [
+          "text",
+          5
+        ]
+      ],
+      "scheduled_time4": [
+        [
+          "null",
+          116
+        ],
+        [
+          "text",
+          4
+        ]
+      ],
+      "scheduled_time5": [
+        [
+          "null",
+          116
+        ],
+        [
+          "text",
+          4
+        ]
+      ],
+      "scheduled_time6": [
+        [
+          "null",
+          117
+        ],
+        [
+          "text",
+          3
+        ]
+      ],
+      "scheduled_time7": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "scheduled_time8": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "scheduled_time9": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "scheduled_time10": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "scheduled_time11": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "scheduled_time12": [
+        [
+          "null",
+          118
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "play_monday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_tuesday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_wednesday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_thursday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_friday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_saturday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "play_sunday": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "num_times_to_play": [
+        [
+          "integer",
+          120
+        ]
+      ],
+      "song_duration": [
+        [
+          "text",
+          120
+        ]
+      ]
+    }
+  },
+  {
+    "type": "table",
+    "name": "seasonalgroups",
+    "sql": "CREATE TABLE seasonalgroups (\n    SEASONALGROUP TEXT NOT NULL PRIMARY KEY,\n    PLAY_DATE_FROM DATE,\n    PLAY_DATE_TO DATE,\n    PLAY_TIME TIME\n)",
+    "count": 16,
+    "types": {
+      "SEASONALGROUP": [
+        [
+          "text",
+          16
+        ]
+      ],
+      "PLAY_DATE_FROM": [
+        [
+          "null",
+          5
+        ],
+        [
+          "text",
+          11
+        ]
+      ],
+      "PLAY_DATE_TO": [
+        [
+          "null",
+          5
+        ],
+        [
+          "text",
+          11
+        ]
+      ],
+      "PLAY_TIME": [
+        [
+          "null",
+          2
+        ],
+        [
+          "text",
+          14
+        ]
+      ]
+    }
+  },
+  {
+    "type": "table",
+    "name": "silence_schedule",
+    "sql": "CREATE TABLE silence_schedule (silence_id INTEGER NOT NULL PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 0, Purpose TEXT, start_time TEXT, end_time TEXT, monday INTEGER NOT NULL DEFAULT 0, tuesday INTEGER NOT NULL DEFAULT 0, wednesday INTEGER NOT NULL DEFAULT 0, thursday INTEGER NOT NULL DEFAULT 0, friday INTEGER NOT NULL DEFAULT 0, saturday INTEGER NOT NULL DEFAULT 0, sunday INTEGER NOT NULL DEFAULT 0)",
+    "count": 12,
+    "types": {
+      "silence_id": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "enabled": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "Purpose": [
+        [
+          "text",
+          12
+        ]
+      ],
+      "start_time": [
+        [
+          "null",
+          10
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "end_time": [
+        [
+          "null",
+          10
+        ],
+        [
+          "text",
+          2
+        ]
+      ],
+      "monday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "tuesday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "wednesday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "thursday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "friday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "saturday": [
+        [
+          "integer",
+          12
+        ]
+      ],
+      "sunday": [
+        [
+          "integer",
+          12
+        ]
+      ]
+    }
+  }
+]

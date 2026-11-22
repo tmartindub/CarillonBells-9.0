@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Carillon">
+ <x:Array x:Key="ThemeCatalog" Type="{x:Type local:CarillonPalette}">
+  <local:CarillonPalette Name="Porcelain Blue" Accent="#D87732" Canvas="#EFF3F6" Ink="#173650" Surface="#FFFFFF"/>
+  <local:CarillonPalette Name="Warm Parchment" Accent="#D87732" Canvas="#F4EEDF" Ink="#4D3825" Surface="#FFFCF6"/>
+  <local:CarillonPalette Name="Cobalt Harbor" Accent="#2E6DD4" Canvas="#BBD1F3" Ink="#183560" Surface="#FFFFFF"/>
+  <local:CarillonPalette Name="Royal Current" Accent="#3FA4F4" Canvas="#223A63" Ink="#EEF5F7" Surface="#3A5B8A"/>
+  <local:CarillonPalette Name="Emerald Glass" Accent="#13916E" Canvas="#B6E0D3" Ink="#114639" Surface="#FAFFFD"/>
+  <local:CarillonPalette Name="Copper Dawn" Accent="#B8582E" Canvas="#EBCBB8" Ink="#60301C" Surface="#FFF8F4"/>
+  <local:CarillonPalette Name="Indigo Velvet" Accent="#604EC9" Canvas="#CDC6F0" Ink="#2D2463" Surface="#FFFCFF"/>
+  <local:CarillonPalette Name="Cranberry Silk" Accent="#B53666" Canvas="#EBBFD0" Ink="#601F3A" Surface="#FFFAFC"/>
+  <local:CarillonPalette Name="Atlantic Teal" Accent="#187696" Canvas="#B4D7E2" Ink="#143F4E" Surface="#FAFEFF"/>
+  <local:CarillonPalette Name="Midnight Copper" Accent="#E59A47" Canvas="#2C2D36" Ink="#F5F0EA" Surface="#334059"/>
+  <local:CarillonPalette Name="Pine Gold" Accent="#BC9235" Canvas="#DEDBBF" Ink="#2D482C" Surface="#FAFDF8"/>
+  <local:CarillonPalette Name="Graphite Ice" Accent="#5C8EE2" Canvas="#29374D" Ink="#F1F6FA" Surface="#3B4A63"/>
+  <local:CarillonPalette Name="Verdant Slate" Accent="#267854" Canvas="#B8D5C7" Ink="#1D3D2F" Surface="#F9FDFA"/>
+ </x:Array>
+</ResourceDictionary>

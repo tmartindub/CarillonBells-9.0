@@ -1,0 +1,23 @@
+# Build outputs and private portable data
+bin/
+dcu/
+obj/
+tools/dotnet/
+tools/.dotnet-home/
+tools/.nuget/
+tools/guide-qa/
+tools/__pycache__/
+tools/dotnet-install.ps1
+export/
+source distributions/*.zip
+*.db
+*.db-*
+*.sqlite*
+*.lock
+logs/
+private/
+**/keepalive.txt
+*.dmp
+*.user
+*.suo
+.vs/

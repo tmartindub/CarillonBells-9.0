@@ -1,0 +1,41 @@
+PASS Full day, midnight, duplicate slots
+PASS Only remaining events
+PASS Simultaneous distinct records
+PASS Disabled weekday
+PASS Expired range
+PASS Compile silence end inclusive
+PASS Live silence end exclusive
+PASS Overnight starting weekday
+PASS Equal silence start/end inactive
+PASS Cross-year directory override
+PASS Christmas range retained while active
+PASS Custom groups preserved
+PASS Easter 2027
+PASS Memorial Day
+PASS Thanksgiving
+PASS Duration m:ss
+PASS Duration >24 hours
+PASS NULL versus midnight
+PASS AM/PM input
+PASS Legacy log timestamp
+PASS Invalid historical date retained
+PASS Hour and minute geometry
+PASS SQLite NULL versus midnight
+PASS Legacy date-time normalization
+PASS SQLite composite-key update
+PASS SQLite duplicate detection
+PASS System Email System field ownership
+PASS Group CRUD
+PASS Group deletion
+PASS Persistent dispatch deduplication
+PASS Rotation cross-year override
+PASS Rotation fallback
+PASS SQLite consistent ZIP backup
+PASS Wide migration and 12 silence slots
+PASS Unknown tables survive migration
+PASS Existing wide backup preserved
+PASS SQLite integrity after migration
+PASS Song deletion
+PASS Played count ignores checkpoints
+PASS Logging disabled respected
+PASS Log trim preserves malformed lines
