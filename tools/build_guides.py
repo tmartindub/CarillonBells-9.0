@@ -18,7 +18,7 @@ LAST_CHANGED = datetime(2026, 11, 22)
 GUIDES = {
     "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation."),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release."),
-    "Migration": ("Database Migration Guide", "Move a Carillon 8.1 database into a separate v9 installation, validate the result, and keep a working rollback."),
+    "Migration": ("Database Migration Guide", "Move a Carillon 7.2.4 or 8.1 database into a separate v9.0 installation, validate the result, and keep a working rollback."),
 }
 
 
