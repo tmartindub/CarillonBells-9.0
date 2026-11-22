@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -123,8 +124,35 @@ public partial class AdministrationWindow : Window
     private void ClearFuneralClick(object sender,RoutedEventArgs e) { foreach(var field in new[]{"other_silence_begin_date","other_silence_end_date","other_silence_begin_time","other_silence_end_time"}) settings.Rows[0][field]=DBNull.Value; }
     private void BrowseRandomClick(object sender,RoutedEventArgs e)
     {
-        if(RandomGrid.SelectedItem is not DataRowView row) return; var dialog=new OpenFolderDialog {Title="Select random music directory inside this portable application folder"};
-        if(dialog.ShowDialog(this)==true) try { var relative=Path.GetRelativePath(runtime.BaseDirectory,dialog.FolderName); if(!DataFormats.PortablePath(runtime.BaseDirectory,relative).Equals(Path.GetFullPath(dialog.FolderName),StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("Copy the music directory into this portable application folder first."); row["rand_music_dir"]=".\\"+relative; }
+        if (sender is not Button { DataContext: DataRowView row }) return;
+        try
+        {
+            CommitEditors();
+            var dialog = new OpenFolderDialog
+            {
+                Title = $"Choose a random music folder for slot {row["slot_no"]}",
+                InitialDirectory = runtime.BaseDirectory
+            };
+            var current = CarillonRepository.Text(row.Row,"rand_music_dir");
+            if (!string.IsNullOrWhiteSpace(current))
+            {
+                try
+                {
+                    var currentFolder = DataFormats.PortablePath(runtime.BaseDirectory,current);
+                    if (Directory.Exists(currentFolder)) dialog.InitialDirectory = currentFolder;
+                }
+                catch (Exception error) when (error is ArgumentException or NotSupportedException or PathTooLongException)
+                {
+                    // An invalid typed path can be replaced by browsing from the application folder.
+                }
+            }
+
+            if (dialog.ShowDialog(this) != true) return;
+            var relative = Path.GetRelativePath(runtime.BaseDirectory,dialog.FolderName);
+            if (!DataFormats.PortablePath(runtime.BaseDirectory,relative).Equals(Path.GetFullPath(dialog.FolderName),StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Copy the music directory into this portable application folder first.");
+            row["rand_music_dir"] = ".\\" + relative;
+        }
         catch(Exception error) { MessageBox.Show(this,error.Message,"Portable music directory"); }
     }
     private void ShowPasswordClick(object sender,RoutedEventArgs e)
@@ -166,8 +194,58 @@ public partial class AdministrationWindow : Window
     }
     private void AnalyzeDatabaseClick(object sender,RoutedEventArgs e)
     {
-        var dialog=new OpenFileDialog {Title="Analyze a Carillon database read-only",Filter="SQLite database|*.db"};if(dialog.ShowDialog(this)!=true)return;
-        try{using var connection=new SqliteConnection(new SqliteConnectionStringBuilder{DataSource=dialog.FileName,Mode=SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();using var command=connection.CreateCommand();command.CommandText="PRAGMA quick_check";var integrity=command.ExecuteScalar()?.ToString();command.CommandText="PRAGMA table_info(PL_RAND_DIR_ROTATION)";var rowBased=false;using(var reader=command.ExecuteReader()){while(reader.Read())if(reader.GetString(1).Equals("slot_no",StringComparison.OrdinalIgnoreCase))rowBased=true;}MigrationReport.Text=$"Read-only analysis {DateTime.Now:MM/dd/yyyy h:mm:ss tt}\nSQLite integrity: {integrity}\nDirectory schema: {(rowBased?"8.1 row-based":"Legacy wide or missing; conversion will operate on an imported copy")}\nNo SQL writes were made to the selected source.";}catch(Exception error){MigrationReport.Text="Analysis failed: "+error.Message;}
+        var dialog = new OpenFileDialog { Title="Analyze a Carillon database read-only", Filter="SQLite database|*.db" };
+        if (dialog.ShowDialog(this) != true) return;
+
+        try
+        {
+            using var connection = new SqliteConnection(new SqliteConnectionStringBuilder
+            {
+                DataSource = dialog.FileName, Mode = SqliteOpenMode.ReadOnly, Pooling = false
+            }.ToString());
+            connection.Open();
+            using var command = connection.CreateCommand();
+            var report = new StringBuilder();
+            report.AppendLine($"Read-only analysis {DateTime.Now:MM/dd/yyyy h:mm:ss tt}");
+
+            command.CommandText = "PRAGMA quick_check";
+            using (var reader = command.ExecuteReader())
+                while (reader.Read()) report.AppendLine($"SQLite integrity: {reader.GetString(0)}");
+
+            command.CommandText = "PRAGMA table_info(PL_RAND_DIR_ROTATION)";
+            var rowBased = false;
+            using (var reader = command.ExecuteReader())
+                while (reader.Read()) rowBased |= reader.GetString(1).Equals("slot_no", StringComparison.OrdinalIgnoreCase);
+            report.AppendLine($"Directory schema: {(rowBased ? "8.1 row-based" : "Legacy wide or missing; conversion will operate on an imported copy")}");
+            report.AppendLine("No SQL writes were made to the selected source.");
+            report.AppendLine();
+            report.AppendLine("Database schema");
+
+            command.CommandText = """
+                SELECT type, name, tbl_name, sql FROM main.sqlite_schema
+                ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'view' THEN 1 WHEN 'index' THEN 2 ELSE 3 END,
+                    name COLLATE NOCASE, name
+                """;
+            using (var reader = command.ExecuteReader())
+            {
+                if (!reader.HasRows) report.AppendLine("No schema objects found.");
+                while (reader.Read())
+                {
+                    var objectType = reader.GetString(0);
+                    var objectName = reader.GetString(1);
+                    var tableName = reader.GetString(2);
+                    report.AppendLine();
+                    report.Append($"{objectType.ToUpperInvariant()} {objectName}");
+                    if (objectType is "index" or "trigger") report.Append($" on {tableName}");
+                    report.AppendLine();
+                    report.AppendLine(reader.IsDBNull(3) ? "Created automatically by SQLite. See the table definition." : reader.GetString(3));
+                }
+            }
+            MigrationReport.Text = report.ToString();
+        }
+        catch (Exception error) { MigrationReport.Text = "Analysis failed: " + error.Message; }
+        MigrationReport.Select(0, 0);
+        MigrationReport.ScrollToHome();
     }
     private void SaveMigrationReportClick(object sender,RoutedEventArgs e){if(string.IsNullOrWhiteSpace(MigrationReport.Text))return;var dialog=new SaveFileDialog{Filter="Text report|*.txt",FileName="Carillon-database-conversion-report.txt"};if(dialog.ShowDialog(this)==true)try{File.WriteAllText(dialog.FileName,MigrationReport.Text);}catch(Exception error){MessageBox.Show(this,error.Message);}}
 }

@@ -52,18 +52,52 @@
      <WrapPanel Margin="0,4,0,0"><Button Content="Send test message" Click="TestEmailClick" Margin="0,0,8,8"/><Button Content="Test morning report" Click="TestMorningClick" Margin="0,0,8,8"/><Button Content="Preview report" Click="PreviewReportClick" Margin="0,0,0,8"/></WrapPanel>
     </StackPanel>
    </Grid></ScrollViewer></TabItem>
-   <TabItem Header="Random music" Tag="Random"><DockPanel Margin="18"><StackPanel DockPanel.Dock="Top" Margin="0,0,0,12"><TextBlock Text="Slot 1 is the fallback. Slots 2–7 are annual date overrides; the first matching slot wins." TextWrapping="Wrap"/><Button Content="Browse for selected directory" Click="BrowseRandomClick" HorizontalAlignment="Left" Margin="0,10,0,0"/></StackPanel>
-    <DataGrid x:Name="RandomGrid" ItemsSource="{Binding RandomDirectories.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"><DataGrid.Columns><DataGridTextColumn Header="Slot" Binding="{Binding [slot_no]}" Width="75" IsReadOnly="True"/><DataGridTextColumn Header="Music directory" Binding="{Binding [rand_music_dir]}" Width="*"/><DataGridTextColumn Header="From (annual)" Binding="{Binding [frm_date]}" Width="190"/><DataGridTextColumn Header="Until (annual)" Binding="{Binding [to_date]}" Width="190"/></DataGrid.Columns></DataGrid>
+   <TabItem Header="Random music" Tag="Random"><DockPanel Margin="18">
+    <TextBlock DockPanel.Dock="Top" Text="Slot 1 is the fallback. Slots 2–7 are annual date overrides; the first matching slot wins." TextWrapping="Wrap" Margin="0,0,0,12"/>
+    <DataGrid x:Name="RandomGrid" ItemsSource="{Binding RandomDirectories.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+     <DataGrid.Columns>
+      <DataGridTextColumn Header="Slot" Binding="{Binding [slot_no]}" Width="75" IsReadOnly="True"/>
+      <DataGridTextColumn Header="Music directory" Binding="{Binding [rand_music_dir]}" Width="*"/>
+      <DataGridTemplateColumn Header="Choose folder" Width="125" IsReadOnly="True">
+       <DataGridTemplateColumn.CellTemplate>
+        <DataTemplate>
+         <Button Content="Browse…" Click="BrowseRandomClick" Margin="4,2" Padding="10,3" VerticalAlignment="Center"
+          AutomationProperties.Name="{Binding [slot_no], StringFormat='Browse for slot {0}'}"/>
+        </DataTemplate>
+       </DataGridTemplateColumn.CellTemplate>
+      </DataGridTemplateColumn>
+      <DataGridTextColumn Header="From (annual)" Binding="{Binding [frm_date]}" Width="190"/>
+      <DataGridTextColumn Header="Until (annual)" Binding="{Binding [to_date]}" Width="190"/>
+     </DataGrid.Columns>
+    </DataGrid>
    </DockPanel></TabItem>
-   <TabItem Header="Silence windows" Tag="Silence"><DockPanel Margin="18"><TextBlock DockPanel.Dock="Top" Text="Twelve reusable rules. Overnight rules use the starting weekday. Equal start/end is inactive. Purpose appears in logs." TextWrapping="Wrap" Margin="0,0,0,12"/>
-    <DataGrid x:Name="SilenceGrid" ItemsSource="{Binding Silence.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"><DataGrid.Columns>
+   <TabItem Header="Silence windows" Tag="Silence"><DockPanel Margin="18,12"><TextBlock DockPanel.Dock="Top" Text="Twelve reusable rules. Overnight rules use the starting weekday. Equal start/end is inactive. Purpose appears in logs." TextWrapping="Wrap" Margin="0,0,0,8"/>
+    <DataGrid x:Name="SilenceGrid" ItemsSource="{Binding Silence.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="34"><DataGrid.Columns>
      <DataGridTextColumn Header="ID" Binding="{Binding [silence_id]}" IsReadOnly="True" Width="60"/><DataGridCheckBoxColumn Header="On" Binding="{Binding [enabled], Converter={StaticResource IntBool}}" Width="60"/>
      <DataGridTextColumn Header="Purpose" Binding="{Binding [Purpose]}" Width="*"/><DataGridTextColumn Header="Start" Binding="{Binding [start_time]}" Width="130"/><DataGridTextColumn Header="End" Binding="{Binding [end_time]}" Width="130"/>
      <DataGridCheckBoxColumn Header="Mon" Binding="{Binding [monday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Tue" Binding="{Binding [tuesday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Wed" Binding="{Binding [wednesday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Thu" Binding="{Binding [thursday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Fri" Binding="{Binding [friday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Sat" Binding="{Binding [saturday], Converter={StaticResource IntBool}}" Width="66"/><DataGridCheckBoxColumn Header="Sun" Binding="{Binding [sunday], Converter={StaticResource IntBool}}" Width="66"/>
     </DataGrid.Columns></DataGrid>
    </DockPanel></TabItem>
    <TabItem Header="Themes" Tag="Themes"><StackPanel Margin="22"><TextBlock Text="Color palette" FontSize="22"/><ComboBox x:Name="ThemeList" ItemsSource="{StaticResource ThemeCatalog}" Style="{StaticResource PalettePicker}" SelectionChanged="ThemeChanged" Width="330" HorizontalAlignment="Left" Margin="0,15"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Name}" Foreground="{DynamicResource Ink}" Padding="8,5"/></DataTemplate></ComboBox.ItemTemplate></ComboBox><TextBlock Text="Custom background / text colors (#RRGGBB)"/><StackPanel Orientation="Horizontal" Margin="0,10"><TextBox x:Name="CustomBackground" Text="#EFF3F6" Width="190"/><TextBox x:Name="CustomText" Text="#173650" Width="190" Margin="10,0"/><Button Content="Apply and save custom colors" Click="CustomThemeClick"/></StackPanel><TextBlock Text="Palette changes apply immediately to every window and are saved separately."/></StackPanel></TabItem>
-   <TabItem Header="Database" Tag="Database"><StackPanel Margin="24"><TextBlock Text="Import a database into this separate application" FontFamily="Georgia" FontSize="25"/><TextBlock Text="The selected source database is opened read-only and copied with SQLite backup. The current local database receives a ZIP backup first. The source is never upgraded or written. Close other Carillon instances using that database before import." TextWrapping="Wrap" Margin="0,15"/><WrapPanel><Button Content="Analyze source database" Click="AnalyzeDatabaseClick" Margin="0,0,10,0"/><Button Content="Choose and import a database copy" Click="ImportClick" Margin="0,0,10,0"/><Button Content="Save report" Click="SaveMigrationReportClick"/></WrapPanel><TextBlock x:Name="DatabaseLabel" TextWrapping="Wrap" Margin="0,20"/><TextBox x:Name="MigrationReport" IsReadOnly="True" AcceptsReturn="True" Height="260" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/></StackPanel></TabItem>
+   <TabItem Header="Database" Tag="Database">
+    <Grid Margin="24">
+     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+     </Grid.RowDefinitions>
+     <TextBlock Text="Import a database into this separate application" FontFamily="Georgia" FontSize="25"/>
+     <TextBlock Grid.Row="1" Text="The selected source database is opened read-only and copied with SQLite backup. The current local database receives a ZIP backup first. The source is never upgraded or written. Close other Carillon instances using that database before import." TextWrapping="Wrap" Margin="0,15"/>
+     <WrapPanel Grid.Row="2">
+      <Button Content="Analyze source database" Click="AnalyzeDatabaseClick" Margin="0,0,10,0"/>
+      <Button Content="Choose and import a database copy" Click="ImportClick" Margin="0,0,10,0"/>
+      <Button Content="Save report" Click="SaveMigrationReportClick"/>
+     </WrapPanel>
+     <TextBlock Grid.Row="3" x:Name="DatabaseLabel" TextWrapping="Wrap" Margin="0,20"/>
+     <TextBox Grid.Row="4" x:Name="MigrationReport" AutomationProperties.Name="Database report"
+      IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top"
+      Padding="12,24,12,12" VerticalScrollBarVisibility="Auto"/>
+    </Grid>
+   </TabItem>
   </TabControl>
  </DockPanel>
 </Window>
