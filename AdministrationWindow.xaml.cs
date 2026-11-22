@@ -122,7 +122,9 @@ public partial class AdministrationWindow : Window
     private void ClearFuneralClick(object sender,RoutedEventArgs e) { foreach(var field in new[]{"other_silence_begin_date","other_silence_end_date","other_silence_begin_time","other_silence_end_time"}) settings.Rows[0][field]=DBNull.Value; }
     private void BrowseRandomClick(object sender,RoutedEventArgs e)
     {
-        if(RandomGrid.SelectedItem is not DataRowView row) return; var dialog=new OpenFolderDialog {Title="Select random music directory"}; if(dialog.ShowDialog(this)==true) row["rand_music_dir"]=dialog.FolderName;
+        if(RandomGrid.SelectedItem is not DataRowView row) return; var dialog=new OpenFolderDialog {Title="Select random music directory inside this portable application folder"};
+        if(dialog.ShowDialog(this)==true) try { var relative=Path.GetRelativePath(runtime.BaseDirectory,dialog.FolderName); if(!DataFormats.PortablePath(runtime.BaseDirectory,relative).Equals(Path.GetFullPath(dialog.FolderName),StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("Copy the music directory into this portable application folder first."); row["rand_music_dir"]=".\\"+relative; }
+        catch(Exception error) { MessageBox.Show(this,error.Message,"Portable music directory"); }
     }
     private void ShowPasswordClick(object sender,RoutedEventArgs e)
     {

@@ -1,0 +1,67 @@
+PASS Full day, midnight, duplicate slots
+PASS Only remaining events
+PASS Simultaneous distinct records
+PASS Disabled weekday
+PASS Expired range
+PASS Compile silence end inclusive
+PASS Live silence end exclusive
+PASS Overnight starting weekday
+PASS Equal silence start/end inactive
+PASS Cross-year directory override
+PASS Christmas range retained while active
+PASS Custom groups preserved
+PASS Easter 2027
+PASS Memorial Day
+PASS Thanksgiving
+PASS Duration m:ss
+PASS Duration >24 hours
+PASS NULL versus midnight
+PASS AM/PM input
+PASS Legacy log timestamp
+PASS Invalid historical date retained
+PASS Hour and minute geometry
+PASS Portable relative audio follows EXE folder
+PASS Legacy drive letter follows relocated EXE
+PASS Rooted audio follows EXE folder
+PASS Reject nonportable audio ..\outside.mp3
+PASS Reject nonportable audio C:outside.mp3
+PASS Reject nonportable audio \\server\share\bell.mp3
+PASS SQLite NULL versus midnight
+PASS Legacy date-time normalization
+PASS SQLite composite-key update
+PASS SQLite duplicate detection
+PASS System Email System field ownership
+PASS Group CRUD
+PASS Group deletion
+PASS Persistent dispatch deduplication
+PASS Rotation cross-year override
+PASS Rotation fallback
+PASS SQLite consistent ZIP backup
+PASS Wide migration and 12 silence slots
+PASS Unknown tables survive migration
+PASS Existing wide backup preserved
+PASS SQLite integrity after migration
+PASS Song deletion
+PASS Played count ignores checkpoints
+PASS Logging disabled respected
+PASS Log trim preserves malformed lines
+PASS U.S. month-first input persists as ISO
+PASS Administration shows slash dates without pending changes
+PASS System dates display U.S. format with blanks retained
+PASS Legacy ISO and U.S. log dates parse
+PASS Report dates use U.S. slash format
+PASS Missing music reports resolved path and recovery
+PASS Edit pauses scheduling (previously False)
+PASS Cancel restores state and selection (False)
+PASS Save succeeds (False)
+PASS Reload keeps grid selection bound (False)
+PASS Save restores state and stable selection (False)
+PASS Save changed identity succeeds (False)
+PASS Changed identity remains selected (False)
+PASS Edit pauses scheduling (previously True)
+PASS Cancel restores state and selection (True)
+PASS Save succeeds (True)
+PASS Reload keeps grid selection bound (True)
+PASS Save restores state and stable selection (True)
+PASS Save changed identity succeeds (True)
+PASS Changed identity remains selected (True)

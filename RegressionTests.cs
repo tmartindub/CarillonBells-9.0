@@ -33,6 +33,10 @@ public static class RegressionTests
             Check("Legacy log timestamp",CarillonLog.Parse("11/23/2026 12:00:00 PM - Played Song: test").Timestamp==now);
             Check("Invalid historical date retained",CarillonLog.Parse("2/29/2026 12:00:00 PM - test").Timestamp is null);
             Check("Hour and minute geometry",((11%12)*30+59*0.5)==359.5);
+            Check("Portable relative audio follows EXE folder",DataFormats.PortablePath(@"D:\Carillon9",@".\Songs\bell.mp3")==@"D:\Carillon9\Songs\bell.mp3");
+            Check("Legacy drive letter follows relocated EXE",DataFormats.PortablePath(@"E:\Copied9",@"C:\Songs\bell.mp3")==@"E:\Copied9\Songs\bell.mp3");
+            Check("Rooted audio follows EXE folder",DataFormats.PortablePath(@"E:\Copied9",@"\Music\bell.mp3")==@"E:\Copied9\Music\bell.mp3");
+            foreach(var escaped in new[]{@"..\outside.mp3",@"C:outside.mp3",@"\\server\share\bell.mp3"}) { var rejected=false; try { DataFormats.PortablePath(baseDirectory,escaped); } catch(ArgumentException) { rejected=true; } Check("Reject nonportable audio "+escaped,rejected); }
             TestDatabase(baseDirectory,Check);
             File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 0;
         } catch(Exception error) { results.Add("FAIL "+error.Message); File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 1; }

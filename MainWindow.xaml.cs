@@ -128,7 +128,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     {
         if(!ConfirmEdits()) return; var dialog=new OpenFileDialog {Filter="MP3 / WAV audio|*.mp3;*.wav",Multiselect=true,Title="Add music files"}; if(dialog.ShowDialog(this)!=true) return;
         var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false);
-        try { foreach(var path in dialog.FileNames) { var duration=await Task.Run(()=>AudioPlayback.ReadDuration(path)); var relative=Path.GetRelativePath(runtime.BaseDirectory,path); var stored=relative.StartsWith("..")?path:".\\"+relative; var song=new Song {Path=stored,Duration=DataFormats.DurationText(duration),From=DateTime.Today,To=DateTime.Today.AddYears(1)}; runtime.Repository.SaveSong(song); } }
+        try { foreach(var path in dialog.FileNames) { var relative=Path.GetRelativePath(runtime.BaseDirectory,path); if(!DataFormats.PortablePath(runtime.BaseDirectory,relative).Equals(Path.GetFullPath(path),StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("Copy music into this portable application folder before adding it."); var duration=await Task.Run(()=>AudioPlayback.ReadDuration(path)); var song=new Song {Path=".\\"+relative,Duration=DataFormats.DurationText(duration),From=DateTime.Today,To=DateTime.Today.AddYears(1)}; runtime.Repository.SaveSong(song); } }
         catch(Exception error) { ShowError(error); }
         finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(); } catch(Exception error) { ShowError(error); } }
     }

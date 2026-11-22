@@ -10,6 +10,18 @@ Extract the complete architecture-specific self-contained evaluation ZIP into a 
 
 The first start can create an empty database. Database import copies a selected database read-only into the separate installation, backs up existing local data as ZIP, and upgrades only the copy. Music is not included or copied automatically. Do not run this application against production storage.
 
+The initialized USB installation is `D:\CarillonBells_9_0`. Run its `CarillonBells.exe` for normal operation. To move it, close Carillon and copy the **entire CarillonBells_9_0 folder**, including databases, music, runtime files and help, to a writable folder on another Windows device. The drive letter may change. The x64 USB build includes its .NET runtime; 32-bit Windows requires the separately published win-x86 build. Keep each installation's database separate.
+
+Scheduled and manual playback, including random music, resolve inside the running EXE's folder. Legacy drive-letter paths use their folder layout under that folder (for example, `C:\Songs\bell.mp3` resolves to `<EXE folder>\Songs\bell.mp3`). Store music and random directories as relative paths. Copy new audio into the portable installation before adding it; network paths and paths escaping the installation are rejected. Database import does not copy audio. Existing music folders are preserved during binary updates.
+
+After the approved pre-change ZIP backup, build and validate the application folder first. Update an initialized USB copy with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x64 -Publish -PortableRoot 'D:\CarillonBells_9_0'
+```
+
+This republishes the application, copies and hash-verifies application files, and preserves the USB database, logs and music. Run the USB self-tests after updating. Database/settings edits in one installation are local to that installation; they are not silently synchronized over another installation's data.
+
 `--evaluation` suppresses automatic email. It retains real scheduling, playback, power hold, and Windows volume control. Manual email test commands ask for confirmation.
 
 ## Building and testing

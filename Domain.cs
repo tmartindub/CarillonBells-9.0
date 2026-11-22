@@ -63,7 +63,20 @@ public static class DataFormats
         return parts.Length==2 ? TimeSpan.FromSeconds(values[0]*60L+values[1]) : TimeSpan.FromSeconds(values[0]*3600L+values[1]*60L+values[2]);
     }
     public static string DurationText(TimeSpan value) => value.TotalHours>=1 ? $"{(long)value.TotalHours}:{value.Minutes:00}:{value.Seconds:00}" : $"{(long)value.TotalMinutes}:{value.Seconds:00}";
-    public static string PortablePath(string baseDirectory,string path) => System.IO.Path.GetFullPath(System.IO.Path.IsPathRooted(path)?path:System.IO.Path.Combine(baseDirectory,path));
+    public static string PortablePath(string baseDirectory,string path)
+    {
+        var root=System.IO.Path.TrimEndingDirectorySeparator(System.IO.Path.GetFullPath(baseDirectory));
+        var prefix=System.IO.Path.EndsInDirectorySeparator(root)?root:root+System.IO.Path.DirectorySeparatorChar;
+        if(path.StartsWith(@"\\") || (path.Length>=2 && path[1]==':' && !System.IO.Path.IsPathFullyQualified(path)))
+            throw new ArgumentException("Use a music path inside this portable application folder.");
+        // Older databases can retain a drive letter; resolve their folder layout beside this EXE.
+        if(System.IO.Path.IsPathFullyQualified(path) && System.IO.Path.GetFullPath(path).StartsWith(prefix,StringComparison.OrdinalIgnoreCase)) return System.IO.Path.GetFullPath(path);
+        var local=System.IO.Path.IsPathRooted(path)?path[(System.IO.Path.GetPathRoot(path)?.Length??0)..]:path;
+        var resolved=System.IO.Path.GetFullPath(System.IO.Path.Combine(root,local));
+        if(!resolved.Equals(root,StringComparison.OrdinalIgnoreCase) && !resolved.StartsWith(prefix,StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("Music paths must stay inside this portable application folder.");
+        return resolved;
+    }
 }
 
 public sealed record ScheduledBell(DateTime When, Song Song)
