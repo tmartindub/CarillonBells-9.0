@@ -16,7 +16,7 @@ public sealed class CarillonRuntime : IDisposable
     public bool Evaluation { get; }
     public DateTime Started { get; }
     public int ClockHandStyleId { get; private set; }
-    private const int LastClockHandStyleId = 10;
+    private const int LastClockHandStyleId = 14;
     private string ClockHandsFile => Path.Combine(BaseDirectory, "data", "clock-hands.txt");
     public string UptimeLabel
     {

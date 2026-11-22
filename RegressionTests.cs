@@ -37,14 +37,16 @@ public static class RegressionTests
             Check("Invalid historical date retained",CarillonLog.Parse("2/29/2026 12:00:00 PM - test").Timestamp is null);
             Check("Hour and minute geometry",((11%12)*30+59*0.5)==359.5);
             var handStyles = (ClockHandStyle[])Application.Current.FindResource("ClockHandCatalog");
-            Check("All eleven clock hand styles have numbered, renderable geometry",
-                handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 11)) &&
+            Check("Original and the fourteen numbered clock hand styles have renderable geometry",
+                handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 15)) &&
                 handStyles.All(style => style.Hour.Drawing is not null && style.Minute.Drawing is not null && style.Cap.Drawing is not null));
             var originalHands = handStyles[0];
             Check("Original clock hand proportions and pivot match the previous clock",
                 originalHands.Minute.Drawing.Bounds == new Rect(220, 13, 20, 217) &&
                 originalHands.Hour.Drawing.Bounds == new Rect(220, 60, 20, 170) &&
                 originalHands.Cap.Drawing.Bounds == new Rect(215, 215, 30, 30));
+            using var icon = Application.GetResourceStream(new Uri("pack://application:,,,/images and icons/Carillon-Bells-9.0-icon.ico"))?.Stream;
+            Check("The approved window icon is an embedded WPF resource", icon?.Length > 0);
             Check("Portable relative audio follows EXE folder",DataFormats.PortablePath(@"D:\Carillon9",@".\Songs\bell.mp3")==@"D:\Carillon9\Songs\bell.mp3");
             Check("Legacy drive letter follows relocated EXE",DataFormats.PortablePath(@"E:\Copied9",@"C:\Songs\bell.mp3")==@"E:\Copied9\Songs\bell.mp3");
             Check("Rooted audio follows EXE folder",DataFormats.PortablePath(@"E:\Copied9",@"\Music\bell.mp3")==@"E:\Copied9\Music\bell.mp3");
@@ -133,18 +135,18 @@ public static class RegressionTests
                 var preference = Path.Combine(scratch, "data", "clock-hands.txt");
                 check("Clock hands opens on Original without pausing scheduling",
                     Equals(picker.SelectedValue, 0) && !dateWindow.RequiresScheduleResume && runtime.ScheduleEnabled);
-                picker.SelectedValue = 7;
+                picker.SelectedValue = 14;
                 check("Previewing a clock style leaves the saved preference alone",
-                    Equals(picker.SelectedValue, 7) && runtime.ClockHandStyleId == 0 && !File.Exists(preference));
+                    Equals(picker.SelectedValue, 14) && runtime.ClockHandStyleId == 0 && !File.Exists(preference));
 
                 var saveHands = typeof(AdministrationWindow).GetMethod("Save", adminFlags)!;
                 check("Saving a clock style stores its ID and updates the analog clock resource",
-                    (bool)saveHands.Invoke(dateWindow, null)! && runtime.ClockHandStyleId == 7 &&
-                    File.ReadAllText(preference) == "7" && ((ClockHandStyle)Application.Current.Resources["SelectedClockHands"]).Id == 7);
+                    (bool)saveHands.Invoke(dateWindow, null)! && runtime.ClockHandStyleId == 14 &&
+                    File.ReadAllText(preference) == "14" && ((ClockHandStyle)Application.Current.Resources["SelectedClockHands"]).Id == 14);
                 picker.SelectedValue = 10;
                 cancelHands.Invoke(dateWindow, [null, new RoutedEventArgs()]);
                 check("Cancel returns the preview to the saved style and keeps scheduling enabled",
-                    Equals(picker.SelectedValue, 7) && File.ReadAllText(preference) == "7" && runtime.ScheduleEnabled);
+                    Equals(picker.SelectedValue, 14) && File.ReadAllText(preference) == "14" && runtime.ScheduleEnabled);
             }
             finally
             {

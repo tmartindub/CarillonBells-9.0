@@ -4,7 +4,7 @@
  Title="{Binding UptimeLabel, StringFormat='Carillon Bells 9.0                            |    Uptime    {0}', FallbackValue='Carillon Bells 9.0'}"
  Width="1280" Height="800" WindowState="Maximized"
  MinWidth="1200" MinHeight="740" WindowStartupLocation="CenterScreen"
- Closing="WindowClosing" Icon="images and icons/Carillon.ico" Background="{DynamicResource Canvas}" FontFamily="Bahnschrift" FontSize="18">
+ Closing="WindowClosing" Icon="images and icons/Carillon-Bells-9.0-icon.ico" Background="{DynamicResource Canvas}" FontFamily="Bahnschrift" FontSize="18">
  <Window.Resources>
   <CollectionViewSource x:Key="SongGroups" Source="{Binding Songs}">
    <CollectionViewSource.GroupDescriptions><PropertyGroupDescription PropertyName="Group"/></CollectionViewSource.GroupDescriptions>

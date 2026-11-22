@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>CarillonBells</AssemblyName><RootNamespace>Carillon</RootNamespace>
-    <Version>9.0.0</Version><ApplicationIcon>images and icons\Carillon.ico</ApplicationIcon>
+    <Version>9.0.0</Version><ApplicationIcon>images and icons\Carillon-Bells-9.0-icon.ico</ApplicationIcon>
     <OutputPath>bin\$(Configuration)\</OutputPath><AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
@@ -15,7 +15,7 @@
     <PackageReference Include="MailKit" Version="5.0.0" />
     <Resource Include="images and icons\ClockFace.png" />
     <Resource Include="images and icons\Splash.png" />
-    <Resource Include="images and icons\Carillon.ico" />
+    <Resource Include="images and icons\Carillon-Bells-9.0-icon.ico" />
     <Resource Include="samples\empty-schema.sql" />
     <Content Include="help\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="LICENSE" CopyToOutputDirectory="PreserveNewest" />
