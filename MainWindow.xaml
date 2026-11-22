@@ -85,6 +85,7 @@
        HeadersVisibility="Column" GridLinesVisibility="None" BorderThickness="0" Background="Transparent" RowBackground="{DynamicResource Surface}" AlternatingRowBackground="{DynamicResource Surface}"
        SelectionMode="Single" SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False" RowHeight="35" FontSize="13" EnableRowVirtualization="False"
        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+       <DataGrid.RowStyle><Style TargetType="DataGridRow"><EventSetter Event="MouseDoubleClick" Handler="SongDoubleClick"/></Style></DataGrid.RowStyle>
        <DataGrid.Columns>
         <DataGridTextColumn Header="SONG NAME" Binding="{Binding Title}" Width="*"/>
         <DataGridTextColumn Header="LENGTH" Binding="{Binding Duration}" Width="70"/>

@@ -72,6 +72,10 @@ public static class RegressionTests
             repository.SaveSong(new Song {Group="Custom",Path="first.mp3",From=DateTime.Today,To=DateTime.Today});
             repository.SaveSong(new Song {Group="Custom",Path="second.mp3",From=DateTime.Today,To=DateTime.Today});
             using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true);
+            var missingPath=System.IO.Path.Combine(scratch,"Music","missing.mp3"); var missingReported=false;
+            try { runtime.Play(new Song {Path=".\\Music\\missing.mp3"}); }
+            catch(FileNotFoundException error) { missingReported=error.FileName==missingPath&&error.Message.Contains("Database import does not copy audio files"); }
+            check("Missing music reports resolved path and recovery",missingReported&&!runtime.Player.Busy);
             var window=new MainWindow(runtime);
             try
             {

@@ -83,6 +83,7 @@ public sealed class CarillonRuntime : IDisposable
             if(files.Length==0) throw new IOException("The active random music directory contains no MP3 files.");
             path=files[Random.Shared.Next(files.Length)];
         }
+        if(!File.Exists(path)) throw new FileNotFoundException("Music file not found:\n"+path+"\n\nDatabase import does not copy audio files. Copy the music folder into this installation so the file is available at the path shown above.",path);
         Player.Play(path,song.Repeats);
         Log.Append("Played Song: "+path); if(Log.Enabled) PlayedToday++; LastPlayed=$"{Path.GetFileNameWithoutExtension(path)} at {DateTime.Now:T}"; Changed?.Invoke();
     }

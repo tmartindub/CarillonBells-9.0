@@ -141,6 +141,12 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(key??runtime.Songs.ElementAtOrDefault(Math.Min(index,runtime.Songs.Count-1))?.Key); } catch(Exception error) { ShowError(error); } }
     }
     private void PlayClick(object sender,RoutedEventArgs e) { if(SelectedSong is null) return; try { runtime.Play(SelectedSong); } catch(Exception error) { ShowError(error); } }
+    private void SongDoubleClick(object sender,MouseButtonEventArgs e)
+    {
+        if(e.ChangedButton!=MouseButton.Left||sender is not DataGridRow {Item:Song song}) return;
+        SelectedSong=song; if(SelectedSong?.Key!=song.Key) return;
+        e.Handled=true; PlayClick(sender,e);
+    }
     private void PauseClick(object sender,RoutedEventArgs e)=>runtime.Player.PauseResume();
     private void StopClick(object sender,RoutedEventArgs e)=>runtime.Player.Stop();
     private void UpdateVolume() { volumeUpdating=true; VolumeSlider.Value=runtime.Audio.Volume*100; VolumeSlider.IsEnabled=!runtime.Audio.Muted; MuteButton.Content=runtime.Audio.Muted?"Unmute":"Mute"; volumeUpdating=false; }
