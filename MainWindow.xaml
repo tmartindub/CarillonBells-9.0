@@ -1,7 +1,8 @@
 <Window Language="en-US" x:Class="Carillon.MainWindow"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Title="Carillon Bells 9.0" Width="1280" Height="800" WindowState="Maximized"
+ Title="{Binding UptimeLabel, StringFormat='Carillon Bells 9.0    |    Uptime    {0}', FallbackValue='Carillon Bells 9.0'}"
+ Width="1280" Height="800" WindowState="Maximized"
  MinWidth="1200" MinHeight="740" WindowStartupLocation="CenterScreen"
  Closing="WindowClosing" Icon="images and icons/Carillon.ico" Background="{DynamicResource Canvas}" FontFamily="Bahnschrift" FontSize="18">
  <Window.Resources>

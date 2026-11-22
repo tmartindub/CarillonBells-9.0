@@ -40,7 +40,8 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public string PlayerTitle=>runtime.Player.Busy?runtime.Player.CurrentTitle:SelectedSong?.Title??"Select a song";
     public string PlaybackLabel=>runtime.Player.Busy?$"{(runtime.Player.Paused?"Paused":"Playing")} · {DataFormats.DurationText(runtime.Player.Duration-runtime.Player.Position)} remaining":runtime.LastPlayed;
     public string LibraryLabel=>$"{Songs.Count} songs · {DataFormats.DurationText(TimeSpan.FromTicks(Songs.Sum(s=>DataFormats.Duration(s.Duration).Ticks)))}";
-    public string Footer=>$"9.0.0 · {(runtime.Evaluation?"Evaluation":"Portable")} · Uptime {DataFormats.DurationText(DateTime.Now-runtime.Started)}";
+    public string UptimeLabel=>runtime.UptimeLabel;
+    public string Footer=>$"9.0.0 · {(runtime.Evaluation?"Evaluation":"Portable")}";
     public string Status=>runtime.Error.Length>0?runtime.Error:$"Recorded plays today: {runtime.PlayedToday} · {runtime.Audio.DeviceName}";
     public event PropertyChangedEventHandler? PropertyChanged;
     private void Notify([System.Runtime.CompilerServices.CallerMemberName]string? name=null)=>PropertyChanged?.Invoke(this,new(name));
@@ -52,7 +53,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void UpdateStatus()
     {
         if(!Dispatcher.CheckAccess()) { Dispatcher.BeginInvoke(UpdateStatus); return; }
-        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongLabel),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(PlaybackLabel),nameof(Footer),nameof(Status),nameof(Organization)}) Notify(property);
+        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongLabel),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(PlaybackLabel),nameof(UptimeLabel),nameof(Status),nameof(Organization)}) Notify(property);
         ScheduleToggle.IsChecked=runtime.ScheduleEnabled;
         PlayerProgress.Maximum=Math.Max(1,runtime.Player.Duration.TotalSeconds); PlayerProgress.Value=runtime.Player.Position.TotalSeconds;
     }

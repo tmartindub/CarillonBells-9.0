@@ -98,7 +98,12 @@ public static class RegressionTests
             File.AppendAllLines(log.FilePath,["2/29/2026 12:00:00 PM - malformed",DateTime.Now.AddDays(-31).ToString("yyyy-MM-dd HH:mm:ss")+" - old"]);log.Trim(DateTime.Now);check("Log trim preserves malformed lines",log.Read().Any(l=>l.Timestamp is null)&&!log.Read().Any(l=>l.Event=="old"));
             repository.SaveSong(new Song {Group="Custom",Path="first.mp3",From=DateTime.Today,To=DateTime.Today});
             repository.SaveSong(new Song {Group="Custom",Path="second.mp3",From=DateTime.Today,To=DateTime.Today});
-            using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true);
+            var uptimeStart = new DateTime(2024, 2, 29, 1, 2, 3);
+            var clockNow = uptimeStart;
+            using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true,()=>clockNow);
+            check("Uptime starts at zero in all seven units",
+                runtime.UptimeLabel == "0 years   0 months   0 weeks   0 days   0 hours   0 minutes   0 seconds");
+            clockNow = DateTime.Now;
             repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
             var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
             check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
@@ -137,6 +142,19 @@ public static class RegressionTests
                     check($"Changed identity remains selected ({enabled})",runtime.ScheduleEnabled==enabled&&window.SelectedSong!.Path=="second.mp3"&&window.SelectedSong.Group=="Changed Custom");
                     begin.Invoke(window,[null,null]); window.EditingSong!.Repeats=1; window.EditingSong.Group="Custom"; save.Invoke(window,null);
                 }
+
+                clockNow = new DateTime(2025, 4, 13, 5, 7, 9);
+                check("Uptime decomposes elapsed time into all seven units",
+                    runtime.UptimeLabel == "1 year   1 month   2 weeks   1 day   4 hours   5 minutes   6 seconds");
+                clockNow = new DateTime(2025, 2, 28, 1, 2, 3);
+                check("Leap-day start observes the end-of-month anniversary",
+                    runtime.UptimeLabel == "1 year   0 months   0 weeks   0 days   0 hours   0 minutes   0 seconds");
+                clockNow = new DateTime(2028, 2, 29, 1, 2, 2);
+                check("Uptime rolls over at the leap-year anniversary",
+                    runtime.UptimeLabel == "3 years   11 months   4 weeks   2 days   23 hours   59 minutes   59 seconds");
+                clockNow = new DateTime(2024, 2, 29, 1, 2, 2);
+                check("Uptime remains nonnegative if the clock moves before startup",
+                    runtime.UptimeLabel == "0 years   0 months   0 weeks   0 days   0 hours   0 minutes   0 seconds");
             }
             finally { window.Close(); }
         }

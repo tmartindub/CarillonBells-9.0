@@ -14,7 +14,27 @@ public sealed class CarillonRuntime : IDisposable
     public CarillonLog Log { get; }
     public string BaseDirectory { get; }
     public bool Evaluation { get; }
-    public DateTime Started { get; } = DateTime.Now;
+    public DateTime Started { get; }
+    public string UptimeLabel
+    {
+        get
+        {
+            var now = Now;
+            if (now < Started) now = Started;
+
+            // Count complete months from the original start date, including month-end anniversaries.
+            var completeMonths = (now.Year - Started.Year) * 12 + now.Month - Started.Month;
+            if (Started.AddMonths(completeMonths) > now) completeMonths--;
+            var remainder = now - Started.AddMonths(completeMonths);
+            var units = new (int Count, string Name)[]
+            {
+                (completeMonths / 12, "year"), (completeMonths % 12, "month"),
+                (remainder.Days / 7, "week"), (remainder.Days % 7, "day"),
+                (remainder.Hours, "hour"), (remainder.Minutes, "minute"), (remainder.Seconds, "second")
+            };
+            return string.Join("   ", units.Select(unit => $"{unit.Count} {unit.Name}{(unit.Count == 1 ? "" : "s")}"));
+        }
+    }
     public List<Song> Songs { get; private set; } = [];
     public List<SilenceRule> Rules { get; private set; } = [];
     public Dictionary<string,object> Settings { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -42,6 +62,7 @@ public sealed class CarillonRuntime : IDisposable
     public CarillonRuntime(CarillonRepository repository,string baseDirectory,Dispatcher dispatcher,bool evaluation,Func<DateTime>? currentTime=null)
     {
         Repository=repository; BaseDirectory=baseDirectory; Evaluation=evaluation; this.currentTime=currentTime??(()=>DateTime.Now);
+        Started=Now;
         Log=new(baseDirectory); Player=new(dispatcher); Audio=new(dispatcher);
         Reload(); repository.EnsureRuntimeTables();
         foreach(var id in repository.Dispatched(Now.Date)) dispatched.Add(id);
