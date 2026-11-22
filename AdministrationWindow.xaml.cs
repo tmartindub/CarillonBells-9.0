@@ -28,6 +28,17 @@ public partial class AdministrationWindow : Window
     {
         loading=true;
         Groups=runtime.Repository.Table("seasonalgroups"); RandomDirectories=runtime.Repository.Table("PL_RAND_DIR_ROTATION"); Silence=runtime.Repository.Table("silence_schedule"); settings=runtime.Repository.Table("PL_SETTINGS");
+        // Format only the editable view; repository writes keep ISO dates.
+        foreach(var table in new[]{Groups,RandomDirectories,settings})
+        {
+            foreach(DataColumn column in table.Columns)
+            {
+                var field=column.ColumnName.ToLowerInvariant();
+                if(field is not ("play_date_from" or "play_date_to" or "frm_date" or "to_date" or "ash_wed_begin" or "ash_wed_end" or "holy_thu_begin" or "holy_sat_end" or "all_souls_day" or "other_silence_begin_date" or "other_silence_end_date")) continue;
+                foreach(DataRow row in table.Rows) row[column]=(object?)DataFormats.Date(row[column])?.ToString("MM/dd/yyyy",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
+            }
+            table.AcceptChanges();
+        }
         DataContext=null; DataContext=this;
         SystemFieldsPanel.DataContext=settings.DefaultView[0]; EmailFieldsPanel.DataContext=settings.DefaultView[0];
         originalPassword=CarillonRepository.Text(settings.Rows[0],"email_password"); EmailPassword.Password=originalPassword; VisiblePassword.Text=originalPassword;
@@ -100,13 +111,13 @@ public partial class AdministrationWindow : Window
     private void PageChanged(object sender,SelectionChangedEventArgs e) { if(loading||e.Source!=Pages) return; ResultLabel.Text="";if((Pages.SelectedItem as TabItem)?.Tag?.ToString()!="Themes"&&!RequiresScheduleResume){runtime.SetSchedule(false);RequiresScheduleResume=true;} }
     private void RecalculateGroupsClick(object sender,RoutedEventArgs e)
     {
-        try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From.ToString("yyyy-MM-dd");row["PLAY_DATE_TO"]=dates.To.ToString("yyyy-MM-dd");} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
+        try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From.ToString("MM/dd/yyyy");row["PLAY_DATE_TO"]=dates.To.ToString("MM/dd/yyyy");} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
     }
     private void RecalculateSettingsClick(object sender,RoutedEventArgs e)
     {
         var easter=CalendarRules.Easter(DateTime.Today.Year); if(easter<DateTime.Today) easter=CalendarRules.Easter(DateTime.Today.Year+1);
-        var row=settings.Rows[0]; row["ash_wed_begin"]=easter.AddDays(-46).ToString("yyyy-MM-dd"); row["holy_thu_begin"]=easter.AddDays(-3).ToString("yyyy-MM-dd"); row["holy_sat_end"]=easter.AddDays(-1).ToString("yyyy-MM-dd");
-        var souls=new DateTime(DateTime.Today.Year,11,2); if(souls<DateTime.Today) souls=souls.AddYears(1); row["all_souls_day"]=souls.ToString("yyyy-MM-dd"); ResultLabel.Text="Dates recalculated; click Save";
+        var row=settings.Rows[0]; row["ash_wed_begin"]=easter.AddDays(-46).ToString("MM/dd/yyyy"); row["holy_thu_begin"]=easter.AddDays(-3).ToString("MM/dd/yyyy"); row["holy_sat_end"]=easter.AddDays(-1).ToString("MM/dd/yyyy");
+        var souls=new DateTime(DateTime.Today.Year,11,2); if(souls<DateTime.Today) souls=souls.AddYears(1); row["all_souls_day"]=souls.ToString("MM/dd/yyyy"); ResultLabel.Text="Dates recalculated; click Save";
     }
     private void ClearFuneralClick(object sender,RoutedEventArgs e) { foreach(var field in new[]{"other_silence_begin_date","other_silence_end_date","other_silence_begin_time","other_silence_end_time"}) settings.Rows[0][field]=DBNull.Value; }
     private void BrowseRandomClick(object sender,RoutedEventArgs e)
@@ -146,14 +157,14 @@ public partial class AdministrationWindow : Window
             using(var target=new SqliteConnection(new SqliteConnectionStringBuilder {DataSource=temporary,Pooling=false}.ToString())) { source.Open(); target.Open(); source.BackupDatabase(target); }
             var candidate=new CarillonRepository(temporary); candidate.EnsureCompatibleSchema();var normalized=candidate.NormalizeLegacyTimes(); candidate.Songs(); candidate.Silence(); candidate.Settings();
             backup=runtime.Repository.BackupZip(); runtime.Player.Stop(); File.Move(temporary,runtime.Repository.DatabasePath,true); runtime.Repository.EnsureRuntimeTables(); runtime.Reload(); LoadData(); ResultLabel.Text="Imported copy; source unchanged";
-            MigrationReport.Text=$"Import completed {DateTime.Now:F}\nSource opened read-only and left unchanged.\nLocal ZIP backup: {backup}\nNormalized time values in working copy: {normalized}\nPlaylist records: {runtime.Songs.Count}\nRandom directory slots: {RandomDirectories.Rows.Count}\nWeekly silence slots: {Silence.Rows.Count}\nCustom and backup tables preserved.";
+            MigrationReport.Text=$"Import completed {DateTime.Now:MM/dd/yyyy h:mm:ss tt}\nSource opened read-only and left unchanged.\nLocal ZIP backup: {backup}\nNormalized time values in working copy: {normalized}\nPlaylist records: {runtime.Songs.Count}\nRandom directory slots: {RandomDirectories.Rows.Count}\nWeekly silence slots: {Silence.Rows.Count}\nCustom and backup tables preserved.";
         } catch(Exception error) { if(backup is not null) { using var zip=ZipFile.OpenRead(backup); zip.GetEntry("carillon.db")!.ExtractToFile(runtime.Repository.DatabasePath,true); } MessageBox.Show(this,error.Message,"Import failed"); }
         finally { if(File.Exists(temporary)) File.Delete(temporary); }
     }
     private void AnalyzeDatabaseClick(object sender,RoutedEventArgs e)
     {
         var dialog=new OpenFileDialog {Title="Analyze a Carillon database read-only",Filter="SQLite database|*.db"};if(dialog.ShowDialog(this)!=true)return;
-        try{using var connection=new SqliteConnection(new SqliteConnectionStringBuilder{DataSource=dialog.FileName,Mode=SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();using var command=connection.CreateCommand();command.CommandText="PRAGMA quick_check";var integrity=command.ExecuteScalar()?.ToString();command.CommandText="PRAGMA table_info(PL_RAND_DIR_ROTATION)";var rowBased=false;using(var reader=command.ExecuteReader()){while(reader.Read())if(reader.GetString(1).Equals("slot_no",StringComparison.OrdinalIgnoreCase))rowBased=true;}MigrationReport.Text=$"Read-only analysis {DateTime.Now:F}\nSQLite integrity: {integrity}\nDirectory schema: {(rowBased?"8.1 row-based":"Legacy wide or missing; conversion will operate on an imported copy")}\nNo SQL writes were made to the selected source.";}catch(Exception error){MigrationReport.Text="Analysis failed: "+error.Message;}
+        try{using var connection=new SqliteConnection(new SqliteConnectionStringBuilder{DataSource=dialog.FileName,Mode=SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();using var command=connection.CreateCommand();command.CommandText="PRAGMA quick_check";var integrity=command.ExecuteScalar()?.ToString();command.CommandText="PRAGMA table_info(PL_RAND_DIR_ROTATION)";var rowBased=false;using(var reader=command.ExecuteReader()){while(reader.Read())if(reader.GetString(1).Equals("slot_no",StringComparison.OrdinalIgnoreCase))rowBased=true;}MigrationReport.Text=$"Read-only analysis {DateTime.Now:MM/dd/yyyy h:mm:ss tt}\nSQLite integrity: {integrity}\nDirectory schema: {(rowBased?"8.1 row-based":"Legacy wide or missing; conversion will operate on an imported copy")}\nNo SQL writes were made to the selected source.";}catch(Exception error){MigrationReport.Text="Analysis failed: "+error.Message;}
     }
     private void SaveMigrationReportClick(object sender,RoutedEventArgs e){if(string.IsNullOrWhiteSpace(MigrationReport.Text))return;var dialog=new SaveFileDialog{Filter="Text report|*.txt",FileName="Carillon-database-conversion-report.txt"};if(dialog.ShowDialog(this)==true)try{File.WriteAllText(dialog.FileName,MigrationReport.Text);}catch(Exception error){MessageBox.Show(this,error.Message);}}
 }

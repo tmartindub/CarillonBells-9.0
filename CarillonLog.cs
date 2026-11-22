@@ -25,7 +25,7 @@ public sealed class CarillonLog(string baseDirectory)
     public void Append(string message)
     {
         if(!Enabled) return;
-        lock(sync) { Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!); File.AppendAllText(FilePath,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss",CultureInfo.InvariantCulture)+" - "+message.Replace('\r',' ').Replace('\n',' ')+Environment.NewLine); }
+        lock(sync) { Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!); File.AppendAllText(FilePath,DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss",CultureInfo.InvariantCulture)+" - "+message.Replace('\r',' ').Replace('\n',' ')+Environment.NewLine); }
     }
     public void Trim(DateTime now)
     {

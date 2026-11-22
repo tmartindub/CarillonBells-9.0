@@ -26,22 +26,22 @@ public static class EmailReports
         static string E(object? value)=>WebUtility.HtmlEncode(value?.ToString()??"None");
         void Row(string label,object? value)=>html.Append("<p><b>"+E(label)+":</b> "+E(value)+"</p>");
         void Section(string title,IEnumerable<string> lines) { html.Append("<h2>"+E(title)+"</h2><ul>"); foreach(var line in lines) html.Append("<li>"+E(line)+"</li>"); html.Append("</ul>"); }
-        Row("Date / organization",$"{now:F} / {runtime.Setting("ORGANIZATION_NAME")}");
+        Row("Date / organization",$"{now:MM/dd/yyyy h:mm:ss tt} / {runtime.Setting("ORGANIZATION_NAME")}");
         foreach(var driveRoot in new[]{Path.GetPathRoot(runtime.BaseDirectory),Path.GetPathRoot(Environment.SystemDirectory)}.Distinct())
         { var drive=new DriveInfo(driveRoot!); if(drive.IsReady) Row("Drive",$"{drive.Name} {drive.VolumeLabel}; {drive.AvailableFreeSpace/1073741824.0:F1} GiB free / {drive.TotalSize/1073741824.0:F1} GiB"); }
-        var boot=now-TimeSpan.FromMilliseconds(Environment.TickCount64); Row("Last Windows boot",boot); Row("Windows uptime",DataFormats.DurationText(now-boot));
+        var boot=now-TimeSpan.FromMilliseconds(Environment.TickCount64); Row("Last Windows boot",$"{boot:MM/dd/yyyy h:mm:ss tt}"); Row("Windows uptime",DataFormats.DurationText(now-boot));
         Row("CPU",cpu); Row("RAM",$"{memory.Load}% in use; {memory.AvailablePhysical/1048576} MiB available of {memory.TotalPhysical/1048576} MiB");
-        Row("Application",$"Carillon Bells 9.0.0 / {RuntimeInformation.ProcessArchitecture}"); Row("Last startup",runtime.Started); Row("Application uptime",DataFormats.DurationText(now-runtime.Started));
+        Row("Application",$"Carillon Bells 9.0.0 / {RuntimeInformation.ProcessArchitecture}"); Row("Last startup",$"{runtime.Started:MM/dd/yyyy h:mm:ss tt}"); Row("Application uptime",DataFormats.DurationText(now-runtime.Started));
         Row("Audio backend",AudioPlayback.Backend); Row("Output device",runtime.Audio.DeviceName);
         Row("Schedule",$"{schedule.Count} total today; {remaining.Count} remaining; {(runtime.ScheduleEnabled?"enabled":"paused")}");
         Row("First event",schedule.FirstOrDefault()); Row("Last event",schedule.LastOrDefault()); Row("Next event",remaining.FirstOrDefault());
-        Row("Played today",runtime.Log.Count(now)); Row("Yesterday",$"{now.AddDays(-1):yyyy-MM-dd}: {runtime.Log.Count(now.AddDays(-1))} recorded plays");
+        Row("Played today",runtime.Log.Count(now)); Row("Yesterday",$"{now.AddDays(-1):MM/dd/yyyy}: {runtime.Log.Count(now.AddDays(-1))} recorded plays");
         Row("Playlist",$"{runtime.Songs.Count} records; {DataFormats.DurationText(TimeSpan.FromTicks(runtime.Songs.Sum(s=>DataFormats.Duration(s.Duration).Ticks)))} total duration");
         Row("Logging",runtime.Log.Enabled?"Enabled":"Disabled; unrecorded plays cannot be reconstructed"); Row("Silence",runtime.SilenceLabel);
-        var errors=logs.Where(l=>l.Timestamp?.Date==now.AddDays(-1).Date && l.Event.Contains("error",StringComparison.OrdinalIgnoreCase)).Select(l=>l.Original).ToList();
+        var errors=logs.Where(l=>l.Timestamp?.Date==now.AddDays(-1).Date && l.Event.Contains("error",StringComparison.OrdinalIgnoreCase)).Select(l=>l.Timestamp is {} stamp?$"{stamp:MM/dd/yyyy HH:mm:ss} - {l.Event}":l.Original).ToList();
         Row("Overall health score",$"{Math.Max(0,100-Math.Min(50,missing.Count*5)-Math.Min(25,errors.Count*5)-(runtime.Audio.DeviceName.StartsWith("No default")?25:0))}/100");
-        Section("Recent play activity",logs.Where(l=>l.Event.StartsWith("Played Song: ")).TakeLast(20).Reverse().Select(l=>l.Original));
-        Section("Daily maintenance activity",logs.Where(l=>l.Event.Contains("maintenance",StringComparison.OrdinalIgnoreCase)||l.Event.Contains("recalculated",StringComparison.OrdinalIgnoreCase)||l.Event.Contains("trim",StringComparison.OrdinalIgnoreCase)).TakeLast(10).Reverse().Select(l=>l.Original));
+        Section("Recent play activity",logs.Where(l=>l.Event.StartsWith("Played Song: ")).TakeLast(20).Reverse().Select(l=>l.Timestamp is {} stamp?$"{stamp:MM/dd/yyyy HH:mm:ss} - {l.Event}":l.Original));
+        Section("Daily maintenance activity",logs.Where(l=>l.Event.Contains("maintenance",StringComparison.OrdinalIgnoreCase)||l.Event.Contains("recalculated",StringComparison.OrdinalIgnoreCase)||l.Event.Contains("trim",StringComparison.OrdinalIgnoreCase)).TakeLast(10).Reverse().Select(l=>l.Timestamp is {} stamp?$"{stamp:MM/dd/yyyy HH:mm:ss} - {l.Event}":l.Original));
         Section("Missing / broken song files",missing.Select(s=>s.Path)); Section("Previous-date errors",errors); Section("Remaining schedule",remaining.Select(b=>b.ToString()));
         html.Append("</body></html>"); return html.ToString();
     }

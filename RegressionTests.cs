@@ -72,6 +72,16 @@ public static class RegressionTests
             repository.SaveSong(new Song {Group="Custom",Path="first.mp3",From=DateTime.Today,To=DateTime.Today});
             repository.SaveSong(new Song {Group="Custom",Path="second.mp3",From=DateTime.Today,To=DateTime.Today});
             using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true);
+            repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
+            var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
+            check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
+            var dateWindow=new AdministrationWindow(runtime,"System");
+            check("Administration shows slash dates without pending changes",dateWindow.Groups.Rows[0]["PLAY_DATE_FROM"].ToString()=="01/02/2027"&&dateWindow.Groups.GetChanges() is null);
+            var dateSettings=(System.Data.DataTable)typeof(AdministrationWindow).GetField("settings",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic)!.GetValue(dateWindow)!;
+            check("System dates display U.S. format with blanks retained",dateSettings.Rows[0]["ash_wed_begin"].ToString()=="01/02/2027"&&dateSettings.Rows[0].IsNull("other_silence_begin_date")&&dateSettings.GetChanges() is null);
+            dateWindow.Close();
+            check("Legacy ISO and U.S. log dates parse",CarillonLog.Parse("2026-01-02 12:00:00 - legacy").Timestamp==new DateTime(2026,1,2,12,0,0)&&CarillonLog.Parse("01/02/2026 12:00:00 - current").Timestamp==new DateTime(2026,1,2,12,0,0));
+            var report=EmailReports.Build(runtime);check("Report dates use U.S. slash format",report.Contains(DateTime.Now.ToString("MM/dd/yyyy"))&&report.Contains(DateTime.Now.AddDays(-1).ToString("MM/dd/yyyy")));
             var missingPath=System.IO.Path.Combine(scratch,"Music","missing.mp3"); var missingReported=false;
             try { runtime.Play(new Song {Path=".\\Music\\missing.mp3"}); }
             catch(FileNotFoundException error) { missingReported=error.FileName==missingPath&&error.Message.Contains("Database import does not copy audio files"); }

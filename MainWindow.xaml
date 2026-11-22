@@ -1,4 +1,4 @@
-<Window x:Class="Carillon.MainWindow"
+<Window Language="en-US" x:Class="Carillon.MainWindow"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  Title="Carillon Bells 9.0" Width="1280" Height="760" WindowState="Maximized"

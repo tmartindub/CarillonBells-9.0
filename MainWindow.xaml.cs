@@ -33,7 +33,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public Song? EditingSong=>editingSong;
     public bool ScheduleVisible { get; private set; }
     public string Organization=>runtime.Setting("ORGANIZATION_NAME");
-    public string TodayLabel=>$"{Organization}  ·  {DateTime.Now:dddd, MMMM d, yyyy  h:mm:ss tt}";
+    public string TodayLabel=>$"{Organization}  ·  {DateTime.Now:dddd, MM/dd/yyyy  h:mm:ss tt}";
     public string NextBellLabel=>runtime.ScheduleEnabled?runtime.Queue.FirstOrDefault()?.ToString()??"No remaining bells":"Schedule paused";
     public string ScheduleCountLabel=>$"{runtime.FullDay(DateTime.Now).Count} today / {runtime.Queue.Count} queued";
     public string SilenceLabel=>runtime.SilenceLabel;
@@ -155,7 +155,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void ScheduleClick(object sender,RoutedEventArgs e)
     {
         ScheduleVisible=!ScheduleVisible; ScheduleRows.Clear();
-        if(ScheduleVisible) { ScheduleRows.Add("FULL DAY"); foreach(var bell in runtime.FullDay(DateTime.Now)) ScheduleRows.Add(bell.ToString()); ScheduleRows.Add("REMAINING QUEUE"); foreach(var bell in runtime.Queue.Where(b=>b.When>=DateTime.Now)) ScheduleRows.Add(bell.ToString()); foreach(var rule in runtime.Rules) foreach(var day in new[]{DateTime.Today.AddDays(-1),DateTime.Today}) if(rule.Occurrence(day) is {} occurrence&&occurrence.End>DateTime.Now) ScheduleRows.Add($"Silence {occurrence.Start:g} – {occurrence.End:g} / {rule.Purpose}"); }
+        if(ScheduleVisible) { ScheduleRows.Add("FULL DAY"); foreach(var bell in runtime.FullDay(DateTime.Now)) ScheduleRows.Add(bell.ToString()); ScheduleRows.Add("REMAINING QUEUE"); foreach(var bell in runtime.Queue.Where(b=>b.When>=DateTime.Now)) ScheduleRows.Add(bell.ToString()); foreach(var rule in runtime.Rules) foreach(var day in new[]{DateTime.Today.AddDays(-1),DateTime.Today}) if(rule.Occurrence(day) is {} occurrence&&occurrence.End>DateTime.Now) ScheduleRows.Add($"Silence {occurrence.Start:MM/dd/yyyy h:mm tt} – {occurrence.End:MM/dd/yyyy h:mm tt} / {rule.Purpose}"); }
         Notify(nameof(ScheduleVisible));
     }
     private void AdminClick(object sender,RoutedEventArgs e)

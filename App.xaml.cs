@@ -4,6 +4,13 @@ using System.Windows;
 namespace Carillon;
 public partial class App : Application
 {
+    public App()
+    {
+        var culture=new System.Globalization.CultureInfo("en-US",false);
+        culture.DateTimeFormat.ShortDatePattern="MM/dd/yyyy";
+        System.Globalization.CultureInfo.DefaultThreadCurrentCulture=culture;
+        System.Globalization.CultureInfo.CurrentCulture=culture;
+    }
     private FileStream? instanceLock,databaseLock;
     protected override async void OnStartup(StartupEventArgs e)
     {
