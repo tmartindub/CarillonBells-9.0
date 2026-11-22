@@ -82,6 +82,7 @@ PASS MP3 pause does not advance
 PASS MP3 stop releases player
 PASS WAV repeats and completion event
 PASS Scheduled file plays while analog Clock is open
+PASS Playback completion keeps Played Song without redundant completion entry
 PASS Re-enable does not duplicate played occurrence
 PASS Injected clock builds future queue
 PASS Forward clock jump skips missed events

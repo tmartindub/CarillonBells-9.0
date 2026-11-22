@@ -47,7 +47,7 @@ public sealed class CarillonRuntime : IDisposable
         foreach(var id in repository.Dispatched(Now.Date)) dispatched.Add(id);
         Log.Trim(Now); trimDate=Now.Date; PlayedToday=Log.Count(Now.Date);
         reportDate=Now.Hour>=5?Now.Date:DateTime.MinValue;
-        Player.Completed+=()=>{ Log.Append("Playback completed"); Changed?.Invoke(); };
+        Player.Completed+=()=>Changed?.Invoke();
         Player.Failed+=Fail; Audio.Changed+=()=>Changed?.Invoke(); Audio.RefreshDevice();
         SetThreadExecutionState(0x80000001);
         Log.Append("Application initialized — Carillon Bells 9.0; "+AudioPlayback.Backend);

@@ -32,6 +32,7 @@ public static class AudioRegressionTests
             runtime=new CarillonRuntime(repository,scratch,Application.Current.Dispatcher,true);
             clock=new ClockWindow {WindowState=WindowState.Normal,Width=900,Height=560};clock.Show();await Task.Delay(6500);
             Check("Scheduled file plays while analog Clock is open",runtime.Log.Count(DateTime.Today)==1&&clock.IsVisible&&!runtime.Player.Busy);
+            Check("Playback completion keeps Played Song without redundant completion entry",runtime.Log.Read().Any(entry=>entry.Event.StartsWith("Played Song: ",StringComparison.Ordinal))&&!runtime.Log.Read().Any(entry=>entry.Event.Equals("Playback completed",StringComparison.OrdinalIgnoreCase)));
             runtime.SetSchedule(false);runtime.SetSchedule(true);await Task.Delay(1100);Check("Re-enable does not duplicate played occurrence",runtime.Log.Count(DateTime.Today)==1);
             runtime.Dispose();runtime=null;
             var fakeNow=DateTime.Now;var future=new Song {Path=wavePath,Playlist="Discontinuity",From=fakeNow.Date,To=fakeNow.Date};future.Times[0].Value=fakeNow.AddMinutes(10).ToString("HH:mm:ss");repository.SaveSong(future);
