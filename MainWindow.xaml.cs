@@ -27,7 +27,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         {
             if(selecting||ReferenceEquals(value,selectedSong)) return;
             if(!ConfirmEdits()) { Dispatcher.BeginInvoke(()=>{ selecting=true; SongGrid.SelectedItem=selectedSong; selecting=false; }); return; }
-            selectedSong=value; editingSong=value?.Clone(); originalFingerprint=editingSong?.Fingerprint??""; Notify(); Notify(nameof(EditingSong));
+            selectedSong=value is null?null:Songs.FirstOrDefault(song=>song.Key==value.Key)??value; editingSong=selectedSong?.Clone(); originalFingerprint=editingSong?.Fingerprint??""; Notify(); Notify(nameof(EditingSong));
         }
     }
     public Song? EditingSong=>editingSong;
