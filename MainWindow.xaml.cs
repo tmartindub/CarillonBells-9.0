@@ -34,7 +34,18 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public bool ScheduleVisible { get; private set; }
     public string Organization=>runtime.Setting("ORGANIZATION_NAME");
     public string TodayLabel=>$"{Organization}  ·  {DateTime.Now:dddd, MM/dd/yyyy  h:mm:ss tt}";
-    public string NextSongLabel=>runtime.ScheduleEnabled?runtime.Queue.FirstOrDefault()?.ToString()??"No remaining songs":"Schedule paused";
+    private ScheduledBell? NextSong=>runtime.ScheduleEnabled?runtime.Queue.FirstOrDefault():null;
+    public string NextSongTiming
+    {
+        get
+        {
+            if (NextSong is not {} next) return "";
+            return next.Song.Repeats>1
+                ? $"×{Math.Min(next.Song.Repeats,5)}    {next.When:HH:mm:ss}"
+                : $"{next.When:HH:mm:ss}";
+        }
+    }
+    public string NextSongTitle=>NextSong?.Song.Title??(runtime.ScheduleEnabled?"No remaining songs":"Schedule paused");
     public string ScheduleCountLabel=>$"{runtime.FullDay(DateTime.Now).Count} today / {runtime.Queue.Count} queued";
     public string SilenceLabel=>runtime.SilenceLabel;
     public string PlayerTitle=>runtime.Player.Busy?runtime.Player.CurrentTitle:SelectedSong?.Title??"Select a song";
@@ -53,7 +64,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void UpdateStatus()
     {
         if(!Dispatcher.CheckAccess()) { Dispatcher.BeginInvoke(UpdateStatus); return; }
-        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongLabel),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(PlaybackLabel),nameof(UptimeLabel),nameof(Status),nameof(Organization)}) Notify(property);
+        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongTiming),nameof(NextSongTitle),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(PlaybackLabel),nameof(UptimeLabel),nameof(Status),nameof(Organization)}) Notify(property);
         ScheduleToggle.IsChecked=runtime.ScheduleEnabled;
         PlayerProgress.Maximum=Math.Max(1,runtime.Player.Duration.TotalSeconds); PlayerProgress.Value=runtime.Player.Position.TotalSeconds;
     }

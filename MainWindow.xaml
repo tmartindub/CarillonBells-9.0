@@ -38,7 +38,7 @@
    </Grid>
   </Border>
   <Grid Grid.Column="1" Margin="16,10">
-   <Grid.RowDefinitions><RowDefinition Height="62"/><RowDefinition Height="70"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="24"/></Grid.RowDefinitions>
+   <Grid.RowDefinitions><RowDefinition Height="62"/><RowDefinition Height="Auto" MinHeight="70"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="24"/></Grid.RowDefinitions>
    <Grid>
     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
     <StackPanel>
@@ -54,7 +54,18 @@
    </Grid>
    <Grid Grid.Row="1" Margin="0,0,0,8">
     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
-    <Border Style="{StaticResource Card}" Padding="12,8" Margin="0,0,12,0"><StackPanel><TextBlock Text="NEXT SONG" FontSize="14" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding NextSongLabel}" FontSize="18" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/></StackPanel></Border>
+    <Border Style="{StaticResource Card}" Padding="12,8" Margin="0,0,12,0">
+     <StackPanel>
+      <Grid>
+       <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <TextBlock Text="NEXT SONG" FontSize="14" Foreground="{DynamicResource Muted}"/>
+       <TextBlock Grid.Column="1" Text="{Binding NextSongTiming}" FontSize="14" FontWeight="SemiBold" Margin="8,0,0,0"/>
+      </Grid>
+      <TextBlock Text="{Binding NextSongTitle}" FontSize="16" Margin="0,3,0,0"
+       TextWrapping="Wrap" TextTrimming="CharacterEllipsis" LineHeight="20" LineStackingStrategy="BlockLineHeight" MaxHeight="40"
+       ToolTip="{Binding NextSongTitle}"/>
+     </StackPanel>
+    </Border>
     <Border Grid.Column="1" Style="{StaticResource Card}" Padding="12,8" Margin="0,0,12,0"><StackPanel><TextBlock Text="TODAY'S SCHEDULE" FontSize="14" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding ScheduleCountLabel}" FontSize="18" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
     <Border Grid.Column="2" Style="{StaticResource Card}" Padding="12,8"><StackPanel><TextBlock Text="SILENCE WINDOW" FontSize="14" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding SilenceLabel}" FontSize="18" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
    </Grid>
