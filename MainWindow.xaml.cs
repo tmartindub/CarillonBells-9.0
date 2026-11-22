@@ -42,7 +42,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public string LibraryLabel=>$"{Songs.Count} songs · {DataFormats.DurationText(TimeSpan.FromTicks(Songs.Sum(s=>DataFormats.Duration(s.Duration).Ticks)))}";
     public string UptimeLabel=>runtime.UptimeLabel;
     public string Footer=>$"9.0.0 · {(runtime.Evaluation?"Evaluation":"Portable")}";
-    public string Status=>runtime.Error.Length>0?runtime.Error:$"Recorded plays today: {runtime.PlayedToday} · {runtime.Audio.DeviceName}";
+    public string Status=>runtime.Error.Length>0?runtime.Error:$"Songs played today: {runtime.PlayedToday}";
     public event PropertyChangedEventHandler? PropertyChanged;
     private void Notify([System.Runtime.CompilerServices.CallerMemberName]string? name=null)=>PropertyChanged?.Invoke(this,new(name));
     public MainWindow(CarillonRuntime runtime)

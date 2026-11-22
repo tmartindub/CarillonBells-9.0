@@ -77,6 +77,9 @@ public static class RegressionTests
                 command.CommandText="CREATE TABLE CustomTable(value TEXT); INSERT INTO CustomTable VALUES('preserve')"; command.ExecuteNonQuery();
             }
             var repository=new CarillonRepository(path); repository.EnsureCompatibleSchema();
+            check("New databases default to portable random songs",
+                repository.Settings()["RAND_SONGS_DIRECTORY"].ToString() == @".\random_songs"
+                && repository.ResolveRandomDirectory(new(2027,6,1),scratch) == Path.Combine(scratch,"random_songs"));
             var song=new Song {Path="test.mp3",From=DateTime.Today,To=DateTime.Today}; song.Times[0].Value="00:00"; repository.SaveSong(song);
             var loaded=repository.Songs().Single(); check("SQLite NULL versus midnight",loaded.Times[0].Value=="00:00:00"&&loaded.Times[1].Value=="");
             using(var connection=repository.Open()){using var command=connection.CreateCommand();command.CommandText="UPDATE playlist SET scheduled_time2='1899-12-30 14:05:00'";command.ExecuteNonQuery();}check("Legacy date-time normalization",repository.NormalizeLegacyTimes()==1&&repository.Songs().Single().Times[1].Value=="14:05:00");
