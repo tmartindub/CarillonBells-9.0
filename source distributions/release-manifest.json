@@ -3,18 +3,18 @@
   "packages": [
     {
       "file": "CarillonBells_9_0_Evaluation_win-x64.zip",
-      "bytes": 70620314,
-      "sha256": "629C081296C9B4843D420CDB6249E51E61885C334C39333B59F105987678E9DA",
-      "sourceCommit": "5bba7286dc56e6926a35f180b394565beca9a277",
+      "bytes": 70620311,
+      "sha256": "BBE7E7533ED1F7E1DE98E4B19657FB7E9C0C64D8D6BA47571B28C1B198654BA4",
+      "sourceCommit": "71cddcf2a33a7aad5ed635bdf4b2683a818dd346",
       "runtime": "win-x64",
       "fileCount": 435,
       "verification": "PASS all manifest hashes and no private database/music/log files"
     },
     {
       "file": "CarillonBells_9_0_Evaluation_win-x86.zip",
-      "bytes": 65910156,
-      "sha256": "68F383D0DF1ECDE2E855919517C708FC2FB5CEF35801298FAA874AF9F9913532",
-      "sourceCommit": "5bba7286dc56e6926a35f180b394565beca9a277",
+      "bytes": 65910154,
+      "sha256": "EBC0D613A79915FD5B210EC2F44C43201A47475A68D01A5FC2E5E52D4A6B1546",
+      "sourceCommit": "71cddcf2a33a7aad5ed635bdf4b2683a818dd346",
       "runtime": "win-x86",
       "fileCount": 434,
       "verification": "PASS all manifest hashes and no private database/music/log files"
