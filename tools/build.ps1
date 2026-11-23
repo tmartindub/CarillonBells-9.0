@@ -1,4 +1,4 @@
-param([ValidateSet('Debug','Release')][string]$Configuration='Release',[ValidateSet('','win-x86','win-x64')][string]$Runtime='',[switch]$Publish,[string]$PortableRoot='')
+param([ValidateSet('Debug','Release')][string]$Configuration='Release',[ValidateSet('','win-x86','win-x64')][string]$Runtime='',[switch]$Publish,[string]$PortableRoot='',[switch]$SingleExe)
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $dotnet=Join-Path $PSScriptRoot 'dotnet\dotnet.exe'
@@ -10,6 +10,18 @@ $env:DOTNET_GENERATE_ASPNET_CERTIFICATE='false'
 Push-Location $projectRoot
 try {
     if($PortableRoot -and (-not $Publish -or -not $Runtime)){throw 'PortableRoot requires -Publish and a runtime.'}
+    if($SingleExe) {
+        if(-not $Publish -or -not $Runtime -or $PortableRoot){throw 'Use -Publish and select win-x64 or win-x86 for -SingleExe. Launch the executable to upgrade a USB drive.'}
+        $singleStage=Join-Path $projectRoot "export\staging-single-$Runtime"
+        & $dotnet publish CarillonBells.csproj -c $Configuration -r $Runtime --self-contained true -o $singleStage -p:CarillonSingleExe=true
+        if($LASTEXITCODE -ne 0){throw "Single-executable publish failed with exit code $LASTEXITCODE"}
+        $files=@(Get-ChildItem -LiteralPath $singleStage -File -Recurse -Force)
+        if($files.Count -ne 1 -or $files[0].FullName -ne (Join-Path $singleStage 'CarillonBells.exe')){
+            throw "Expected only CarillonBells.exe in $singleStage."
+        }
+        Get-FileHash -LiteralPath $files[0].FullName
+        return
+    }
     if($Publish) {
         if(-not $Runtime){throw 'Specify win-x86 or win-x64 when publishing.'}
         & $dotnet publish CarillonBells.csproj -c $Configuration -r $Runtime --self-contained true -o "export\staging-$Runtime" -p:DebugType=None

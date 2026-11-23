@@ -1,6 +1,57 @@
-param([ValidateSet('win-x86','win-x64')][string]$Runtime,[string]$SourceCommit='uncommitted')
+param([ValidateSet('win-x86','win-x64')][string]$Runtime,[string]$SourceCommit='uncommitted',[switch]$SingleExe,[string]$MusicDirectory='')
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
+if($SingleExe) {
+    if(!$Runtime -or !$MusicDirectory){throw 'Choose the runtime and the Music folder for the English single-executable deployment.'}
+    $music=Get-Item -LiteralPath $MusicDirectory
+    if(!$music.PSIsContainer -or $music.Name -ne 'Music' -or ($music.Attributes -band [IO.FileAttributes]::ReparsePoint)){
+        throw 'Select the actual Music folder as the deployment audio source.'
+    }
+    $entries=@(Get-ChildItem -LiteralPath $music.FullName -Recurse -Force)
+    if($entries | Where-Object {$_.Attributes -band [IO.FileAttributes]::ReparsePoint}){throw 'Music contains a linked file or folder.'}
+    $audio=@($entries | Where-Object {!$_.PSIsContainer -and $_.Extension -in '.mp3','.wav'})
+    if(!$audio.Count){throw 'The Music folder has no MP3 or WAV files.'}
+    $executable=Get-Item -LiteralPath (Join-Path $projectRoot "export\staging-single-$Runtime\CarillonBells.exe")
+    $zip=Join-Path $projectRoot "export\CarillonBells_9_0_English_Deployment_$Runtime.zip"
+    if(Test-Path -LiteralPath $zip){throw 'The English deployment ZIP already exists.'}
+    $partial=Join-Path (Split-Path -Parent $zip) ('.carillon-package-'+[guid]::NewGuid().ToString('N')+'.zip')
+    $payload=@{'CarillonBells.exe'=$executable}
+    foreach($file in $audio){
+        $relative=$file.FullName.Substring($music.FullName.Length+1).Replace('\','/')
+        $payload["Music/$relative"]=$file
+    }
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    try {
+        $archive=[IO.Compression.ZipFile]::Open($partial,[IO.Compression.ZipArchiveMode]::Create)
+        try {
+            foreach($name in ($payload.Keys | Sort-Object)){
+                [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,$payload[$name].FullName,$name,[IO.Compression.CompressionLevel]::Optimal) | Out-Null
+            }
+        } finally { $archive.Dispose() }
+        $archive=[IO.Compression.ZipFile]::OpenRead($partial)
+        try {
+            if($archive.Entries.Count -ne $payload.Count){throw 'Unexpected number of package files.'}
+            foreach($entry in $archive.Entries){
+                if(!$payload.ContainsKey($entry.FullName)){throw "Unexpected package file $($entry.FullName)"}
+                $stream=$entry.Open()
+                try {
+                    if((Get-FileHash -InputStream $stream).Hash -ne (Get-FileHash -LiteralPath $payload[$entry.FullName].FullName).Hash){
+                        throw "Package verification failed for $($entry.FullName)"
+                    }
+                } finally { $stream.Dispose() }
+            }
+        } finally { $archive.Dispose() }
+        [IO.File]::Move($partial,$zip)
+    } finally {
+        if(Test-Path -LiteralPath $partial){Remove-Item -LiteralPath $partial}
+    }
+    Write-Host "Verified English deployment ZIP with a single executable and $($audio.Count) files under Music."
+    Get-FileHash -LiteralPath $zip
+    return
+}
+if($MusicDirectory){throw 'MusicDirectory is available for the English single-executable deployment.'}
 $stage=Join-Path $projectRoot "export\staging-$Runtime"
 foreach($executable in 'CarillonBells.exe','CarillonMigration.exe') {
     if(-not(Test-Path -LiteralPath (Join-Path $stage $executable))){throw 'Publish the application and migration wizard for this architecture first.'}

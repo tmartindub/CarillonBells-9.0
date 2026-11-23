@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
 using System.IO;
 using System.Windows;
+using Carillon.Migration;
 namespace Carillon;
 public partial class App : Application
 {
@@ -20,12 +21,30 @@ public partial class App : Application
         try
         {
             var root=AppContext.BaseDirectory;
+            var database=Path.Combine(root,"databases","carillon.db");
+            var startBlank=false;
+            if(e.Args.Contains("--upgrade-usb"))
+            {
+                OpenUsbUpgrade();
+                return;
+            }
+#if CARILLON_SINGLE_EXE
+            if(!File.Exists(database))
+            {
+                var choice=MessageBox.Show(
+                    "Upgrade an existing Carillon USB drive?\n\nChoose Yes to upgrade a USB drive or No to create an empty database beside this executable.",
+                    "Carillon first start",MessageBoxButton.YesNoCancel);
+                if(choice==MessageBoxResult.Yes) { OpenUsbUpgrade(); return; }
+                if(choice!=MessageBoxResult.No) { Shutdown(); return; }
+                startBlank=true;
+            }
+#endif
             instanceLock=new FileStream(Path.Combine(root,"Carillon.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
-            var database=Path.Combine(root,"databases","carillon.db"); Directory.CreateDirectory(Path.GetDirectoryName(database)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(database)!);
             databaseLock=new FileStream(database+".lock",FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
             if(!File.Exists(database))
             {
-                if(MessageBox.Show("This separate Carillon installation has no database. Create a blank SQLite database? You can import a copy of your existing database from Database import.","Carillon first start",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) { Shutdown(); return; }
+                if(!startBlank&&MessageBox.Show("This separate Carillon installation has no database. Create a blank SQLite database? You can import a copy of your existing database from Database import.","Carillon first start",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) { Shutdown(); return; }
                 using var connection=new SqliteConnection(new SqliteConnectionStringBuilder {DataSource=database,Pooling=false}.ToString()); connection.Open(); using var command=connection.CreateCommand();
                 using var stream=GetResourceStream(new Uri("pack://application:,,,/samples/empty-schema.sql"))?.Stream??throw new FileNotFoundException("The empty database schema is missing."); using var reader=new StreamReader(stream); command.CommandText=reader.ReadToEnd(); command.ExecuteNonQuery();
             }
@@ -40,5 +59,16 @@ public partial class App : Application
         }
         catch(Exception error) { MessageBox.Show("Carillon could not start: "+error.Message+"\n\nCheck that the portable folder is writable and another instance is not using it.","Carillon startup"); Shutdown(1); }
     }
+    private void OpenUsbUpgrade()
+    {
+#if CARILLON_SINGLE_EXE
+        var executable=Environment.ProcessPath ?? throw new IOException("The running Carillon executable could not be located.");
+        MainWindow=new MigrationWindow(executable);
+        MainWindow.Show();
+#else
+        throw new InvalidOperationException("Run the single-executable Carillon release to upgrade an existing USB drive.");
+#endif
+    }
+
     protected override void OnExit(ExitEventArgs e) { databaseLock?.Dispose(); instanceLock?.Dispose(); base.OnExit(e); }
 }

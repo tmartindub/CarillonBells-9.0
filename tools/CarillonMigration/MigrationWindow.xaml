@@ -3,7 +3,11 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  Title="Carillon 9.0 Migration Assistant" Width="930" Height="730" MinWidth="650" MinHeight="480"
  WindowStartupLocation="CenterScreen" FontFamily="Bahnschrift" FontSize="16" Language="en-US"
- Background="{StaticResource Canvas}" Closing="WindowClosing">
+ Closing="WindowClosing">
+ <Window.Resources>
+  <ResourceDictionary Source="/CarillonBells;component/tools/CarillonMigration/MigrationStyles.xaml"/>
+ </Window.Resources>
+ <Window.Background><StaticResource ResourceKey="Canvas"/></Window.Background>
  <Grid>
   <Grid.RowDefinitions>
    <RowDefinition Height="Auto"/>
@@ -14,8 +18,18 @@
   <Border Background="{StaticResource Ink}" Padding="28,18">
    <StackPanel>
     <TextBlock Text="Carillon 9.0 Migration Assistant" FontSize="29" FontFamily="Georgia" Foreground="White"/>
-    <TextBlock Text="Copy a Carillon 7.2.4 or 8.1 installation into a new v9 folder."
-     Foreground="#E0EAF2" FontSize="15" Margin="0,6,0,0"/>
+    <TextBlock Foreground="#E0EAF2" FontSize="15" Margin="0,6,0,0">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+       <Setter Property="Text" Value="Copy a Carillon 7.2.4 or 8.1 installation into a new v9 folder."/>
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+         <Setter Property="Text" Value="Upgrade a Carillon 7.2.4 or 8.1 installation on its existing USB drive."/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
    </StackPanel>
   </Border>
   <Border Grid.Row="1" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
@@ -32,10 +46,14 @@
       </Style>
      </TextBlock.Style>
     </TextBlock>
-    <TextBlock Text="Destination">
+    <TextBlock>
      <TextBlock.Style>
       <Style TargetType="TextBlock" BasedOn="{StaticResource StepText}">
+       <Setter Property="Text" Value="Destination"/>
        <Style.Triggers>
+        <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+         <Setter Property="Text" Value="Backup"/>
+        </DataTrigger>
         <DataTrigger Binding="{Binding CurrentStep}" Value="1">
          <Setter Property="Background" Value="{StaticResource ActiveStep}"/>
          <Setter Property="Foreground" Value="{StaticResource Ink}"/>
@@ -85,7 +103,18 @@
         </Style>
        </StackPanel.Style>
        <TextBlock Style="{StaticResource PageTitle}" Text="Choose the legacy installation"/>
-       <TextBlock Text="Select the folder that contains the older Carillon installation and its databases folder. This can be the root of an older portable drive."/>
+       <TextBlock>
+        <TextBlock.Style>
+         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+          <Setter Property="Text" Value="Select the folder that contains the older Carillon installation and its databases folder. This can be the root of an older portable drive."/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Text" Value="On the USB you want to upgrade, select the folder that contains the older Carillon installation and its databases folder. Select the drive itself if Carillon is at its root."/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </TextBlock.Style>
+       </TextBlock>
        <Label Margin="0,20,0,0" Content="Legacy installation _folder" Target="{Binding ElementName=SourceInput}"/>
        <Grid>
         <Grid.ColumnDefinitions>
@@ -100,7 +129,7 @@
        <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
         Text="Next identifies the version and playlist count from the local database."/>
       </StackPanel>
-      <StackPanel AutomationProperties.Name="Destination step">
+      <StackPanel>
        <StackPanel.Style>
         <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
          <Style.Triggers>
@@ -110,21 +139,58 @@
          </Style.Triggers>
         </Style>
        </StackPanel.Style>
-       <TextBlock Style="{StaticResource PageTitle}" Text="Choose a new v9 folder"/>
+       <TextBlock>
+        <TextBlock.Style>
+         <Style TargetType="TextBlock" BasedOn="{StaticResource PageTitle}">
+          <Setter Property="Text" Value="Choose a new v9 folder"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Text" Value="Choose a backup folder"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </TextBlock.Style>
+       </TextBlock>
        <TextBlock x:Name="InspectedSource" FontWeight="SemiBold"/>
-       <Label Margin="0,20,0,0" Content="_New installation path" Target="{Binding ElementName=DestinationInput}"/>
-       <Grid>
-        <Grid.ColumnDefinitions>
-         <ColumnDefinition Width="*"/>
-         <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <TextBox x:Name="DestinationInput" Text="CarillonBells_9_0" AutomationProperties.Name="New installation path"
-         AutomationProperties.HelpText="Enter the full path for a new folder, or browse for its parent."/>
-        <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse _parent…" AutomationProperties.Name="Browse for parent of new installation"
-         Click="BrowseDestinationClick"/>
-       </Grid>
-       <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
-        Text="Choose an existing parent folder and use the suggested name, or enter a full path such as E:\CarillonBells_9_0. The final folder must be new."/>
+       <StackPanel AutomationProperties.Name="Destination step">
+        <StackPanel.Style>
+         <Style TargetType="StackPanel">
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Visibility" Value="Collapsed"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </StackPanel.Style>
+        <Label Margin="0,20,0,0" Content="_New installation path" Target="{Binding ElementName=DestinationInput}"/>
+        <Grid>
+         <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+         </Grid.ColumnDefinitions>
+         <TextBox x:Name="DestinationInput" Text="CarillonBells_9_0" AutomationProperties.Name="New installation path"
+          AutomationProperties.HelpText="Enter the full path for a new folder, or browse for its parent."/>
+         <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse _parent…" AutomationProperties.Name="Browse for parent of new installation"
+          Click="BrowseDestinationClick"/>
+        </Grid>
+        <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
+         Text="Choose an existing parent folder and use the suggested name, or enter a full path such as E:\CarillonBells_9_0. The final folder must be new."/>
+       </StackPanel>
+       <StackPanel AutomationProperties.Name="Backup step" Visibility="{Binding IsUsbUpgrade, Converter={StaticResource VisibleWhenTrue}}">
+        <Label Margin="0,20,0,0" Content="_Backup folder" Target="{Binding ElementName=BackupFolderInput}"/>
+        <Grid>
+         <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+         </Grid.ColumnDefinitions>
+         <TextBox x:Name="BackupFolderInput" AutomationProperties.Name="Backup folder"
+          AutomationProperties.HelpText="Enter a full folder path on your PC or another drive, or choose Browse."/>
+         <Button Grid.Column="1" Margin="10,0,0,0" Content="B_rowse…" AutomationProperties.Name="Browse for the backup folder"
+          Click="BrowseBackupClick"/>
+        </Grid>
+        <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
+         Text="Use a folder on your PC or another drive. The assistant creates and verifies a ZIP backup before making changes to the selected USB."/>
+       </StackPanel>
       </StackPanel>
       <StackPanel AutomationProperties.Name="Review step">
        <StackPanel.Style>
@@ -136,13 +202,51 @@
          </Style.Triggers>
         </Style>
        </StackPanel.Style>
-       <TextBlock Style="{StaticResource PageTitle}" Text="Review the migration"/>
+       <TextBlock>
+        <TextBlock.Style>
+         <Style TargetType="TextBlock" BasedOn="{StaticResource PageTitle}">
+          <Setter Property="Text" Value="Review the migration"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Text" Value="Review the USB upgrade"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </TextBlock.Style>
+       </TextBlock>
        <TextBlock x:Name="ReviewSummary" FontWeight="SemiBold"/>
+       <TextBlock x:Name="ReviewRoute" Margin="0,4,0,0" Visibility="{Binding IsUsbUpgrade, Converter={StaticResource VisibleWhenTrue}}"/>
        <Label Margin="0,14,0,0" Content="Source database"/>
        <TextBlock x:Name="ReviewDatabase"/>
-       <Label Margin="0,12,0,0" Content="Destination folder"/>
+       <Label Margin="0,12,0,0">
+        <Label.Style>
+         <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="Content" Value="Destination folder"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Content" Value="USB folder to upgrade"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </Label.Style>
+       </Label>
        <TextBlock x:Name="ReviewDestination"/>
-       <Label Margin="0,12,0,0" Content="Music to copy"/>
+       <StackPanel Visibility="{Binding IsUsbUpgrade, Converter={StaticResource VisibleWhenTrue}}">
+        <Label Margin="0,12,0,0" Content="Backup folder"/>
+        <TextBlock x:Name="ReviewBackupFolder"/>
+       </StackPanel>
+       <Label Margin="0,12,0,0">
+        <Label.Style>
+         <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="Content" Value="Music to copy"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Content" Value="Music"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </Label.Style>
+       </Label>
        <TextBlock x:Name="ReviewMusic"/>
        <Border Margin="0,15,0,0" Padding="14,10" Background="{StaticResource AccentLight}" CornerRadius="6">
         <StackPanel>
@@ -161,7 +265,18 @@
          </Style.Triggers>
         </Style>
        </StackPanel.Style>
-       <TextBlock Style="{StaticResource PageTitle}" Text="Migration complete"/>
+       <TextBlock>
+        <TextBlock.Style>
+         <Style TargetType="TextBlock" BasedOn="{StaticResource PageTitle}">
+          <Setter Property="Text" Value="Migration complete"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Text" Value="USB upgrade complete"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </TextBlock.Style>
+       </TextBlock>
        <TextBlock x:Name="ResultSummary" FontWeight="SemiBold"/>
        <Label Margin="0,14,0,0" Content="New installation"/>
        <TextBlock x:Name="ResultDestination"/>
@@ -190,7 +305,18 @@
        </Style.Triggers>
       </Style>
      </CheckBox.Style>
-     <TextBlock Text="I have reviewed the source database, destination, and warnings and want to create this v9 installation."/>
+     <TextBlock>
+      <TextBlock.Style>
+       <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Text" Value="I have reviewed the source database, destination, and warnings and want to create this v9 installation."/>
+        <Style.Triggers>
+         <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+          <Setter Property="Text" Value="I have reviewed the USB folder, backup location, and warnings and want to upgrade this installation."/>
+         </DataTrigger>
+        </Style.Triggers>
+       </Style>
+      </TextBlock.Style>
+     </TextBlock>
     </CheckBox>
     <TextBlock x:Name="StatusText" AutomationProperties.LiveSetting="Polite" MinHeight="21"
      Foreground="{StaticResource Muted}">
@@ -205,7 +331,7 @@
      </TextBlock.Style>
     </TextBlock>
     <ProgressBar Height="5" Margin="0,7,0,0" IsIndeterminate="True"
-     AutomationProperties.Name="Migration progress" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}"/>
+     AutomationProperties.Name="Operation progress" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}"/>
     <Grid Margin="0,10,0,0">
      <Button HorizontalAlignment="Left" Content="_Close" Click="CloseClick">
       <Button.Style>
@@ -218,8 +344,19 @@
        </Style>
       </Button.Style>
      </Button>
-     <Button HorizontalAlignment="Left" Content="_Cancel migration" Click="CancelMigrationClick"
-      IsEnabled="{Binding CanCancelMigration}" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}"/>
+     <Button HorizontalAlignment="Left" Click="CancelMigrationClick"
+      IsEnabled="{Binding CanCancelMigration}" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}">
+      <Button.Style>
+       <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Content" Value="_Cancel migration"/>
+        <Style.Triggers>
+         <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+          <Setter Property="Content" Value="_Cancel upgrade"/>
+         </DataTrigger>
+        </Style.Triggers>
+       </Style>
+      </Button.Style>
+     </Button>
      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
       <StackPanel Orientation="Horizontal">
        <StackPanel.Style>
@@ -232,7 +369,18 @@
          </Style.Triggers>
         </Style>
        </StackPanel.Style>
-       <Button Content="Open _destination folder" Click="OpenDestinationClick" Margin="0,0,10,0"/>
+       <Button Click="OpenDestinationClick" Margin="0,0,10,0">
+        <Button.Style>
+         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+          <Setter Property="Content" Value="Open _destination folder"/>
+          <Style.Triggers>
+           <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
+            <Setter Property="Content" Value="Open _USB folder"/>
+           </DataTrigger>
+          </Style.Triggers>
+         </Style>
+        </Button.Style>
+       </Button>
        <Button Content="Open v9 for _review" Style="{StaticResource PrimaryButton}" Click="OpenReviewClick"/>
       </StackPanel>
       <Button Margin="0,0,10,0" Content="_Back" Click="BackClick">
@@ -259,6 +407,13 @@
           <DataTrigger Binding="{Binding CurrentStep}" Value="2">
            <Setter Property="Content" Value="Back Up and _Migrate"/>
           </DataTrigger>
+          <MultiDataTrigger>
+           <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding CurrentStep}" Value="2"/>
+            <Condition Binding="{Binding IsUsbUpgrade}" Value="True"/>
+           </MultiDataTrigger.Conditions>
+           <Setter Property="Content" Value="Back Up and _Upgrade"/>
+          </MultiDataTrigger>
           <MultiDataTrigger>
            <MultiDataTrigger.Conditions>
             <Condition Binding="{Binding CurrentStep}" Value="2"/>

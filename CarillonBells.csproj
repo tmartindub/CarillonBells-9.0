@@ -7,6 +7,16 @@
     <OutputPath>bin\$(Configuration)\</OutputPath><AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(CarillonSingleExe)' == 'true'">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <DebugType>None</DebugType>
+    <DefineConstants>$(DefineConstants);CARILLON_SINGLE_EXE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.15" />
     <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
@@ -17,11 +27,16 @@
     <Resource Include="images and icons\Splash.png" />
     <Resource Include="images and icons\Carillon-Bells-9.0-icon.ico" />
     <Resource Include="samples\empty-schema.sql" />
-    <Content Include="help\**\*" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="LICENSE" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="NOTICE" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="third-party-notices\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Compile Remove="tools\**\*.cs" />
     <Page Remove="tools\CarillonMigration\**\*.xaml" />
+    <Compile Include="tools\CarillonMigration\MigrationEngine.cs;tools\CarillonMigration\MigrationWindow.xaml.cs;tools\CarillonMigration\UsbUpgrade.cs" />
+    <Page Include="tools\CarillonMigration\MigrationWindow.xaml;tools\CarillonMigration\MigrationStyles.xaml" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(CarillonSingleExe)' != 'true'">
+    <Content Include="help\**\*;LICENSE;NOTICE;third-party-notices\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(CarillonSingleExe)' == 'true'">
+    <EmbeddedResource Include="help\**\*" LogicalName="Carillon.Help/%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="LICENSE;NOTICE;third-party-notices\**\*" LogicalName="Carillon.Notices/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

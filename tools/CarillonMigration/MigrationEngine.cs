@@ -18,7 +18,7 @@ public sealed record MigrationPlan(MigrationSource Source, string Destination, i
 public sealed record MigrationResult(string Destination, string BackupPath, string ReportPath, int MusicFilesCopied,
     IReadOnlyList<string> Warnings);
 
-public static class MigrationEngine
+public static partial class MigrationEngine
 {
     private sealed record Rotation(int Slot, string Directory);
     private sealed record SourceData(LegacyVersion Version, List<string> Tracks, List<Rotation> Rotation, List<string> Warnings);
@@ -389,13 +389,10 @@ public static class MigrationEngine
     private static Transfer PlanTemplate(string template, CancellationToken cancellationToken)
     {
         CheckPath(template);
-        foreach (var name in new[] { "CarillonBells.exe", "CarillonBells.dll" })
-        {
-            var file = Path.Combine(template, name);
-            CheckPath(file);
-            if (!File.Exists(file))
-                throw new FileNotFoundException("The migration wizard must run from the packaged v9 application folder.");
-        }
+        var application = Path.Combine(template, "CarillonBells.exe");
+        CheckPath(application);
+        if (!File.Exists(application))
+            throw new FileNotFoundException("The migration wizard must run from the packaged v9 application folder.");
 
         var transfer = new Transfer();
         foreach (var file in Directory.EnumerateFiles(template).Order(StringComparer.OrdinalIgnoreCase))

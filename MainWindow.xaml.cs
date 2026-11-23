@@ -181,7 +181,29 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     }
     private void ClockClick(object sender,RoutedEventArgs e) { if(clock is null) { clock=new ClockWindow(); clock.Closed+=(_,_)=>clock=null; clock.Show(); } else clock.Activate(); }
     private void LogClick(object sender,RoutedEventArgs e)=>new LogWindow(runtime.Log){Owner=this}.Show();
-    private void HelpClick(object sender,RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo(Path.Combine(runtime.BaseDirectory,"help","index.html")){UseShellExecute=true}); } catch(Exception error) { ShowError(error); } }
+    private void HelpClick(object sender,RoutedEventArgs e)
+    {
+        try
+        {
+#if CARILLON_SINGLE_EXE
+            var assembly=typeof(MainWindow).Assembly;
+            const string prefix="Carillon.Help/";
+            var helpFolder=Path.Combine(Path.GetTempPath(),"CarillonBells","help-"+typeof(MainWindow).Module.ModuleVersionId.ToString("N"));
+            foreach(var name in assembly.GetManifestResourceNames().Where(name=>name.StartsWith(prefix,StringComparison.Ordinal)))
+            {
+                var target=Path.Combine(helpFolder,name[prefix.Length..]);
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                using var content=assembly.GetManifestResourceStream(name)!;
+                using var file=File.Create(target);
+                content.CopyTo(file);
+            }
+#else
+            var helpFolder=Path.Combine(runtime.BaseDirectory,"help");
+#endif
+            Process.Start(new ProcessStartInfo(Path.Combine(helpFolder,"index.html")) {UseShellExecute=true});
+        }
+        catch(Exception error) { ShowError(error); }
+    }
     private void ExitClick(object sender,RoutedEventArgs e)=>Close();
     private void ShowError(Exception error) { runtime.Fail(error.Message); MessageBox.Show(this,error.Message,"Carillon"); }
     private void WindowClosing(object? sender,CancelEventArgs e) { if(!ConfirmEdits()) { e.Cancel=true; return; } clock?.Close(); runtime.Changed-=UpdateStatus; runtime.Audio.Changed-=UpdateVolume; runtime.Dispose(); }
