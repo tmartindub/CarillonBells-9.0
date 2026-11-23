@@ -22,7 +22,7 @@ public static class EmailReports
         var memory=new MemoryStatus {Length=(uint)Marshal.SizeOf<MemoryStatus>()}; GlobalMemoryStatusEx(ref memory);
         GetSystemTimes(out var idle,out var kernel,out var user); var total=kernel+user;
         var cpu=$"{100.0*(1.0-(double)(idle-previousIdle)/Math.Max(1,total-previousTotal)):F1}%"+(previousTotal==0?" average since boot":" since previous report sample"); previousIdle=idle; previousTotal=total;
-        var html=new StringBuilder("<!doctype html><html><head><meta charset='utf-8'><title>Carillon health report</title></head><body style='font-family:Segoe UI;color:#173650'><h1>Carillon Morning Health Report</h1>");
+        var html=new StringBuilder($"<!doctype html><html><head><meta charset='utf-8'><title>{App.ProductTitle} - Morning Health Report</title></head><body style='font-family:Segoe UI;color:#173650'><h1>Morning Health Report</h1>");
         static string E(object? value)=>WebUtility.HtmlEncode(value?.ToString()??"None");
         void Row(string label,object? value)=>html.Append("<p><b>"+E(label)+":</b> "+E(value)+"</p>");
         void Section(string title,IEnumerable<string> lines) { html.Append("<h2>"+E(title)+"</h2><ul>"); foreach(var line in lines) html.Append("<li>"+E(line)+"</li>"); html.Append("</ul>"); }
@@ -31,7 +31,7 @@ public static class EmailReports
         { var drive=new DriveInfo(driveRoot!); if(drive.IsReady) Row("Drive",$"{drive.Name} {drive.VolumeLabel}; {drive.AvailableFreeSpace/1073741824.0:F1} GiB free / {drive.TotalSize/1073741824.0:F1} GiB"); }
         var boot=now-TimeSpan.FromMilliseconds(Environment.TickCount64); Row("Last Windows boot",$"{boot:MM/dd/yyyy h:mm:ss tt}"); Row("Windows uptime",DataFormats.DurationText(now-boot));
         Row("CPU",cpu); Row("RAM",$"{memory.Load}% in use; {memory.AvailablePhysical/1048576} MiB available of {memory.TotalPhysical/1048576} MiB");
-        Row("Application",$"Carillon Bells 9.0.0 / {RuntimeInformation.ProcessArchitecture}"); Row("Last startup",$"{runtime.Started:MM/dd/yyyy h:mm:ss tt}"); Row("Application uptime",DataFormats.DurationText(now-runtime.Started));
+        Row("Application",$"{App.ProductTitle} / {RuntimeInformation.ProcessArchitecture}"); Row("Last startup",$"{runtime.Started:MM/dd/yyyy h:mm:ss tt}"); Row("Application uptime",DataFormats.DurationText(now-runtime.Started));
         Row("Audio backend",AudioPlayback.Backend); Row("Output device",runtime.Audio.DeviceName);
         Row("Schedule",$"{schedule.Count} total today; {remaining.Count} remaining; {(runtime.ScheduleEnabled?"enabled":"paused")}");
         Row("First event",schedule.FirstOrDefault()); Row("Last event",schedule.LastOrDefault()); Row("Next event",remaining.FirstOrDefault());

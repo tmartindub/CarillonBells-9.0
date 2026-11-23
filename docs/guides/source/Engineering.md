@@ -2,7 +2,7 @@
 
 ## Purpose and upgrade behavior
 
-Carillon Bells 9.0 is the C# Windows Presentation Foundation edition of Westminster Chimes and Carillon Bells. It replaces the Delphi FireMonkey implementation while retaining the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, mail reports, and the original analog clock face.
+Version 9.0 of Westminster Chimes and Carillon Bells uses C# and Windows Presentation Foundation. It replaces the Delphi FireMonkey implementation while retaining the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, mail reports, and the original analog clock face.
 
 The single-executable release supports a new USB with a starter database and in-place upgrades of existing 7.2.4 and 8.1 installations. An in-place upgrade runs from the existing folder and uses its database and audio tree. The Database tab separately supports read-only analysis and import of a selected database into an existing v9 installation.
 
@@ -169,7 +169,7 @@ Open CarillonBells.sln in a Windows IDE with .NET 10 and WPF support. CarillonBe
 
 Run tools\build.ps1 with Release or Debug. For the current USB release, publish a 64-bit build with -Runtime win-x64, -Publish, and -SingleExe. The script uses tools\dotnet when installed, otherwise it uses the system dotnet executable, and directs CLI settings and NuGet packages into project-local caches. The lock file and project file identify dependency versions. The bundled EXE contains the 64-bit .NET Desktop runtime and the SQLite native component.
 
-Use an approved pre-change ZIP before updating a working installation. Close Carillon and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the single-executable USB release, extract the Upgrade ZIP to the existing installation folder. To relocate a working installation, close it and copy the complete folder.
+Use an approved pre-change ZIP before updating a working installation. Close the app and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the single-executable USB release, extract the Upgrade ZIP to the existing installation folder. To relocate a working installation, close it and copy the complete folder.
 
 ## Validation and packaging
 

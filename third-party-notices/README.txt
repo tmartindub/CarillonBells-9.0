@@ -1,4 +1,4 @@
-Carillon Bells 9.0 dependency notices
+Westminster Chimes and Carillon Bells 9.0 dependency notices
 
 NAudio Core / WinMM / WASAPI 2.2.1 — Mark Heath and contributors — MIT
 NLayer and NLayer.NAudioSupport 2.0.1 — Mark Heath, Andrew Ward and contributors — MIT

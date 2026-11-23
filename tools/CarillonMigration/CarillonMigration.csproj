@@ -7,6 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>CarillonMigration</AssemblyName>
     <RootNamespace>Carillon.Migration</RootNamespace>
+    <Product>Westminster Chimes and Carillon Bells</Product>
+    <AssemblyTitle>$(Product) - Migration Assistant</AssemblyTitle>
     <Version>9.0.0</Version>
     <ApplicationIcon>..\..\images and icons\Carillon-Bells-9.0-icon.ico</ApplicationIcon>
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>

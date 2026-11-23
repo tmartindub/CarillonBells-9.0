@@ -171,7 +171,7 @@ public sealed class CarillonRepository(string databasePath)
         foreach(var f in missingSettings.Where(f=>!settings.Contains(f))) Run($"ALTER TABLE PL_SETTINGS ADD COLUMN [{f}] {(f=="settings_id"?"INTEGER NOT NULL DEFAULT 1":f is "email_enabled" or "LOGGING_STATUS" or "silence_enabled" or "smtp_port"?"INTEGER":"TEXT")}");
         using(var count=connection.CreateCommand()) { count.Transaction=transaction; count.CommandText="SELECT COUNT(*) FROM PL_SETTINGS"; if(Convert.ToInt32(count.ExecuteScalar())>1) throw new InvalidDataException("Multiple settings rows require review; no rows were discarded."); }
         Run("UPDATE PL_SETTINGS SET settings_id=1; CREATE UNIQUE INDEX IF NOT EXISTS idx_pl_settings_settings_id ON PL_SETTINGS(settings_id)");
-        Run("INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,email_enabled,silence_enabled) SELECT 1,'Carillon Bells',1,0,0 WHERE NOT EXISTS(SELECT 1 FROM PL_SETTINGS)");
+        Run($"INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,email_enabled,silence_enabled) SELECT 1,'{App.ProductName}',1,0,0 WHERE NOT EXISTS(SELECT 1 FROM PL_SETTINGS)");
         if(wide)
         {
             var backupName="PL_RAND_DIR_ROTATION_WIDE_BACKUP";

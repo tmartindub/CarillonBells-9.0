@@ -616,7 +616,7 @@ public static partial class MigrationEngine
     private static void WriteReport(string path, MigrationPlan plan, SourceData data, int normalized, int files, string backup)
     {
         using var output = new StreamWriter(new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None));
-        output.WriteLine("Carillon Bells 9.0 migration report");
+        output.WriteLine(App.ProductTitle + " - Migration report");
         output.WriteLine(DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture));
         output.WriteLine();
         output.WriteLine($"Source version: {(data.Version == LegacyVersion.Version724 ? "7.2.4" : "8.1")}");

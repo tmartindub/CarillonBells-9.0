@@ -25,7 +25,7 @@ try {
     if($Publish) {
         if(-not $Runtime){throw 'Specify win-x86 or win-x64 when publishing.'}
         & $dotnet publish CarillonBells.csproj -c $Configuration -r $Runtime --self-contained true -o "export\staging-$Runtime" -p:DebugType=None
-        if($LASTEXITCODE -ne 0){throw "Carillon Bells publish failed with exit code $LASTEXITCODE"}
+        if($LASTEXITCODE -ne 0){throw "Westminster Chimes and Carillon Bells publish failed with exit code $LASTEXITCODE"}
         & $dotnet publish tools\CarillonMigration\CarillonMigration.csproj -c $Configuration -r $Runtime --self-contained true -o "export\staging-$Runtime" -p:DebugType=None
     } elseif($Runtime) { & $dotnet build tools\CarillonMigration\CarillonMigration.csproj -c $Configuration -r $Runtime }
     else { & $dotnet build CarillonBells.sln -c $Configuration }

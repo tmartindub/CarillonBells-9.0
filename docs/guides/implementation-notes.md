@@ -1,4 +1,4 @@
-# Carillon Bells 9.0 implementation continuation
+# Westminster Chimes and Carillon Bells 9.0 implementation continuation
 
 Last changed November 21, 2026.
 

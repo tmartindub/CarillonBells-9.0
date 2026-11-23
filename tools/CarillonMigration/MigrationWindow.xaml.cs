@@ -169,8 +169,8 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
             usbUpgradePlan = prepared;
             ReviewSummary.Text = InspectedSource.Text;
             ReviewRoute.Text = inspected.Version == LegacyVersion.Version724
-                ? "7.2.4 → 8.1 database schema → Carillon 9.0"
-                : "8.1 → Carillon 9.0 · The 8.1 database schema is retained.";
+                ? "7.2.4 → 8.1 database schema → v9.0"
+                : "8.1 → v9.0 · The 8.1 database schema is retained.";
             ReviewDestination.Text = prepared.Source.Folder;
             ReviewBackupFolder.Text = prepared.BackupFolder;
             ReviewMusic.Text = "Music stays in its current folders on this USB.";
@@ -226,7 +226,7 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
             }
             result = completed;
             ResultSummary.Text = IsUsbUpgrade
-                ? "Carillon 9.0 is installed on the selected USB. Music remains in its current folders."
+                ? "The upgrade is complete on the selected USB. Music remains in its current folders."
                 : $"Created the v9 installation and copied {completed.MusicFilesCopied:N0} music files.";
             ResultDestination.Text = completed.Destination;
             ResultBackup.Text = completed.BackupPath;

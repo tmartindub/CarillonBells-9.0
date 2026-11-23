@@ -1,6 +1,6 @@
-# Start and move Carillon
+# Start and move the app
 
-Carillon Bells 9.0 schedules Westminster chimes and music on Windows. This guide covers setting up the portable installation, programming bells, controlling playback and silence, and looking after the local database.
+Westminster Chimes and Carillon Bells schedules chimes and music on Windows. This guide covers setting up the portable installation, programming bells, controlling playback and silence, and looking after the local database.
 
 ## First start
 
@@ -14,7 +14,7 @@ Start **CarillonBells.exe** with the **--evaluation** option to suppress automat
 
 ## Copy the entire installation
 
-Close Carillon before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. Use one running instance per installation.
+Close the app before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. Use one running instance per installation.
 
 Place new audio inside the installation before adding it. For example, a playlist path of .\Songs\Evening Bells.mp3 refers to Songs\Evening Bells.mp3 beside the executable. An imported path of C:\Songs\Evening Bells.mp3 resolves to the same Songs subfolder in the current installation. Use a local folder within the installation for each track and random music directory.
 
@@ -22,7 +22,7 @@ Place new audio inside the installation before adding it. For example, a playlis
 
 ## Status and navigation
 
-The title bar shows Carillon Bells 9.0 and uptime for the current session in years, months, weeks, days, hours, minutes, and seconds. The main heading shows the organization and current date and time. Schedule enabled, near the top right, controls the live queue.
+The title bar shows Westminster Chimes and Carillon Bells and uptime for the current session in years, months, weeks, days, hours, minutes, and seconds. The main header shows the organization and current date and time. Schedule enabled, near the top right, controls the live queue.
 
 - Next Song shows the scheduled time and title. A repeat marker such as ×3 means the entry will play three times. Longer titles can wrap to two lines. Hover over the title to read it in full.
 - Today's Schedule shows the full-day count and the number of events still queued. Open Today's schedule in the sidebar to review the full day and remaining events separately.
@@ -42,7 +42,7 @@ The main window starts maximized. The Songs list, editor, and sidebar can scroll
 ## Add music and find a song
 
 1. Copy the MP3 or WAV files into a music subfolder within the installation. Use PCM or IEEE-float WAV for uncompressed audio.
-2. Click Add files under Play schedule. Select one or more files and confirm the selection. Carillon reads the duration and adds each recording to the playlist. A new entry has a date range from today through one year ahead. Set its play times when it is ready for scheduled playback.
+2. Click Add files under Play schedule. Select one or more files and confirm the selection. The app reads the duration and adds each recording to the playlist. A new entry has a date range from today through one year ahead. Set its play times when it is ready for scheduled playback.
 3. Use Search songs or groups to filter the Songs list. Clear the search to see all entries. Expand and Collapse open or close the group headings. Each heading shows the number of entries and their combined length.
 4. Select a song to load the editor. The four navigation arrows below Songs move to the first, previous, next, or last record in the current list.
 
@@ -68,19 +68,19 @@ Select the song, click Delete under Play schedule, and confirm the named entry. 
 
 Select Schedule enabled to run the queue or clear it to pause scheduling. Today's schedule lists the full day and the remaining queue. The full-day view applies weekly silence exclusions and can also show weekly silence intervals that have yet to end. Use Back to playlist to return.
 
-Carillon plays queued entries one at a time. When several songs share a time, each eligible song remains a separate occurrence. A busy player can delay an entry in the queue. After a detected sleep or clock change, Carillon skips missed times and rebuilds the queue from the current time. An occurrence already recorded for the local date is skipped on restart or re-enable. If a scheduled file failed to open, correct the path and use manual playback to test it before its next occurrence.
+The player handles queued entries one at a time. When several songs share a time, each eligible song remains a separate occurrence. A busy player can delay an entry in the queue. After detecting a sleep or clock change, the app skips missed times and rebuilds the queue from the current time. An occurrence already recorded for the local date is skipped on restart or re-enable. If a scheduled file failed to open, correct the path and use manual playback to test it before its next occurrence.
 
 ## Use manual playback and Windows volume
 
 Select a song and click Play, or double-click its row. You can play a song manually while scheduling is paused. Pause toggles between pause and resume, while Stop ends playback. The player shows the current track, time remaining, and progress. When it is idle it shows the last play from the session, if any.
 
-System volume and Mute or Unmute act on the Windows default output endpoint. Windows volume changes are reflected in Carillon. The slider is disabled while the endpoint is muted. Check the selected output in Windows before changing the installation's sound level, especially when a bell amplifier is connected.
+System volume and Mute or Unmute act on the Windows default output endpoint. The volume control reflects Windows volume changes. The slider is disabled while the endpoint is muted. Check the selected output in Windows before changing the installation's sound level, especially when a bell amplifier is connected.
 
 # Manage groups and random music
 
 ## Work in Administration
 
-Music groups, Random music, Silence windows, System, Email / reports, and Database import open tabs in Carillon Administration. An enabled schedule pauses while working on those settings. Close Administration to return to the previous schedule state. Opening Themes or Clock hands alone lets scheduling continue. Switching from either of those tabs to an operational settings tab pauses the queue until you close Administration.
+Music groups, Random music, Silence windows, System, Email / reports, and Database import open tabs in the Administration window. An enabled schedule pauses while working on those settings. Close Administration to return to the previous schedule state. Opening Themes or Clock hands alone lets scheduling continue. Switching from either of those tabs to an operational settings tab pauses the queue until you close Administration.
 
 Save applies pending settings. Cancel changes reloads the last saved values across the Administration tabs. Closing with pending changes prompts you to save, discard the changes, or keep the window open. Palette changes are saved as soon as you choose them or apply custom colors. Clock hand selections use Save.
 
@@ -88,14 +88,14 @@ Save applies pending settings. Cancel changes reloads the last saved values acro
 
 Open Music groups to manage seasonal names, From and Until dates, and the group's Play time. The grid displays play time in hours, minutes, and seconds. Add group creates a pending row for you to name and complete. Delete group prompts for confirmation and retains the songs. Use First, Previous, Next, and Last to move through the rows. Click Save to apply your changes.
 
-Matching seasonal songs take their dates and first play time from the group. Carillon clears their remaining time fields when it synchronizes the group. Daily List retains its individual song schedules. Use Recalculate dates for upcoming year to fill recognized seasonal dates, review the proposed changes, then Save. Custom group dates remain as entered. Christmas uses December 22 through December 26.
+Matching seasonal songs take their dates and first play time from the group. Group synchronization clears their remaining time fields. Daily List retains its individual song schedules. Use Recalculate dates for upcoming year to fill recognized seasonal dates, review the proposed changes, then Save. Custom group dates remain as entered. Christmas uses December 22 through December 26.
 
 ## Choose folders for random music
 
 1. Put MP3 files directly inside the folders you plan to use. For example, use Random_songs for the default collection and a folder such as Songs\Advent for an override.
 2. Open Random music. Click Browse in the row you want to change and pick a folder within this installation. The picker starts in that row's current folder if available. You can also type a local relative directory, such as .\Random_songs.
 3. Set slot 1 for normal playback. To set an annual override, choose a folder and fill both From (annual) and Until (annual) in slots 2 through 7. The first matching override in slot order wins. A range may cross the end of a year, such as 12/22/2026 through 01/06/2027, and repeats each year.
-4. Click Save. To try the result, play the playlist entry whose title contains Random Music Generator. At playback Carillon selects an MP3 directly from the applicable folder. Keep playable files at that folder's top level.
+4. Click Save. To try the result, play the playlist entry whose title contains Random Music Generator. The app selects an MP3 directly from the applicable folder. Keep playable files at that folder's top level.
 
 ![In this example, slot 2 uses the Advent folder every December 1–24. Slot 1 supplies the everyday folder.](figures/random.png)
 
@@ -109,7 +109,7 @@ Silence windows has twelve reusable rows. In an unused row, enter a Purpose such
 
 ![Check On and Sun to silence scheduled playback for Sunday service from 10:00 a.m. to 11:30 a.m.](figures/silence.png)
 
-When more than one rule applies, the Silence Window card shows the active reasons. Carillon manages mute while a reason is active and restores the user's manual mute state when the last reason ends. At the exact end time, weekly schedule generation still excludes a bell at that instant. Leave a small time gap if you need a planned bell immediately after silence.
+When more than one rule applies, the Silence Window card shows the active reasons. The app manages mute while a reason is active and restores the user's manual mute state when the last reason ends. At the exact end time, weekly schedule generation still excludes a bell at that instant. Leave a small time gap if you need a planned bell immediately after silence.
 
 ## Set liturgical and funeral silence
 
@@ -125,11 +125,11 @@ In Email / reports, enter the SMTP host, STARTTLS port, username, password or ap
 
 Preview report saves the current report as a local HTML file. Open the file in your browser to review schedule and playback activity, maintenance, missing music, storage and resource usage, and system health. Send test message uses the test recipient, and Test morning report uses the morning report recipients. Both save pending changes first and ask you to confirm a real message. Use the preview for a local check.
 
-If Carillon is already running when 05:00 arrives, the automatic morning report becomes due. Starting at or after 05:00 skips that day's catch-up send. Evaluation mode suppresses automatic reports and silence alerts. Scheduled playback continues in evaluation mode.
+If the app is already running when 05:00 arrives, the automatic morning report becomes due. Starting at or after 05:00 skips that day's catch-up send. Evaluation mode suppresses automatic reports and silence alerts. Scheduled playback continues in evaluation mode.
 
 ## Read recorded activity and maintenance
 
-Open Log for the newest 1,000 entries from logs\CarillonPlayLog.txt. Use Refresh to load new events. Recorded plays appear as Played Song entries. If Playback logging is off, the day's count represents the plays that were recorded while logging was enabled. Carillon reconstructs the count from the log after a restart.
+Open Log for the newest 1,000 entries from logs\CarillonPlayLog.txt. Use Refresh to load new events. Recorded plays appear as Played Song entries. If Playback logging is off, the day's count represents the plays that were recorded while logging was enabled. The app reconstructs the count from the log after a restart.
 
 A running installation writes data\keepalive.txt roughly every 30 seconds. Daily schedule maintenance becomes due at 00:05 while scheduling is enabled. Log trimming becomes due at 00:10 and also runs at startup. The log retains 30 days of readable entries and preserves older lines with unreadable timestamps. These background tasks continue while the Clock and Log windows are open.
 
@@ -137,7 +137,7 @@ A running installation writes data\keepalive.txt roughly every 30 seconds. Daily
 
 Open Clock for the live analog display. The face scales when you resize or maximize the window. Choose File, then Close, to return to the playlist. Scheduling continues while the clock is open.
 
-Click Clock hands below Clock in the sidebar. Select a style to see its preview at 10:10 on the Carillon clock face. Original uses the classic hands. The 14 numbered styles include Regency Lyre, Fleur-de-lis, Baroque Scroll, and Art Nouveau. Click Save to apply the selected hands to the live clock. Cancel changes discards the preview selection. The saved selection follows the portable copy in data\clock-hands.txt.
+Click Clock hands below Clock in the sidebar. Select a style to see its preview at 10:10 on the clock face. Original uses the classic hands. The 14 numbered styles include Regency Lyre, Fleur-de-lis, Baroque Scroll, and Art Nouveau. Click Save to apply the selected hands to the live clock. Cancel changes discards the preview selection. The saved selection follows the portable copy in data\clock-hands.txt.
 
 ![Select 14 Art Nouveau to compare its full-size preview with the other choices before saving.](figures/hands.png)
 
@@ -149,22 +149,22 @@ Help opens the local HTML guide in your default browser. The single-executable r
 
 ## Inspect and import a copy
 
-1. Close other Carillon instances using the source file. Start the separate v9 installation, open Database import, and check the displayed current local database path.
+1. Close any instance of the app using the source file. Start the separate v9 installation, open Database import, and check the displayed current local database path.
 2. Choose Analyze source database and select the source carillon.db. Review SQLite integrity and the random-directory schema in the scrollable report. The report includes table, view, index, and trigger definitions. Save report exports the report currently displayed as a text file.
-3. Click Choose and import a database copy and select the source. Carillon copies and validates it, backs up the existing local database in databases\backup, then installs the compatible copy. The source stays read-only.
+3. Click Choose and import a database copy and select the source. The app copies and validates it, backs up the existing local database in databases\backup, then installs the compatible copy. The source stays read-only.
 4. Review the import result and note the ZIP path. Close Administration to load the imported playlist in the main window. Verify songs, group times, random music folders, silence, and email settings before leaving it unattended.
 5. Copy any missing music into the new installation with the folder layout expected by its playlist. The imported database carries the references to music. Transfer the audio files separately and test a known song from every relevant music folder.
 
 ## Restore an earlier local database
 
-Record the backup ZIP path from the import report. Close Carillon and preserve the current local database under another name or in a separate backup before restoring. Extract carillon.db from the chosen ZIP into the installation's databases folder. Keep the ZIP and any reports secured with other copies of your settings. Restart Carillon and review the playlist, settings, and next play.
+Record the backup ZIP path from the import report. Close the app and preserve the current local database under another name or in a separate backup before restoring. Extract carillon.db from the chosen ZIP into the installation's databases folder. Keep the ZIP and any reports secured with other copies of your settings. Restart the app and review the playlist, settings, and next play.
 
 # Troubleshoot common problems
 
 - No sound. Check the Silence Window card and the Windows output device, mute setting, and volume. Try a known local song with Play. If the player reports a missing file, compare the displayed full path with the actual folder and filename.
-- Random music uses an unexpected folder. Check the current date against slots 2 through 7 in order. Review slot 1 for dates outside those overrides. Check that the folder Carillon selects contains MP3s at its top level.
+- Random music uses an unexpected folder. Check the current date against slots 2 through 7 in order. Review slot 1 for dates outside those overrides. Check that the selected folder contains MP3s at its top level.
 - A song is missing from today's schedule. Confirm its weekday, date range, and time. If it is seasonal, look under Music groups for the governing dates and first play time. Check weekly silence and use the remaining-queue list to see what has already passed or dispatched.
-- Startup reports a lock or storage problem. Close any other Carillon instance using that copy. Reconnect the USB drive if needed, check write access, and run the executable from the extracted portable folder.
+- Startup reports a lock or storage problem. Close any other instance of the app using that copy. Reconnect the USB drive if needed, check write access, and run the executable from the extracted portable folder.
 - A report fails to send. Check the configured recipients, SMTP host, STARTTLS settings, and credentials. Review Log for the error. Confirm whether the app is in Evaluation mode if you were expecting automatic mail.
 - The visible schedule seems stale. Close Administration, complete any pending song edits, and check Schedule enabled. Confirm the Windows date and time, then inspect Today's schedule again.
 

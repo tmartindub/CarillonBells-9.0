@@ -1,4 +1,4 @@
-Carillon Bells 9.0 evaluation build verification
+Westminster Chimes and Carillon Bells 9.0 evaluation build verification
 Date: November 21, 2026
 SDK: 10.0.404 (project-local); target net10.0-windows
 Runtime packs: 10.0.15

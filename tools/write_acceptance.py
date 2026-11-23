@@ -50,7 +50,7 @@ automated.update({
  'Save/Cancel preserve':'UI Save persisted a disposable repeat edit and Cancel restored its saved value; stable-key/group state logic reviewed.',
  'Clock shows':'Original embedded clock artwork and analog hands inspected in the running UI.',
 })
-lines=['# Carillon Bells 9.0 acceptance record','','Last changed November 21, 2026.','',
+lines=['# Westminster Chimes and Carillon Bells 9.0 acceptance record','','Last changed November 21, 2026.','',
 'This is an experimental separate application. Implementation is present across the handoff domains. Verification below records only checks actually performed; it does not declare production acceptance or authorize replacement of Delphi 8.1.','',
 'Evidence files: architecture-specific `domain-database-results-win-*.txt`, `audio-runtime-results-win-*.txt`, `build-results.txt`, and the source/schema inventories in this folder.','',
 'Manual UI checks covered the private development copy opening 120 songs, computed schedule, original analog clock, administration forms, Save/Cancel on disposable data, persisted palette selection, dark contrast, restored and maximized windows, and orderly close. No real email was sent.','']
@@ -63,7 +63,7 @@ for heading,items in groups:
         lines.append('| '+item.replace('|','/')+' | '+evidence+' |')
     lines.append('')
 lines+=['## Decisions and deliberate changes','',
-'- Separate Carillon Bells 9.0 project and GitHub repository; protected 8.1 and prototype remain unchanged.',
+'- Separate Westminster Chimes and Carillon Bells 9.0 project and GitHub repository; protected 8.1 and prototype remain unchanged.',
 '- New code Apache 2.0; prior MIT notices retained.',
 '- .NET 10 LTS, self-contained x86 and x64 deployment; no single-EXE claim.',
 '- NLayer handles MP3 decoding and duration; Windows waveOut receives PCM through NAudio.',

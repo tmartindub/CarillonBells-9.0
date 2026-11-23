@@ -1,4 +1,4 @@
-"""Build the editable Carillon 9.0 guide drafts from the versioned manuscripts."""
+"""Build the editable Westminster Chimes and Carillon Bells guide drafts."""
 
 import argparse
 from datetime import datetime
@@ -14,11 +14,13 @@ from docx.shared import Emu, Inches, Pt, RGBColor
 
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "docs" / "guides" / "source"
+PRODUCT_NAME = "Westminster Chimes and Carillon Bells"
+PRODUCT_VERSION = "9.0"
 GUIDES = {
     "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 23)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 23)),
-    "Migration": ("Database Migration Guide", "Upgrade Carillon 7.2.4 or 8.1 to v9.0 on the same USB drive.", datetime(2026, 11, 23)),
-    "QuickStart": ("Quick Start Guide", "Set up Carillon, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
+    "Migration": ("Database Migration Guide", "Upgrade a 7.2.4 or 8.1 installation to version 9.0 on the same USB drive.", datetime(2026, 11, 23)),
+    "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
 }
 
 
@@ -117,7 +119,7 @@ def make_guide(kind, destination):
     normal.paragraph_format.line_spacing = 1.16
     normal.paragraph_format.space_after = Pt(7)
     normal.paragraph_format.widow_control = True
-    styles["Title"].font.size = Pt(34)
+    styles["Title"].font.size = Pt(30)
     styles["Title"].font.bold = True
     styles["Title"].paragraph_format.space_after = Pt(8)
     styles["Subtitle"].font.size = Pt(25)
@@ -169,8 +171,9 @@ def make_guide(kind, destination):
     caption.paragraph_format.keep_together = True
     caption.paragraph_format.keep_with_next = False
 
-    cover = document.add_paragraph("Carillon Bells 9.0", "Title")
+    cover = document.add_paragraph(PRODUCT_NAME, "Title")
     cover.paragraph_format.space_before = Pt(22 if quick_start else 80)
+    document.add_paragraph(f"Version {PRODUCT_VERSION}")
     document.add_paragraph(title, "Subtitle")
     document.add_paragraph(purpose)
     document.add_paragraph(f"Last changed {last_changed:%B %d, %Y}")
@@ -186,10 +189,11 @@ def make_guide(kind, destination):
     add_field(footer, "PAGE", "2")
 
     properties = document.core_properties
-    properties.title = f"Carillon Bells 9.0 {title}"
+    properties.title = f"{PRODUCT_NAME} {title}"
     properties.subject = purpose
-    properties.author = "Carillon Bells Project"
-    properties.keywords = "Carillon Bells, version 9.0, portable Windows application"
+    properties.author = f"{PRODUCT_NAME} Project"
+    properties.keywords = f"{PRODUCT_NAME}, version {PRODUCT_VERSION}, portable Windows application"
+    properties.version = PRODUCT_VERSION
     properties.modified = last_changed
     document.save(destination)
 

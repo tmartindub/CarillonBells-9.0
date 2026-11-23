@@ -1,4 +1,4 @@
-# Carillon Bells 9.0
+# Westminster Chimes and Carillon Bells 9.0
 
 Experimental C# / WPF edition of Westminster Chimes and Carillon Bells. This is a separate application and repository. The working Delphi 8.1 source, GitHub repository, website and production downloads remain unchanged.
 

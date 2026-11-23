@@ -1,4 +1,4 @@
-# Start Carillon
+# Start the app
 
 1. In File Explorer, right-click **CarillonBells_9_0_USB_New_Install_win-x64.zip** and choose **Extract All**. On 64-bit Windows, extract the entire ZIP to a new USB drive or a writable PC folder. Keep `CarillonBells.exe` beside the supplied folders, including `databases` and `Music`.
 2. Check the PC date and time and select the intended Windows speakers or amplifier. Set a low volume if you are testing.
@@ -6,7 +6,7 @@
 
 **Upgrading from 7.2.4 or 8.1?** Close the old program. Use the **USB Upgrade** ZIP on the existing USB and follow the **Database Migration Guide** in **Documentation**. Run the new executable from the USB so it uses the existing database and music.
 
-Start Carillon from the USB to use its database and music, even if Windows assigns a different drive letter. Close Carillon before unplugging the USB or copying its installation folder to another drive.
+Start the app from the USB to use its database and music, even if Windows assigns a different drive letter. Close the app before unplugging the USB or copying its installation folder to another drive.
 
 # Add music and test playback
 
@@ -28,6 +28,6 @@ Start Carillon from the USB to use its database and music, even if Windows assig
 
 ## Confirm the first scheduled play
 
-Check **Schedule enabled**. Open **Today's schedule** from the sidebar and look for the recording under **Remaining queue**. The **Next Song** card shows the first item due. Keep Carillon open and listen at the scheduled time, then check **Log** for the **Played Song** entry.
+Check **Schedule enabled**. Open **Today's schedule** from the sidebar and look for the recording under **Remaining queue**. The **Next Song** card shows the first item due. Keep the app open and listen at the scheduled time, then check **Log** for the **Played Song** entry.
 
 If the recording is missing from the queue, check today’s weekday box, the dates, the saved time, and **Silence windows**. If the player runs without sound, check the Windows output, mute, and volume. Use **Help** in the sidebar or the **User Guide** for daily operation.

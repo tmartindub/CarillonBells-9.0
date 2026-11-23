@@ -6,7 +6,7 @@ schema=json.loads((root/'docs/guides/database-schema.json').read_text())
 sql='\n'.join(item['sql']+';' for item in schema if item['type']=='table')+'\n'
 sql+='\n'.join(item['sql']+';' for item in schema if item['type']=='index')+'\n'
 fallback_directory=r'.\random_songs'
-sql+=f"INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,silence_enabled,email_enabled,RAND_SONGS_DIRECTORY) VALUES(1,'Carillon Bells',1,0,0,'{fallback_directory}');\n"
+sql+=f"INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,silence_enabled,email_enabled,RAND_SONGS_DIRECTORY) VALUES(1,'Westminster Chimes and Carillon Bells',1,0,0,'{fallback_directory}');\n"
 sql+=f"INSERT INTO PL_RAND_DIR_ROTATION(slot_no,rand_music_dir) VALUES(1,'{fallback_directory}');\n"
 for i in range(2,8): sql+=f'INSERT INTO PL_RAND_DIR_ROTATION(slot_no) VALUES({i});\n'
 for i in range(1,13): sql+=f"INSERT INTO silence_schedule(silence_id,Purpose) VALUES({i},'Silence Window {i}');\n"

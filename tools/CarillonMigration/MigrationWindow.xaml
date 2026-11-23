@@ -1,7 +1,7 @@
 <Window x:Class="Carillon.Migration.MigrationWindow"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- Title="Carillon 9.0 Migration Assistant" Width="930" Height="730" MinWidth="650" MinHeight="480"
+ Title="Westminster Chimes and Carillon Bells v9.0 - Migration Assistant" Width="930" Height="730" MinWidth="650" MinHeight="480"
  WindowStartupLocation="CenterScreen" FontFamily="Bahnschrift" FontSize="16" Language="en-US"
  Closing="WindowClosing">
  <Window.Resources>
@@ -17,7 +17,8 @@
   </Grid.RowDefinitions>
   <Border Background="{StaticResource Ink}" Padding="28,18">
    <StackPanel>
-    <TextBlock Text="Carillon 9.0 Migration Assistant" FontSize="29" FontFamily="Georgia" Foreground="White"/>
+    <TextBlock Text="Westminster Chimes and Carillon Bells" FontSize="29" FontFamily="Georgia" Foreground="White"/>
+    <TextBlock Text="Migration Assistant · v9.0" FontSize="17" Foreground="White" Margin="0,4,0,0"/>
     <TextBlock Foreground="#E0EAF2" FontSize="15" Margin="0,6,0,0">
      <TextBlock.Style>
       <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">

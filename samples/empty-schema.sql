@@ -41,7 +41,7 @@ CREATE TABLE seasonalgroups (
 );
 CREATE TABLE silence_schedule (silence_id INTEGER NOT NULL PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 0, Purpose TEXT, start_time TEXT, end_time TEXT, monday INTEGER NOT NULL DEFAULT 0, tuesday INTEGER NOT NULL DEFAULT 0, wednesday INTEGER NOT NULL DEFAULT 0, thursday INTEGER NOT NULL DEFAULT 0, friday INTEGER NOT NULL DEFAULT 0, saturday INTEGER NOT NULL DEFAULT 0, sunday INTEGER NOT NULL DEFAULT 0);
 CREATE UNIQUE INDEX idx_pl_settings_settings_id ON PL_SETTINGS(settings_id);
-INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,silence_enabled,email_enabled,RAND_SONGS_DIRECTORY) VALUES(1,'Carillon Bells',1,0,0,'.\random_songs');
+INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,silence_enabled,email_enabled,RAND_SONGS_DIRECTORY) VALUES(1,'Westminster Chimes and Carillon Bells',1,0,0,'.\random_songs');
 INSERT INTO PL_RAND_DIR_ROTATION(slot_no,rand_music_dir) VALUES(1,'.\random_songs');
 INSERT INTO PL_RAND_DIR_ROTATION(slot_no) VALUES(2);
 INSERT INTO PL_RAND_DIR_ROTATION(slot_no) VALUES(3);

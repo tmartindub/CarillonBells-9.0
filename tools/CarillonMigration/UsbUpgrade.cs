@@ -39,7 +39,7 @@ public static partial class MigrationEngine
             {
                 original = InspectDatabase(source);
                 if (original.Version != LegacyVersion.Version724)
-                    throw new InvalidDataException("This database is already compatible with Carillon 9.0.");
+                    throw new InvalidDataException("This database is already compatible with " + App.ProductTitle + ".");
 
                 fingerprint = SHA256.HashData(guard);
                 WriteBackup(database, temporaryBackup, CancellationToken.None);
@@ -192,7 +192,7 @@ public static partial class MigrationEngine
             {
                 temporaryReportOwned = true;
                 using var writer = new StreamWriter(reportStream);
-                writer.WriteLine("Carillon Bells 9.0 USB upgrade");
+                writer.WriteLine(App.ProductTitle + " - USB upgrade");
                 writer.WriteLine($"Installation folder: {folder}");
                 writer.WriteLine($"Verified pre-upgrade ZIP: {backup}");
                 writer.WriteLine($"Playlist entries: {data.Tracks.Count}");

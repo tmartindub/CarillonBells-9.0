@@ -85,7 +85,7 @@ public sealed class CarillonRuntime : IDisposable
         Player.Completed+=()=>Changed?.Invoke();
         Player.Failed+=Fail; Audio.Changed+=()=>Changed?.Invoke(); Audio.RefreshDevice();
         SetThreadExecutionState(0x80000001);
-        Log.Append("Application initialized — Carillon Bells 9.0; "+AudioPlayback.Backend);
+        Log.Append("Application initialized — "+App.ProductTitle+" · "+AudioPlayback.Backend);
         timer=new DispatcherTimer(TimeSpan.FromSeconds(1),DispatcherPriority.Background,Tick,dispatcher);
         SetSchedule(!migrationReview); Tick(null,EventArgs.Empty);
     }
@@ -178,7 +178,7 @@ public sealed class CarillonRuntime : IDisposable
             {
                 var message=appliedSilence.Length==0?"Silence ended; previous manual mute restored":"Silence started: "+appliedSilence;
                 Log.Append(message); previousSilence=appliedSilence;
-                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,"Carillon Bell System Alert",System.Net.WebUtility.HtmlEncode(message),Setting("email_recipients"),lifetime.Token));
+                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - System Alert",System.Net.WebUtility.HtmlEncode(message),Setting("email_recipients"),lifetime.Token));
             }
             if(now.TimeOfDay>=TimeSpan.FromMinutes(5)&&maintenanceDate!=now.Date&&ScheduleEnabled)
             {
@@ -190,7 +190,7 @@ public sealed class CarillonRuntime : IDisposable
             if(now.Hour>=5&&reportDate!=now.Date)
             {
                 reportDate=now.Date;
-                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,"Carillon Morning Health Report",EmailReports.Build(this),Setting("morning_report_recipients"),lifetime.Token));
+                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - Morning Health Report",EmailReports.Build(this),Setting("morning_report_recipients"),lifetime.Token));
                 else if(Evaluation) Log.Append("Morning report suppressed in evaluation mode");
             }
             if(now.Second%30==0) { var data=Path.Combine(BaseDirectory,"data"); Directory.CreateDirectory(data); File.WriteAllText(Path.Combine(data,"keepalive.txt"),now.ToString("O")); }

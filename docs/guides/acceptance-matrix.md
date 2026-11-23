@@ -1,4 +1,4 @@
-# Carillon Bells 9.0 acceptance record
+# Westminster Chimes and Carillon Bells 9.0 acceptance record
 
 Last changed November 21, 2026.
 
@@ -112,7 +112,7 @@ Manual UI checks covered the private development copy opening 120 songs, compute
 
 ## Decisions and deliberate changes
 
-- Separate Carillon Bells 9.0 project and GitHub repository; protected 8.1 and prototype remain unchanged.
+- Separate Westminster Chimes and Carillon Bells 9.0 project and GitHub repository; protected 8.1 and prototype remain unchanged.
 - New code Apache 2.0; prior MIT notices retained.
 - .NET 10 LTS, self-contained x86 and x64 deployment; no single-EXE claim.
 - NLayer handles MP3 decoding and duration; Windows waveOut receives PCM through NAudio.
