@@ -121,6 +121,24 @@ public partial class AdministrationWindow : Window
         var page=(Pages.SelectedItem as TabItem)?.Tag?.ToString();var grid=page switch {"Groups"=>GroupsGrid,"Random"=>RandomGrid,"Silence"=>SilenceGrid,_=>null};if(grid is null)return;
         try {CommitEditors();var count=grid.Items.Count-(grid.CanUserAddRows?1:0);if(count==0)return;var index=Math.Max(0,grid.SelectedIndex);grid.SelectedIndex=((Button)sender).Tag?.ToString() switch {"First"=>0,"Last"=>count-1,"Previous"=>Math.Max(0,index-1),_=>Math.Min(count-1,index+1)};grid.ScrollIntoView(grid.SelectedItem);}catch(Exception error){MessageBox.Show(this,error.Message);}
     }
+    private void ClearSilenceWindowClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            CommitEditors();
+            if (SilenceGrid.SelectedItems.Count != 1 || SilenceGrid.SelectedItem is not DataRowView row)
+                return;
+
+            row["enabled"] = 0;
+            row["Purpose"] = DBNull.Value;
+            row["start_time"] = DBNull.Value;
+            row["end_time"] = DBNull.Value;
+            foreach (var day in Song.DatabaseDays)
+                row[day] = 0;
+            ResultLabel.Text = $"Window {row["silence_id"]} cleared. Click Save to apply.";
+        }
+        catch (Exception error) { MessageBox.Show(this, error.Message, "Cannot clear silence window"); }
+    }
     private void AddGroupClick(object sender,RoutedEventArgs e) {Pages.SelectedItem=Pages.Items.OfType<TabItem>().First(t=>t.Tag?.ToString()=="Groups");var row=Groups.NewRow();row["SEASONALGROUP"]="New Group "+DateTime.Now.ToString("HHmmss");Groups.Rows.Add(row);GroupsGrid.SelectedIndex=Groups.Rows.Count-1;GroupsGrid.ScrollIntoView(GroupsGrid.SelectedItem);}
     private void DeleteGroupClick(object sender,RoutedEventArgs e) {if(GroupsGrid.SelectedItem is DataRowView row&&MessageBox.Show(this,"Delete the selected group? Playlist songs are retained.","Delete group",MessageBoxButton.YesNo)==MessageBoxResult.Yes)row.Delete();}
     private void PageChanged(object sender,SelectionChangedEventArgs e) { if(loading||e.Source!=Pages) return; ResultLabel.Text="";if((Pages.SelectedItem as TabItem)?.Tag?.ToString() is not ("Themes" or "ClockHands")&&!RequiresScheduleResume){runtime.SetSchedule(false);RequiresScheduleResume=true;} }
