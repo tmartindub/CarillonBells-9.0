@@ -67,9 +67,6 @@ strong { font-weight: 700; }
 .hero .button-secondary, .page-intro .button-secondary { color: #fff; background: transparent; border-color: #adc4d2; }
 .hero .button-secondary:hover, .page-intro .button-secondary:hover { background: #fff; color: var(--navy); }
 
-.release-band { background: var(--warm); border-block-end: 1px solid #ded0c1; }
-.release-row { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: .3rem 1.5rem; padding-block: .9rem; }
-.release-row a { font-weight: 700; }
 .section { padding-block: clamp(3.1rem, 6.6vw, 5.4rem); }
 .section + .section:not(.section-accent) { border-block-start: 1px solid #dce6ea; }
 .section-accent { background: var(--soft); border-block: 1px solid #dfebef; }
@@ -107,12 +104,6 @@ strong { font-weight: 700; }
 .demo-card > a { display: block; margin: 0; border-block-start: 1px solid var(--line); background: var(--soft); }
 .demo-card img { inline-size: 100%; block-size: 10rem; object-fit: contain; object-position: center; }
 
-.audio-card { box-shadow: 0 .6rem 1.8rem #18384d0e; }
-.sample { display: grid; gap: .4rem; margin-block-start: .9rem; }
-.sample + .sample { border-block-start: 1px solid var(--line); padding-block-start: .9rem; }
-.sample p { font-weight: 650; }
-.sample audio { display: block; inline-size: 100%; max-inline-size: 100%; }
-.small-link { font-size: .875rem; }
 .hardware-card { border-block-start: .26rem solid #bd7647; }
 .policies h2 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); }
 .policies p { margin-block-start: .65rem; color: var(--muted); }
@@ -122,6 +113,7 @@ strong { font-weight: 700; }
 .contact-row { display: flex; justify-content: space-between; align-items: center; gap: 1.25rem 2.75rem; padding-block: 2.4rem; }
 .contact-band h2 { font-size: clamp(1.7rem, 3vw, 2.55rem); }
 .contact-band p { max-width: 62ch; margin-block-start: .65rem; color: #dbe8ef; }
+.contact-email { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: center; gap: .4rem .75rem; max-inline-size: 100%; }
 .contact-band .button { overflow-wrap: anywhere; }
 .site-footer { background: var(--deep-navy); border-block-start: 1px solid #405e73; color: #dae8ef; font-size: .875rem; }
 .footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem 2rem; padding-block: 1.1rem 1.55rem; }
