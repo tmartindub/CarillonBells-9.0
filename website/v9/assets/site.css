@@ -129,6 +129,18 @@ strong { font-weight: 700; }
 .jump-links a:hover { color: #fff; }
 .package-architectures { display: flex; flex-wrap: wrap; gap: .4rem .55rem; padding: 0; list-style: none; }
 .package-architectures li { padding: .2rem .55rem; border: 1px solid var(--line); border-radius: .3rem; color: var(--navy); background: var(--soft); font-size: .875rem; }
+.source-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .9rem 1.5rem;
+  color: #fff;
+  background: var(--navy);
+  border-color: #405e73;
+}
+.source-panel p { margin-block-start: .35rem; color: var(--soft); }
+.source-panel > .button { margin-block-start: 0; }
 .music-list p { color: var(--muted); font-size: .875rem; }
 .link-list { margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
 .link-list > li { display: flex; justify-content: space-between; align-items: center; gap: .55rem 1rem; padding: .8rem 1.1rem; }
