@@ -1,0 +1,281 @@
+<Window x:Class="Carillon.Migration.MigrationWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Carillon 9.0 Migration Assistant" Width="930" Height="730" MinWidth="650" MinHeight="480"
+ WindowStartupLocation="CenterScreen" FontFamily="Bahnschrift" FontSize="16" Language="en-US"
+ Background="{StaticResource Canvas}" Closing="WindowClosing">
+ <Grid>
+  <Grid.RowDefinitions>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="*"/>
+   <RowDefinition Height="Auto"/>
+  </Grid.RowDefinitions>
+  <Border Background="{StaticResource Ink}" Padding="28,18">
+   <StackPanel>
+    <TextBlock Text="Carillon 9.0 Migration Assistant" FontSize="29" FontFamily="Georgia" Foreground="White"/>
+    <TextBlock Text="Copy a Carillon 7.2.4 or 8.1 installation into a new v9 folder."
+     Foreground="#E0EAF2" FontSize="15" Margin="0,6,0,0"/>
+   </StackPanel>
+  </Border>
+  <Border Grid.Row="1" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+   <UniformGrid Columns="4" Margin="24,8">
+    <TextBlock Text="Source">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource StepText}">
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding CurrentStep}" Value="0">
+         <Setter Property="Background" Value="{StaticResource ActiveStep}"/>
+         <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
+    <TextBlock Text="Destination">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource StepText}">
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding CurrentStep}" Value="1">
+         <Setter Property="Background" Value="{StaticResource ActiveStep}"/>
+         <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
+    <TextBlock Text="Review">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource StepText}">
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+         <Setter Property="Background" Value="{StaticResource ActiveStep}"/>
+         <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
+    <TextBlock Text="Result">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource StepText}">
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+         <Setter Property="Background" Value="{StaticResource ActiveStep}"/>
+         <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
+   </UniformGrid>
+  </Border>
+  <ScrollViewer x:Name="PageScroll" Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+   PanningMode="VerticalOnly" IsEnabled="{Binding CanNavigate}">
+   <Border Margin="24,18" Padding="24" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8">
+    <Grid>
+      <StackPanel AutomationProperties.Name="Source step">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="0">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="Choose the legacy installation"/>
+       <TextBlock Text="Select the folder that contains the older Carillon installation and its databases folder. This can be the root of an older portable drive."/>
+       <Label Margin="0,20,0,0" Content="Legacy installation _folder" Target="{Binding ElementName=SourceInput}"/>
+       <Grid>
+        <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="SourceInput" AutomationProperties.Name="Legacy installation folder"
+         AutomationProperties.HelpText="Enter the full folder path or choose Browse."/>
+        <Button Grid.Column="1" Margin="10,0,0,0" Content="_Browse…" AutomationProperties.Name="Browse for legacy installation"
+         Click="BrowseSourceClick"/>
+       </Grid>
+       <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
+        Text="Next identifies the version and playlist count from the local database."/>
+      </StackPanel>
+      <StackPanel AutomationProperties.Name="Destination step">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="1">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="Choose a new v9 folder"/>
+       <TextBlock x:Name="InspectedSource" FontWeight="SemiBold"/>
+       <Label Margin="0,20,0,0" Content="_New installation path" Target="{Binding ElementName=DestinationInput}"/>
+       <Grid>
+        <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="DestinationInput" Text="CarillonBells_9_0" AutomationProperties.Name="New installation path"
+         AutomationProperties.HelpText="Enter the full path for a new folder, or browse for its parent."/>
+        <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse _parent…" AutomationProperties.Name="Browse for parent of new installation"
+         Click="BrowseDestinationClick"/>
+       </Grid>
+       <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
+        Text="Choose an existing parent folder and use the suggested name, or enter a full path such as E:\CarillonBells_9_0. The final folder must be new."/>
+      </StackPanel>
+      <StackPanel AutomationProperties.Name="Review step">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="Review the migration"/>
+       <TextBlock x:Name="ReviewSummary" FontWeight="SemiBold"/>
+       <Label Margin="0,14,0,0" Content="Source database"/>
+       <TextBlock x:Name="ReviewDatabase"/>
+       <Label Margin="0,12,0,0" Content="Destination folder"/>
+       <TextBlock x:Name="ReviewDestination"/>
+       <Label Margin="0,12,0,0" Content="Music to copy"/>
+       <TextBlock x:Name="ReviewMusic"/>
+       <Border Margin="0,15,0,0" Padding="14,10" Background="{StaticResource AccentLight}" CornerRadius="6">
+        <StackPanel>
+         <TextBlock x:Name="ReviewWarningTitle" FontWeight="SemiBold"/>
+         <ItemsControl x:Name="ReviewWarnings" ItemTemplate="{StaticResource MigrationWarning}" Margin="0,6,0,0"/>
+        </StackPanel>
+       </Border>
+      </StackPanel>
+      <StackPanel AutomationProperties.Name="Result step">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="Migration complete"/>
+       <TextBlock x:Name="ResultSummary" FontWeight="SemiBold"/>
+       <Label Margin="0,14,0,0" Content="New installation"/>
+       <TextBlock x:Name="ResultDestination"/>
+       <Label Margin="0,12,0,0" Content="Backup ZIP"/>
+       <TextBlock x:Name="ResultBackup"/>
+       <Label Margin="0,12,0,0" Content="Migration report"/>
+       <TextBlock x:Name="ResultReport"/>
+       <TextBlock x:Name="ResultWarningTitle" Margin="0,15,0,4" FontWeight="SemiBold"/>
+       <ItemsControl x:Name="ResultWarnings" ItemTemplate="{StaticResource MigrationWarning}"/>
+      </StackPanel>
+    </Grid>
+   </Border>
+  </ScrollViewer>
+  <Border Grid.Row="3" BorderBrush="{StaticResource Line}" BorderThickness="0,1,0,0"
+   Background="{StaticResource Surface}" Padding="24,10,24,14">
+   <StackPanel>
+    <CheckBox x:Name="ReviewConfirmed" Margin="0,2,0,4" VerticalContentAlignment="Center"
+     IsEnabled="{Binding CanNavigate}">
+     <CheckBox.Style>
+      <Style TargetType="CheckBox">
+       <Setter Property="Visibility" Value="Collapsed"/>
+       <Style.Triggers>
+        <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+         <Setter Property="Visibility" Value="Visible"/>
+        </DataTrigger>
+       </Style.Triggers>
+      </Style>
+     </CheckBox.Style>
+     <TextBlock Text="I have reviewed the source database, destination, and warnings and want to create this v9 installation."/>
+    </CheckBox>
+    <TextBlock x:Name="StatusText" AutomationProperties.LiveSetting="Polite" MinHeight="21"
+     Foreground="{StaticResource Muted}">
+     <TextBlock.Style>
+      <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+       <Style.Triggers>
+        <Trigger Property="Text" Value="">
+         <Setter Property="Visibility" Value="Collapsed"/>
+        </Trigger>
+       </Style.Triggers>
+      </Style>
+     </TextBlock.Style>
+    </TextBlock>
+    <ProgressBar Height="5" Margin="0,7,0,0" IsIndeterminate="True"
+     AutomationProperties.Name="Migration progress" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}"/>
+    <Grid Margin="0,10,0,0">
+     <Button HorizontalAlignment="Left" Content="_Close" Click="CloseClick">
+      <Button.Style>
+       <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Style.Triggers>
+         <DataTrigger Binding="{Binding IsMigrating}" Value="True">
+          <Setter Property="Visibility" Value="Collapsed"/>
+         </DataTrigger>
+        </Style.Triggers>
+       </Style>
+      </Button.Style>
+     </Button>
+     <Button HorizontalAlignment="Left" Content="_Cancel migration" Click="CancelMigrationClick"
+      IsEnabled="{Binding CanCancelMigration}" Visibility="{Binding IsMigrating, Converter={StaticResource VisibleWhenTrue}}"/>
+     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+      <StackPanel Orientation="Horizontal">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel">
+         <Setter Property="Visibility" Value="Collapsed"/>
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <Button Content="Open _destination folder" Click="OpenDestinationClick" Margin="0,0,10,0"/>
+       <Button Content="Open v9 for _review" Style="{StaticResource PrimaryButton}" Click="OpenReviewClick"/>
+      </StackPanel>
+      <Button Margin="0,0,10,0" Content="_Back" Click="BackClick">
+       <Button.Style>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+         <Setter Property="IsEnabled" Value="{Binding CanNavigate}"/>
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="0">
+           <Setter Property="Visibility" Value="Collapsed"/>
+          </DataTrigger>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+           <Setter Property="Visibility" Value="Collapsed"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </Button.Style>
+      </Button>
+      <Button IsDefault="True" Click="AdvanceClick">
+       <Button.Style>
+        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+         <Setter Property="IsEnabled" Value="{Binding CanNavigate}"/>
+         <Setter Property="Content" Value="_Next"/>
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+           <Setter Property="Content" Value="Back Up and _Migrate"/>
+          </DataTrigger>
+          <MultiDataTrigger>
+           <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding CurrentStep}" Value="2"/>
+            <Condition Binding="{Binding IsChecked, ElementName=ReviewConfirmed}" Value="False"/>
+           </MultiDataTrigger.Conditions>
+           <Setter Property="IsEnabled" Value="False"/>
+          </MultiDataTrigger>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+           <Setter Property="Visibility" Value="Collapsed"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </Button.Style>
+      </Button>
+     </StackPanel>
+    </Grid>
+   </StackPanel>
+  </Border>
+ </Grid>
+</Window>

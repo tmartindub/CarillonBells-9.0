@@ -32,7 +32,8 @@ public partial class App : Application
             var repository=new CarillonRepository(database); repository.EnsureCompatibleSchema(); ThemeManager.Load(repository);
             var splash=new SplashWindow(); splash.Show();
             await Task.Delay(900);
-            var runtime=new CarillonRuntime(repository,root,Dispatcher,e.Args.Contains("--evaluation"));
+            var migrationReview=e.Args.Contains("--migration-review");
+            var runtime=new CarillonRuntime(repository,root,Dispatcher,e.Args.Contains("--evaluation"),migrationReview:migrationReview);
             var handStyles = (ClockHandStyle[])FindResource("ClockHandCatalog");
             Resources["SelectedClockHands"] = handStyles.FirstOrDefault(style => style.Id == runtime.ClockHandStyleId) ?? handStyles[0];
             var window=new MainWindow(runtime); MainWindow=window; window.Show(); splash.Close();

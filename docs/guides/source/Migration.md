@@ -1,53 +1,66 @@
 # Plan the migration
 
-Carillon Bells 9.0 imports a SQLite database into a separate installation. Use the section for your starting version, **7.2.4 to 9.0** or **8.1 to 9.0**, then follow the shared import and validation instructions. Complete the migration on a test copy before connecting v9 to the production playback system.
+Use **Carillon Migration** to create a v9 installation from a working 7.2.4 or 8.1 folder. The wizard copies the database and music, shows which conversion applies, and checks the new music paths. The existing **Database import** option is covered later for users who only need to bring a database into an existing v9 installation.
 
 ## What to have ready
 
 - The working 7.2.4 or 8.1 folder and the SQLite database it uses. In a standard portable installation, look for **databases\carillon.db**. Verify which file the running version uses before copying it.
-- A fresh, writable folder for the complete v9 package. Use its own executable, runtime files and database. For example, use **D:\CarillonBells_9_0** for v9 on a portable drive.
-- Your music folders, including the fallback and seasonal folders used by random playback. Their relative layout matters.
+- A complete v9 package for the destination computer. Extract the package before running the wizard. **CarillonMigration.exe** is beside **CarillonBells.exe**.
+- A writable destination drive with room for the application, the database and the music. Pick a new folder, such as **D:\CarillonBells_9_0_Migrated**.
 - A private backup destination with enough free space for a ZIP of the prior installation and its music. The legacy and v9 databases can contain email credentials.
 
 ## Choose the test mode and output
 
-Use **Launch-Carillon-Evaluation.cmd** if it is included, or start **CarillonBells.exe** with **--evaluation**. Automatic email is suppressed in this mode. Scheduled playback and the Windows system volume controls are active. Keep the live bell amplifier disconnected during initial validation or select an appropriate test output.
+After the wizard finishes, **Open v9 for review** starts the new installation with scheduling paused and automatic email suppressed for that session. Use a test output to check playback before starting the installation normally. If you open **Launch-Carillon-Evaluation.cmd** instead, scheduling starts enabled.
 
-# Prepare the two installations
+# Use the Carillon Migration wizard
 
-1. Exit the old Carillon version and close any other application using its database. Make a ZIP of the working installation and verify that it contains the database before testing the migration.
-2. Extract the entire v9 package to its own folder. The self-contained package includes its runtime.
-3. Copy the music folders into the v9 folder with the same paths relative to the executable. If the old playlist refers to **.\Songs\Daily\Bell.mp3**, the test v9 installation needs **Songs\Daily\Bell.mp3** beside its executable.
-4. Start v9 from the destination folder. If asked to create a blank database, accept so the app has a local **databases\carillon.db** to receive the import.
-5. Clear **Schedule enabled** before reviewing the imported schedule. The administration dialog pauses an enabled scheduler while it is open, then restores its prior state when it closes.
+## Choose the source and destination
 
-## Keep each database separate
+1. Close the old Carillon application and any other tool using its database. Save and verify a separate ZIP of the old installation before putting the new copy into service.
+2. Open **CarillonMigration.exe** from the v9 package or installation. In **Source**, browse to the folder or drive that contains the old application and its database. Click **Next** to check the SQLite database and detect the format.
+3. In **Destination**, enter the full path for the new installation. Browse to a parent folder or portable drive to help fill in the path. The last part of the path names the folder the wizard will create. Click **Next**.
 
-The executable folder determines where v9 reads and writes. An import replaces the destination v9 database. Your original installation and its database remain available for rollback. For an older database that stores a drive letter, v9 uses the folder layout after the drive root within its own installation. Confirm that all scheduled tracks and random folders resolve within that installation.
+## Review and migrate
+
+1. On **Review**, confirm the detected version, database and destination paths, playlist count, and music copy summary. Read any warnings about missing recordings or random directories. Go **Back** to correct the selection if necessary.
+2. Check the confirmation box and click **Back Up and Migrate**. The wizard verifies a ZIP of the original database snapshot before it upgrades a 7.2.4 copy. It copies the v9 application files and the available music for the new installation.
+
+![The review shows the 7.2.4 upgrade, two music files ready to copy, and a missing playlist track to check.](figures/wizard-review.png)
+
+To stop a transfer, click **Cancel migration** and wait for cleanup. The wizard makes the new destination available after validation finishes.
+
+## Find the backup and open v9
+
+On **Result**, note the backup under **databases\backup** and **migration-report.txt** in the new installation. Click **Open destination folder** to inspect the files or **Open v9 for review** to launch it with scheduling paused. The result repeats any warnings about music to check before enabling the schedule.
+
+![The result lists the database ZIP, the migration report, and the button that starts v9 with scheduling paused.](figures/wizard-result.png)
 
 # 7.2.4 to 9.0
 
-## Try a direct import into v9
+The wizard detects the older database form by its random-directory columns. It adds the v9 compatibility fields, converts the numbered columns to seven directory slots, and retains the original wide table in the new database. It creates twelve disabled weekly silence windows if the old database lacked that table and normalizes legacy schedule times on the copy.
 
-1. Follow **Analyze the source database** with the closed 7.2.4 database or a verified copy. Expect **SQLite integrity: ok**. A standard 7.2.4 database reports **Legacy wide or missing** because its random music folders are stored as numbered columns in one row. In **Database schema**, look for **playlist**, **seasonalgroups**, and **PL_SETTINGS**.
-2. Follow **Import and check the working copy** with the same file. On the v9 copy, the importer converts the old random directory values to seven slots, retains the original table as a backup, and creates twelve disabled weekly silence windows if the table was absent.
-3. After import, compare the playlist and seasonal groups with 7.2.4. Confirm the fallback in slot 1, its dated overrides in slots 2–7, and the original liturgical or funeral silence settings under **System**. Then follow **Validate music and schedules**.
+After migration, compare the playlist and music groups with 7.2.4. Confirm the fallback in slot 1, the dated overrides in slots 2–7, and the liturgical or funeral silence settings under **System**. Run the checks in **Validate music and schedules** before putting the installation into service.
 
 ## Use the 8.1 converter if needed
 
-If a healthy 7.2.4 database fails direct import, save the v9 report or record the error first. If you have the original 8.1 conversion utility, you can test an intermediate upgrade on a separate working database copy. Resolve any integrity errors against a verified backup before attempting either upgrade.
+If a healthy 7.2.4 database fails to migrate, record the error first. If you have the original 8.1 conversion utility, you can test an intermediate upgrade on a separate working database copy. Resolve any integrity errors against a verified backup before attempting either upgrade.
 
 1. Close Carillon. From a separate 8.1 portable installation, start **CarillonDBUpgrade724To81.exe**. Click **Browse** and select the separate working copy of the 7.2.4 database. The utility upgrades the file you select in place.
 2. Review the displayed format, check the confirmation box, and click **Back Up and Upgrade**. Keep the resulting backup and conversion report. Verify the converted playlist and settings in the separate 8.1 installation.
-3. Close 8.1 and follow **8.1 to 9.0** below using the converted database as the source. Keep the original 7.2.4 ZIP for rollback.
+3. Close 8.1 and run the v9 wizard with the folder containing the converted database and its music. Keep the original 7.2.4 ZIP for rollback.
 
 # 8.1 to 9.0
 
-1. Follow **Analyze the source database** with the closed 8.1 SQLite database or a verified copy. Expect **SQLite integrity: ok** and **8.1 row-based** for the normal seven-slot directory table.
-2. Follow **Import and check the working copy** with the same file. Existing random directory slots and weekly silence rules carry over. Any missing standard slots are filled on the imported copy.
-3. Compare the seven directory rows and twelve weekly silence rows with 8.1. Spot-check enabled rules, purposes, times and weekday selections. Then follow **Validate music and schedules**.
+The wizard detects the row-based random directory table and copies the 8.1 database with its existing schema and values. Directory slots and weekly silence rules carry over as saved. When v9 first opens the new installation, it can initialize its own settings or runtime records as part of normal startup.
 
-# Analyze the source database
+Compare the seven directory rows and twelve weekly silence rows with 8.1. Spot-check enabled rules, purposes, times and weekday selections. Then follow **Validate music and schedules**.
+
+# Import only a database into an existing v9 installation
+
+Use **Database import** when v9 is already set up and you want to replace its local database. Copy music manually in this workflow. For example, if the old playlist refers to **.\Songs\Daily\Bell.mp3**, the v9 folder needs **Songs\Daily\Bell.mp3** beside its executable. Keep the original legacy installation intact and confirm that you have selected the intended v9 copy before importing.
+
+## Analyze the source database
 
 1. Open **Database import** in the v9 sidebar. The **Database** tab shows the current local v9 database path. Confirm that it belongs to the intended destination.
 2. Click **Analyze source database** and choose the old SQLite **.db** file. This operation opens the source read-only.
@@ -61,7 +74,7 @@ If a healthy 7.2.4 database fails direct import, save the v9 report or record th
 
 The analysis is a structural and integrity check. It helps you see whether expected objects exist and how SQLite defines them. Verify playlist rows, file availability, group dates and report delivery through the practical checks later in this guide.
 
-# Import and check the working copy
+## Import and check the working copy
 
 1. In the same **Database** tab, choose **Choose and import a database copy**. Resolve any pending administration edits if prompted.
 2. Select the source **.db** that you analyzed. Choose the legacy database or a verified copy of it.
@@ -119,7 +132,7 @@ Review the Windows output and volume again when connecting a different computer.
 
 1. Disable scheduling and close v9.
 2. Preserve a ZIP of the current v9 database if it contains new work you may need.
-3. Check that the pre-import ZIP named in the import report opens and contains **carillon.db**. Restore that file to the intended v9 folder as **databases\carillon.db** while v9 is closed. Keep the saved ZIP for reference.
+3. If you used **Database import**, check that the pre-import ZIP contains **carillon.db**. Restore that file to the intended v9 folder as **databases\carillon.db** while v9 is closed. The wizard's ZIP contains the original legacy snapshot. Keep it for recovery with the old version or to start another migration.
 4. Reopen v9 in evaluation mode and review the playlist, settings and schedule before reconnecting production audio.
 
 If you need to resume 7.2.4 or 8.1 immediately, close v9 and launch the preserved installation from its own directory. Confirm the original database, schedule and audio output before returning to service.

@@ -2,7 +2,9 @@ param([ValidateSet('win-x86','win-x64')][string]$Runtime,[string]$SourceCommit='
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $stage=Join-Path $projectRoot "export\staging-$Runtime"
-if(-not(Test-Path -LiteralPath (Join-Path $stage 'CarillonBells.exe'))){throw 'Publish the architecture first.'}
+foreach($executable in 'CarillonBells.exe','CarillonMigration.exe') {
+    if(-not(Test-Path -LiteralPath (Join-Path $stage $executable))){throw 'Publish the application and migration wizard for this architecture first.'}
+}
 $forbidden=Get-ChildItem -LiteralPath $stage -Recurse -File | Where-Object {$_.Extension -in '.db','.mp3','.wav','.dmp' -or $_.Name -like '*.db-*' -or $_.FullName -match '\\(logs|Songs|old_Songs)\\'}
 if($forbidden){throw 'Staging contains private/test data or music. Clean it before packaging.'}
 Copy-Item -LiteralPath (Join-Path $projectRoot 'Launch-Carillon-Evaluation.cmd') -Destination $stage

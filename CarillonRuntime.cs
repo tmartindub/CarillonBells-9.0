@@ -61,10 +61,12 @@ public sealed class CarillonRuntime : IDisposable
     private readonly Func<DateTime> currentTime;
     public DateTime Now=>currentTime();
     private readonly List<Task> background=[];
+    private readonly bool migrationReview;
     [DllImport("kernel32.dll")] private static extern uint SetThreadExecutionState(uint flags);
-    public CarillonRuntime(CarillonRepository repository,string baseDirectory,Dispatcher dispatcher,bool evaluation,Func<DateTime>? currentTime=null)
+    public CarillonRuntime(CarillonRepository repository,string baseDirectory,Dispatcher dispatcher,bool evaluation,Func<DateTime>? currentTime=null,bool migrationReview=false)
     {
-        Repository=repository; BaseDirectory=baseDirectory; Evaluation=evaluation; this.currentTime=currentTime??(()=>DateTime.Now);
+        Repository=repository; BaseDirectory=baseDirectory; Evaluation=evaluation||migrationReview; this.currentTime=currentTime??(()=>DateTime.Now);
+        this.migrationReview=migrationReview;
         Started=Now;
         try
         {
@@ -85,7 +87,7 @@ public sealed class CarillonRuntime : IDisposable
         SetThreadExecutionState(0x80000001);
         Log.Append("Application initialized — Carillon Bells 9.0; "+AudioPlayback.Backend);
         timer=new DispatcherTimer(TimeSpan.FromSeconds(1),DispatcherPriority.Background,Tick,dispatcher);
-        SetSchedule(true); Tick(null,EventArgs.Empty);
+        SetSchedule(!migrationReview); Tick(null,EventArgs.Empty);
     }
     public void SaveClockHandStyle(int styleId)
     {
@@ -167,12 +169,15 @@ public sealed class CarillonRuntime : IDisposable
                 Log.Append("Schedule rebuilt after date/time discontinuity; missed occurrences skipped");
             }
             lastElapsed=elapsed; lastWall=now;
-            var reasons=SilenceReasons(now); var silence=string.Join("; ",reasons.Distinct()); Audio.SetSilenced(reasons.Count>0);
+            var reasons=SilenceReasons(now); var silence=string.Join("; ",reasons.Distinct());
+            var applyAutomation=!migrationReview||ScheduleEnabled;
+            Audio.SetSilenced(applyAutomation&&reasons.Count>0);
             SilenceLabel=silence.Length==0?"No active silence":silence;
-            if(previousSilence!=silence)
+            var appliedSilence=applyAutomation?silence:"";
+            if(previousSilence!=appliedSilence)
             {
-                var message=silence.Length==0?"Silence ended; previous manual mute restored":"Silence started: "+silence;
-                Log.Append(message); previousSilence=silence;
+                var message=appliedSilence.Length==0?"Silence ended; previous manual mute restored":"Silence started: "+appliedSilence;
+                Log.Append(message); previousSilence=appliedSilence;
                 if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,"Carillon Bell System Alert",System.Net.WebUtility.HtmlEncode(message),Setting("email_recipients"),lifetime.Token));
             }
             if(now.TimeOfDay>=TimeSpan.FromMinutes(5)&&maintenanceDate!=now.Date&&ScheduleEnabled)
@@ -180,8 +185,8 @@ public sealed class CarillonRuntime : IDisposable
                 maintenanceDate=now.Date; Log.Append("Total Songs played yesterday: "+Log.Count(now.Date.AddDays(-1))); Repository.SyncGroups(); Reload(); Rebuild(now); Log.Append("Daily schedule maintenance completed");
             }
             if(now.TimeOfDay>=TimeSpan.FromMinutes(10)&&trimDate!=now.Date) { Log.Trim(now); trimDate=now.Date; Log.Append("Daily 30-day log trim completed"); }
-            if(now.Month==1&&now.Day>=2&&now.TimeOfDay>=TimeSpan.FromMinutes(15)&&settingsYear!=now.Year) { RecalculateSettings(); settingsYear=now.Year; Log.Append("Annual liturgical dates recalculated"); }
-            if(now.Month==1&&now.Day==3&&now.TimeOfDay>=TimeSpan.FromMinutes(2)&&groupsYear!=now.Year) { RecalculateGroups(); groupsYear=now.Year; Log.Append("Annual seasonal dates recalculated"); }
+            if(applyAutomation&&now.Month==1&&now.Day>=2&&now.TimeOfDay>=TimeSpan.FromMinutes(15)&&settingsYear!=now.Year) { RecalculateSettings(); settingsYear=now.Year; Log.Append("Annual liturgical dates recalculated"); }
+            if(applyAutomation&&now.Month==1&&now.Day==3&&now.TimeOfDay>=TimeSpan.FromMinutes(2)&&groupsYear!=now.Year) { RecalculateGroups(); groupsYear=now.Year; Log.Append("Annual seasonal dates recalculated"); }
             if(now.Hour>=5&&reportDate!=now.Date)
             {
                 reportDate=now.Date;

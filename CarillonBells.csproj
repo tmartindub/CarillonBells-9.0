@@ -22,5 +22,6 @@
     <Content Include="NOTICE" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="third-party-notices\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Compile Remove="tools\**\*.cs" />
+    <Page Remove="tools\CarillonMigration\**\*.xaml" />
   </ItemGroup>
 </Project>

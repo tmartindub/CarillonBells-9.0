@@ -10,6 +10,8 @@ Extract the complete architecture-specific self-contained evaluation ZIP into a 
 
 The first start can create an empty database. Database import copies a selected database read-only into the separate installation, backs up existing local data as ZIP, and upgrades only the copy. Music is not included or copied automatically. Do not run this application against production storage.
 
+To move a complete 7.2.4 or 8.1 installation, open **CarillonMigration.exe** beside the v9 executable. Select the closed legacy installation and a new destination folder. The wizard previews the detected format, music files and any missing paths, then creates a v9 copy with the database, music, a database backup ZIP and a report. It upgrades the 7.2.4 database copy. For 8.1 it preserves the existing schema during migration. See the Database Migration Guide for the review steps.
+
 The initialized USB installation is `D:\CarillonBells_9_0`. Run its `CarillonBells.exe` for normal operation. To move it, close Carillon and copy the **entire CarillonBells_9_0 folder**, including databases, music, runtime files and help, to a writable folder on another Windows device. The drive letter may change. The x64 USB build includes its .NET runtime; 32-bit Windows requires the separately published win-x86 build. Keep each installation's database separate.
 
 Scheduled and manual playback, including random music, resolve inside the running EXE's folder. Legacy drive-letter paths use their folder layout under that folder (for example, `C:\Songs\bell.mp3` resolves to `<EXE folder>\Songs\bell.mp3`). Store music and random directories as relative paths. Copy new audio into the portable installation before adding it; network paths and paths escaping the installation are rejected. Database import does not copy audio. Existing music folders are preserved during binary updates.
@@ -51,6 +53,7 @@ Self-tests use disposable sanitized data. The audio test reads the supplied MP3 
 
 - `docs\guides\CarillonBells_9_0_User_Guide.docx`
 - `docs\guides\CarillonBells_9_0_Engineering_Guide.docx`
+- `docs\guides\CarillonBells_9_0_Database_Migration_Guide.docx`
 - Companion PDFs under `docs\pdf`
 - `help\index.html` for offline help, search, glossary, index and print support; GTranslate requires internet access
 - `docs\guides\acceptance-matrix.md` for implemented behavior, executed tests and outstanding environmental acceptance

@@ -13,16 +13,25 @@ try {
     if($Publish) {
         if(-not $Runtime){throw 'Specify win-x86 or win-x64 when publishing.'}
         & $dotnet publish CarillonBells.csproj -c $Configuration -r $Runtime --self-contained true -o "export\staging-$Runtime" -p:DebugType=None
-    } elseif($Runtime) { & $dotnet build CarillonBells.csproj -c $Configuration -r $Runtime }
-    else { & $dotnet build CarillonBells.csproj -c $Configuration }
+        if($LASTEXITCODE -ne 0){throw "Carillon Bells publish failed with exit code $LASTEXITCODE"}
+        & $dotnet publish tools\CarillonMigration\CarillonMigration.csproj -c $Configuration -r $Runtime --self-contained true -o "export\staging-$Runtime" -p:DebugType=None
+    } elseif($Runtime) { & $dotnet build tools\CarillonMigration\CarillonMigration.csproj -c $Configuration -r $Runtime }
+    else { & $dotnet build CarillonBells.sln -c $Configuration }
     if($LASTEXITCODE -ne 0){throw "Build failed with exit code $LASTEXITCODE"}
     if($Publish) {
-        Copy-Item -LiteralPath (Join-Path $projectRoot 'README.md'),(Join-Path $projectRoot 'Launch-Carillon-Evaluation.cmd') -Destination (Join-Path $projectRoot "export\staging-$Runtime") -Force
+        $stage=Join-Path $projectRoot "export\staging-$Runtime"
+        Copy-Item -LiteralPath (Join-Path $projectRoot 'README.md'),(Join-Path $projectRoot 'Launch-Carillon-Evaluation.cmd') -Destination $stage -Force
+        foreach($guideFolder in @(@('guides','*.docx'),@('pdf','*.pdf'))) {
+            $relative=Join-Path 'docs' $guideFolder[0]
+            $guideStage=Join-Path $stage $relative
+            New-Item -ItemType Directory -Path $guideStage -Force | Out-Null
+            Get-ChildItem -LiteralPath (Join-Path $projectRoot $relative) -Filter $guideFolder[1] -File |
+                Copy-Item -Destination $guideStage -Force
+        }
     }
     if($PortableRoot) {
         $portable=Get-Item -LiteralPath $PortableRoot
         if(-not $portable.PSIsContainer -or -not(Test-Path -LiteralPath (Join-Path $portable.FullName 'databases\carillon.db')) -or -not(Test-Path -LiteralPath (Join-Path $portable.FullName 'CarillonBells.exe'))){throw 'PortableRoot must be an initialized Carillon v9 installation with its own database.'}
-        $stage=Join-Path $projectRoot "export\staging-$Runtime"
         foreach($destination in @((Join-Path $projectRoot "bin\$Configuration"),$portable.FullName)) {
             foreach($file in Get-ChildItem -LiteralPath $stage -File -Recurse) {
                 $relative=$file.FullName.Substring($stage.Length+1)
