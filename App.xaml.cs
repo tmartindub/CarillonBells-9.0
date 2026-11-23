@@ -22,53 +22,43 @@ public partial class App : Application
         {
             var root=AppContext.BaseDirectory;
             var database=Path.Combine(root,"databases","carillon.db");
-            var startBlank=false;
-            if(e.Args.Contains("--upgrade-usb"))
-            {
-                OpenUsbUpgrade();
-                return;
-            }
 #if CARILLON_SINGLE_EXE
             if(!File.Exists(database))
-            {
-                var choice=MessageBox.Show(
-                    "Upgrade an existing Carillon USB drive?\n\nChoose Yes to upgrade a USB drive or No to create an empty database beside this executable.",
-                    "Carillon first start",MessageBoxButton.YesNoCancel);
-                if(choice==MessageBoxResult.Yes) { OpenUsbUpgrade(); return; }
-                if(choice!=MessageBoxResult.No) { Shutdown(); return; }
-                startBlank=true;
-            }
+                throw new FileNotFoundException("The USB database was not found at:\n"+database+"\n\nOpen CarillonBells.exe from the USB that contains the starter or existing database.");
 #endif
             instanceLock=new FileStream(Path.Combine(root,"Carillon.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
             Directory.CreateDirectory(Path.GetDirectoryName(database)!);
             databaseLock=new FileStream(database+".lock",FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
+#if !CARILLON_SINGLE_EXE
             if(!File.Exists(database))
             {
-                if(!startBlank&&MessageBox.Show("This separate Carillon installation has no database. Create a blank SQLite database? You can import a copy of your existing database from Database import.","Carillon first start",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) { Shutdown(); return; }
+                if(MessageBox.Show("This separate Carillon installation has no database. Create a blank SQLite database? You can import a copy of your existing database from Database import.","Carillon first start",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) { Shutdown(); return; }
                 using var connection=new SqliteConnection(new SqliteConnectionStringBuilder {DataSource=database,Pooling=false}.ToString()); connection.Open(); using var command=connection.CreateCommand();
                 using var stream=GetResourceStream(new Uri("pack://application:,,,/samples/empty-schema.sql"))?.Stream??throw new FileNotFoundException("The empty database schema is missing."); using var reader=new StreamReader(stream); command.CommandText=reader.ReadToEnd(); command.ExecuteNonQuery();
             }
-            var repository=new CarillonRepository(database); repository.EnsureCompatibleSchema(); ThemeManager.Load(repository);
+#endif
+            var upgradeRequired=MigrationEngine.LocalDatabaseRequiresUpgrade(database);
+            if(upgradeRequired&&MessageBox.Show(
+                "A Carillon 7.2.4 database was found. Close the old Carillon program before continuing.\n\nCarillon will save a backup ZIP in the databases folder, then upgrade the database. Continue?",
+                "Upgrade Carillon 7.2.4",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)!=MessageBoxResult.Yes)
+            {
+                Shutdown(); return;
+            }
+
+            string? upgradeBackup=null;
+            if(upgradeRequired) upgradeBackup=await Task.Run(()=>MigrationEngine.UpgradeLocalDatabase(database));
+
+            var repository=new CarillonRepository(database); repository.EnsureCompatibleSchema(backupInDatabaseFolder:true); ThemeManager.Load(repository);
             var splash=new SplashWindow(); splash.Show();
             await Task.Delay(900);
-            var migrationReview=e.Args.Contains("--migration-review");
+            var migrationReview=upgradeRequired||e.Args.Contains("--migration-review");
             var runtime=new CarillonRuntime(repository,root,Dispatcher,e.Args.Contains("--evaluation"),migrationReview:migrationReview);
+            if(upgradeBackup is not null) runtime.Log.Append("Carillon 7.2.4 database upgraded. Backup ZIP: "+upgradeBackup);
             var handStyles = (ClockHandStyle[])FindResource("ClockHandCatalog");
             Resources["SelectedClockHands"] = handStyles.FirstOrDefault(style => style.Id == runtime.ClockHandStyleId) ?? handStyles[0];
             var window=new MainWindow(runtime); MainWindow=window; window.Show(); splash.Close();
         }
         catch(Exception error) { MessageBox.Show("Carillon could not start: "+error.Message+"\n\nCheck that the portable folder is writable and another instance is not using it.","Carillon startup"); Shutdown(1); }
     }
-    private void OpenUsbUpgrade()
-    {
-#if CARILLON_SINGLE_EXE
-        var executable=Environment.ProcessPath ?? throw new IOException("The running Carillon executable could not be located.");
-        MainWindow=new MigrationWindow(executable);
-        MainWindow.Show();
-#else
-        throw new InvalidOperationException("Run the single-executable Carillon release to upgrade an existing USB drive.");
-#endif
-    }
-
     protected override void OnExit(ExitEventArgs e) { databaseLock?.Dispose(); instanceLock?.Dispose(); base.OnExit(e); }
 }

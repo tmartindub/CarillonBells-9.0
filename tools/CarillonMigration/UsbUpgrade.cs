@@ -13,6 +13,72 @@ public sealed record UsbUpgradePlan(MigrationSource Source, string BackupFolder,
 
 public static partial class MigrationEngine
 {
+    public static bool LocalDatabaseRequiresUpgrade(string database)
+    {
+        using var connection = OpenDatabase(database, SqliteOpenMode.ReadOnly);
+        var fields = Fields(connection, RotationTable);
+        return fields.Contains("rand_music_dir1") && !fields.Contains("slot_no");
+    }
+
+    public static string UpgradeLocalDatabase(string database)
+    {
+        database = FullPath(database);
+        var folder = Path.GetDirectoryName(database)!;
+        var stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff", CultureInfo.InvariantCulture);
+        var identifier = Guid.NewGuid().ToString("N");
+        var backup = Path.Combine(folder, $"carillon_before_upgrade_{stamp}_{identifier[..8]}.zip");
+        var temporaryBackup = backup + ".tmp";
+        var candidate = Path.Combine(folder, $".carillon-upgrade-{identifier}.db");
+
+        try
+        {
+            SourceData original;
+            byte[] fingerprint;
+            using (var guard = ProtectDatabase(database))
+            using (var source = OpenDatabase(database, SqliteOpenMode.ReadOnly, immutable: true))
+            {
+                original = InspectDatabase(source);
+                if (original.Version != LegacyVersion.Version724)
+                    throw new InvalidDataException("This database is already compatible with Carillon 9.0.");
+
+                fingerprint = SHA256.HashData(guard);
+                WriteBackup(database, temporaryBackup, CancellationToken.None);
+                File.Move(temporaryBackup, backup);
+
+                using var snapshot = OpenDatabase(candidate, SqliteOpenMode.ReadWriteCreate);
+                source.BackupDatabase(snapshot);
+            }
+
+            var repository = new CarillonRepository(candidate);
+            repository.EnsureCompatibleSchema(alreadyBackedUp: true);
+            repository.EnsureRuntimeTables(alreadyBackedUp: true);
+            repository.Songs();
+            repository.Settings();
+            repository.Silence();
+
+            using (var converted = OpenDatabase(candidate, SqliteOpenMode.ReadOnly))
+            {
+                var result = InspectDatabase(converted);
+                if (result.Version != LegacyVersion.Version81 || !result.Tracks.SequenceEqual(original.Tracks) ||
+                    !result.Rotation.SequenceEqual(original.Rotation))
+                    throw new InvalidDataException("The converted database did not retain the expected playlist and rotation slots.");
+            }
+
+            using (var guard = ProtectDatabase(database))
+            {
+                if (!SHA256.HashData(guard).SequenceEqual(fingerprint))
+                    throw new IOException("The USB database changed after the backup. Close the old Carillon program and try again.");
+            }
+            File.Move(candidate, database, overwrite: true);
+            return backup;
+        }
+        finally
+        {
+            File.Delete(candidate);
+            File.Delete(temporaryBackup);
+        }
+    }
+
     private static readonly string UsbDatabaseEntry = Path.Combine("databases", "carillon.db");
     private const string UsbApplication = "CarillonBells.exe";
     private static readonly string[] LegacyApplicationFiles =

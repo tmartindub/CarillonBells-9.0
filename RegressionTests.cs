@@ -1,7 +1,9 @@
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Carillon.Migration;
 namespace Carillon;
 public static class RegressionTests
 {
@@ -103,9 +105,23 @@ public static class RegressionTests
             repository.EnsureRuntimeTables();repository.RecordDispatch("id",DateTime.Today);repository.RecordDispatch("id",DateTime.Today);check("Persistent dispatch deduplication",repository.Dispatched(DateTime.Today).Count()==1);
             var rotation=repository.Table("PL_RAND_DIR_ROTATION");rotation.Rows[0]["rand_music_dir"]="default";rotation.Rows[1]["rand_music_dir"]="override";rotation.Rows[1]["frm_date"]="2026-12-01";rotation.Rows[1]["to_date"]="2027-01-10";repository.SaveTable(rotation,"slot_no");
             check("Rotation cross-year override",repository.ResolveRandomDirectory(new(2027,1,1),scratch)==Path.Combine(scratch,"override"));check("Rotation fallback",repository.ResolveRandomDirectory(new(2027,6,1),scratch)==Path.Combine(scratch,"default"));
-            var backup=repository.BackupZip();using(var zip=System.IO.Compression.ZipFile.OpenRead(backup))check("SQLite consistent ZIP backup",zip.GetEntry("carillon.db")!.Length>0);
+            var backup=repository.BackupZip();using(var zip=ZipFile.OpenRead(backup))check("SQLite consistent ZIP backup",zip.GetEntry("carillon.db")!.Length>0);
+            check("Row-based database opens without the 7.2.4 upgrade",!MigrationEngine.LocalDatabaseRequiresUpgrade(path));
             using(var connection=repository.Open()) {using var command=connection.CreateCommand();command.CommandText="DROP TABLE PL_RAND_DIR_ROTATION; CREATE TABLE PL_RAND_DIR_ROTATION(id INTEGER PRIMARY KEY,"+string.Join(',',Enumerable.Range(1,7).Select(i=>$"rand_music_dir{i} TEXT,frm_date{i} DATE,to_date{i} DATE"))+"); INSERT INTO PL_RAND_DIR_ROTATION(id,rand_music_dir1) VALUES(1,'wide-default'); DROP TABLE silence_schedule;";command.ExecuteNonQuery();}
-            repository.EnsureCompatibleSchema();check("Wide migration and 12 silence slots",repository.Table("PL_RAND_DIR_ROTATION").Rows.Count==7&&repository.Table("silence_schedule").Rows.Count==12);
+            check("Wide 7.2.4 database is detected",MigrationEngine.LocalDatabaseRequiresUpgrade(path));
+            var beforeUpgrade = File.ReadAllBytes(path);
+            var directoriesBeforeUpgrade = Directory.GetDirectories(scratch);
+            var upgradeBackup = MigrationEngine.UpgradeLocalDatabase(path);
+            using (var zip = ZipFile.OpenRead(upgradeBackup))
+            using (var entry = zip.GetEntry("carillon.db")!.Open())
+            using (var savedDatabase = new MemoryStream())
+            {
+                entry.CopyTo(savedDatabase);
+                check("In-place upgrade ZIP retains the exact old database",Path.GetDirectoryName(upgradeBackup)==scratch&&savedDatabase.ToArray().SequenceEqual(beforeUpgrade));
+            }
+            check("In-place upgrade leaves no new folders or staging files",Directory.GetDirectories(scratch).SequenceEqual(directoriesBeforeUpgrade)&&!Directory.EnumerateFiles(scratch,".carillon-upgrade-*").Any());
+            check("In-place upgrade retains play times, weekday flags, and dispatch records",repository.Songs().Single().Fingerprint==edited.Fingerprint&&repository.Dispatched(DateTime.Today).Single()=="id");
+            check("Wide migration and 12 silence slots",repository.Table("PL_RAND_DIR_ROTATION").Rows.Count==7&&repository.Table("silence_schedule").Rows.Count==12&&!MigrationEngine.LocalDatabaseRequiresUpgrade(path));
             using(var connection=repository.Open(true)){using var command=connection.CreateCommand();command.CommandText="SELECT value FROM CustomTable";check("Unknown tables survive migration",command.ExecuteScalar()?.ToString()=="preserve");command.CommandText="SELECT COUNT(*) FROM sqlite_master WHERE name LIKE 'PL_RAND_DIR_ROTATION_WIDE_BACKUP%'";check("Existing wide backup preserved",Convert.ToInt32(command.ExecuteScalar())==2);command.CommandText="PRAGMA quick_check";check("SQLite integrity after migration",command.ExecuteScalar()?.ToString()=="ok");}
             repository.DeleteSong(repository.Songs().Single());check("Song deletion",repository.Songs().Count==0);
             var log=new CarillonLog(scratch){Enabled=true};log.Append("Played Song: one");log.Append("Daily play count checkpoint: 45");check("Played count ignores checkpoints",log.Count(DateTime.Today)==1);log.Enabled=false;log.Append("Played Song: hidden");check("Logging disabled respected",log.Count(DateTime.Today)==1);

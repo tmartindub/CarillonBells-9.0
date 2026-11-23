@@ -1,17 +1,17 @@
 # Start Carillon
 
-1. In File Explorer, right-click the English 64-bit deployment ZIP and choose **Extract All**. Extract to a writable folder on your PC or USB drive. Keep `CarillonBells.exe` and the supplied `Music` folder together.
-2. Open `CarillonBells.exe` from that folder. For a new installation, choose **No** when **Carillon first start** asks whether to upgrade an existing USB drive. Carillon creates `databases\carillon.db` beside the executable. If that database is already present, Carillon opens it directly.
-3. Check the PC date and time and select the intended speakers or amplifier as the Windows sound output. Clear **Schedule enabled** while you set up and test. Carillon enables the schedule when you start it normally.
+1. In File Explorer, right-click **CarillonBells_9_0_USB_New_Install_win-x64.zip** and choose **Extract All**. On 64-bit Windows, extract the entire ZIP to a new USB drive or a writable PC folder. Keep `CarillonBells.exe` beside the supplied folders, including `databases` and `Music`.
+2. Check the PC date and time and select the intended Windows speakers or amplifier. Set a low volume if you are testing.
+3. Open `CarillonBells.exe` where you extracted it. The included database opens with basic time-marking chimes already scheduled. Clear **Schedule enabled** while you set up and test.
 
-**Upgrading from 7.2.4 or 8.1?** Open the v9 executable from a fresh extracted folder on your PC and choose **Yes** at the first-start prompt. Follow the **Database Migration Guide** to back up and upgrade your existing USB drive. The assistant uses the database and music already on the drive.
+**Upgrading from 7.2.4 or 8.1?** Close the old program. Use the **USB Upgrade** ZIP on the existing USB and follow the **Database Migration Guide** in **Documentation**. Run the new executable from the USB so it uses the existing database and music.
 
 Start Carillon from the USB to use its database and music, even if Windows assigns a different drive letter. Close Carillon before unplugging the USB or copying its installation folder to another drive.
 
 # Add music and test playback
 
-1. Use a supplied MP3 or copy your own MP3 or WAV into the **Music** folder beside the executable.
-2. Click **Add files** below **Play schedule**, open the **Music** folder, and select a recording. It appears in **Songs**. On a prepared installation, you can also select a recording that is already listed.
+1. Select a supplied chime in **Songs**, or copy your own MP3 or WAV into the **Music** folder beside the executable.
+2. To add your own recording, click **Add files** below **Play schedule**, open the **Music** folder, and select the recording. It appears in **Songs**.
 3. Set Windows volume low for the test. If the player shows **Unmute**, click it. Use **System volume** to adjust the level, then select the recording and click **Play**. Listen for sound, then click **Stop**.
 
 ![The demo shows Songs in the center, Add files on the right, and the player below. Keep Schedule enabled cleared during setup.](figures/main.png)

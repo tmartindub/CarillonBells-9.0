@@ -15,8 +15,8 @@ from docx.shared import Emu, Inches, Pt, RGBColor
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "docs" / "guides" / "source"
 GUIDES = {
-    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 22)),
-    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 22)),
+    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 23)),
+    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 23)),
     "Migration": ("Database Migration Guide", "Upgrade Carillon 7.2.4 or 8.1 to v9.0 on the same USB drive.", datetime(2026, 11, 23)),
     "QuickStart": ("Quick Start Guide", "Set up Carillon, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
 }

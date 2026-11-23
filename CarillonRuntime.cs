@@ -78,7 +78,7 @@ public sealed class CarillonRuntime : IDisposable
             // A missing or inaccessible display preference leaves the clock on Original.
         }
         Log=new(baseDirectory); Player=new(dispatcher); Audio=new(dispatcher);
-        Reload(); repository.EnsureRuntimeTables();
+        Reload(); repository.EnsureRuntimeTables(backupInDatabaseFolder:true);
         foreach(var id in repository.Dispatched(Now.Date)) dispatched.Add(id);
         Log.Trim(Now); trimDate=Now.Date; PlayedToday=Log.Count(Now.Date);
         reportDate=Now.Hour>=5?Now.Date:DateTime.MinValue;

@@ -29,10 +29,11 @@
     <Resource Include="samples\empty-schema.sql" />
     <Compile Remove="tools\**\*.cs" />
     <Page Remove="tools\CarillonMigration\**\*.xaml" />
-    <Compile Include="tools\CarillonMigration\MigrationEngine.cs;tools\CarillonMigration\MigrationWindow.xaml.cs;tools\CarillonMigration\UsbUpgrade.cs" />
-    <Page Include="tools\CarillonMigration\MigrationWindow.xaml;tools\CarillonMigration\MigrationStyles.xaml" />
+    <Compile Include="tools\CarillonMigration\MigrationEngine.cs;tools\CarillonMigration\UsbUpgrade.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(CarillonSingleExe)' != 'true'">
+    <Compile Include="tools\CarillonMigration\MigrationWindow.xaml.cs" />
+    <Page Include="tools\CarillonMigration\MigrationWindow.xaml;tools\CarillonMigration\MigrationStyles.xaml" />
     <Content Include="help\**\*;LICENSE;NOTICE;third-party-notices\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup Condition="'$(CarillonSingleExe)' == 'true'">

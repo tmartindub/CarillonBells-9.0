@@ -1,10 +1,10 @@
 # Release scope and design
 
-## Purpose and migration from 8.1
+## Purpose and upgrade behavior
 
-Carillon Bells 9.0 is the C# Windows Presentation Foundation edition of Westminster Chimes and Carillon Bells. It replaces the Delphi FireMonkey implementation in the new v9 installation while retaining the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, mail reports, and the original analog clock face. This edition documents application source revision 3eb90c0.
+Carillon Bells 9.0 is the C# Windows Presentation Foundation edition of Westminster Chimes and Carillon Bells. It replaces the Delphi FireMonkey implementation while retaining the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, mail reports, and the original analog clock face.
 
-The new implementation is a separate application with its own executable, database, and Git history. A database copied from 8.1 supplies the starting playlist and settings. The v9 import flow reads the source database, upgrades a candidate copy, and backs up the local v9 database before replacement. The repository preserves compatible tables and custom schema objects. The standalone 8.1 conversion utility is historical. The Database tab now supplies the analysis, import, and conversion report.
+The single-executable release supports a new USB with a starter database and in-place upgrades of existing 7.2.4 and 8.1 installations. An in-place upgrade runs from the existing folder and uses its database and audio tree. The Database tab separately supports read-only analysis and import of a selected database into an existing v9 installation.
 
 ## Source map
 
@@ -23,9 +23,11 @@ Use the versioned source to resolve behavioral questions. The FMX handoff and or
 
 Application startup sets the short-date format to en-US MM/dd/yyyy. It handles --self-test and --audio-test before normal initialization, so those modes use dedicated test paths. Normal startup obtains exclusive handles for Carillon.lock beside the executable and carillon.db.lock beside the database. A lock file can remain on disk after an earlier session. Check the process holding the file handle when diagnosing a startup lock.
 
-For a first launch, the app creates the databases folder and asks before initializing an absent carillon.db from the embedded sanitized schema. It then checks compatibility, loads the palette, displays the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash uses the Westminster artwork, title, and portable edition caption. The approved three-bell icon is embedded in the executable and used by the app windows.
+The new USB package supplies databases\carillon.db and its time-marking recordings. The single-executable launch reads the database in its own installation folder. A 7.2.4 database triggers one confirmation before conversion and opens a review session with scheduling paused and automatic mail suppressed. A compatible 8.1 database opens directly with the normal runtime; the application backs up the file before initializing any missing dispatch metadata.
 
-The app uses AppContext.BaseDirectory as the root for the database, logs, playback, and help, including when launched from a shortcut with a different working directory. Separate copies on a disk and a USB drive can therefore keep independent data. Run a single scheduling instance on a Windows audio endpoint in normal operation. Two copies with independent queues can both dispatch on the same device.
+After the database is ready, startup loads the palette, displays the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash uses the Westminster artwork, title, and portable edition caption. The approved three-bell icon is embedded in the executable and used by the app windows.
+
+The app uses AppContext.BaseDirectory as the root for the database, logs, and playback, including when launched from a shortcut with a different working directory. The single executable opens its embedded HTML Help from a temporary PC copy. Separate copies on a disk and a USB drive keep independent data. Run a single scheduling instance on a Windows audio endpoint in normal operation. Two copies with independent queues can both dispatch on the same device.
 
 ## Shutdown and power management
 
@@ -83,7 +85,7 @@ When synchronization runs, it matches trimmed seasonal names case-insensitively 
 
 ## Random directory selection
 
-Slot 1 is the everyday fallback and uses .\random_songs in a blank v9 installation. Slots 2 through 7 are evaluated in order. The first nonempty folder whose annual date range matches wins. Calendar matching uses month and day, handles a range that crosses New Year, and includes both boundaries. Edits use the Browse button in the intended row. The chosen folder must resolve within the portable installation and is stored as a relative path.
+Slot 1 is the everyday fallback. The empty test schema gives it .\random_songs. Slots 2 through 7 are evaluated in order. The first nonempty folder whose annual date range matches wins. Calendar matching uses month and day, handles a range that crosses New Year, and includes both boundaries. Edits use the Browse button in the intended row. The chosen folder must resolve within the portable installation and is stored as a relative path.
 
 For a song title containing Random Music Generator, the player resolves the active folder at playback and chooses a random MP3 from that directory. The scan uses files directly inside the folder. A missing folder or one without an eligible file causes a playback error. Check the override that was active on the date of the failure before changing the fallback.
 
@@ -104,7 +106,13 @@ Microsoft.Data.Sqlite opens short-lived connections with pooling disabled. Repos
 - PL_RAND_DIR_ROTATION stores slots 1 through 7 with rand_music_dir, frm_date, and to_date. PL_RAND_DIR_ROTATION_WIDE_BACKUP is a preserved historical layout.
 - silence_schedule stores a rule ID, enabled flag, purpose, times, and weekday flags. Carillon9_Dispatched stores the persistent local-date dispatch ledger.
 
-samples\empty-schema.sql is the application resource for creating a blank install and test databases. The repository's compatibility checks remain authoritative for an imported database with an older schema.
+The empty schema resource at samples\empty-schema.sql supplies a baseline for disposable databases. The release starter is packaged as databases\carillon.db with basic time-marking entries whose relative paths resolve under Music. The repository's compatibility checks also apply to a separately imported database.
+
+## In-place upgrade
+
+For 7.2.4, startup detects the wide random-directory schema and requests confirmation before converting it. It saves a verified carillon_before_upgrade_*.zip beside the working database. The converted schema retains the original wide table and fills missing compatibility fields and silence slots. It preserves the stored schedule times and the existing audio. A normal start of a compatible 8.1 database adds Carillon9_Dispatched when needed and places the pre-change ZIP beside the database.
+
+The in-place ZIP contains carillon.db. For release verification, use disposable legacy installations and confirm the preserved snapshot, readable working database, and unchanged existing music before resuming on-site playback.
 
 ## Analysis and import
 
@@ -118,7 +126,7 @@ A consistent ZIP of the current local database precedes replacement. The app val
 
 ## Recovery and backups
 
-Close the copy being restored and make a ZIP backup before restoring from a known-good file. Confirm the exact destination and its drive letter. Extract the desired carillon.db from the backup ZIP into the selected copy's databases directory. Reopen in Evaluation mode and verify settings, paths, and upcoming events before resuming normal onsite operation. Database backups live under databases\backup and the project's separate pre-change archive can include source, application files, database snapshots, and the clock preference.
+Close the copy being restored and make a separate ZIP of the current database. Confirm the exact destination and its drive letter. Extract carillon.db from the chosen backup into the installation's databases directory. In-place startup backups are beside the database under databases. The Database import action keeps its local backups under databases\backup. Reopen in Evaluation mode and verify settings, paths, and upcoming events before resuming normal on-site operation.
 
 # Audio output and clock visuals
 
@@ -157,18 +165,18 @@ CarillonLog serializes file access and recognizes both current en-US and histori
 
 ## Project and build commands
 
-Open CarillonBells.sln in a Windows IDE with .NET 10 and WPF support. CarillonBells.csproj targets net10.0-windows. Directory.Build.props routes project intermediates into dcu and excludes local output, tools, and private directories from compilation. The executable icon, splash and clock assets are WPF resources. Help is local HTML copied into published output.
+Open CarillonBells.sln in a Windows IDE with .NET 10 and WPF support. CarillonBells.csproj targets net10.0-windows. Directory.Build.props routes project intermediates into dcu and excludes local output, tools, and private directories from compilation. The executable icon, splash and clock assets are WPF resources. In the single-executable release, local HTML Help is embedded so upgrades can use it immediately. The new USB package also includes a Help folder for direct access.
 
-Run tools\build.ps1 with Release or Debug. To publish a portable build, supply -Runtime win-x64 or -Runtime win-x86 and -Publish. The script uses tools\dotnet when installed, otherwise it uses the system dotnet executable, and directs CLI settings and NuGet packages into project-local caches. The lock file and project file identify dependency versions. Self-contained packages include the architecture-specific .NET Desktop and SQLite components and require the complete folder.
+Run tools\build.ps1 with Release or Debug. For the current USB release, publish a 64-bit build with -Runtime win-x64, -Publish, and -SingleExe. The script uses tools\dotnet when installed, otherwise it uses the system dotnet executable, and directs CLI settings and NuGet packages into project-local caches. The lock file and project file identify dependency versions. The bundled EXE contains the 64-bit .NET Desktop runtime and the SQLite native component.
 
-Use an approved pre-change ZIP before updating a working installation. Close Carillon and validate the application build first. The optional -PortableRoot argument applies only to an initialized v9 destination with its own database and executable. It copies and hash-verifies application files while preserving the portable database, audio, logs, and data directory. Recheck the drive letter and start from the intended EXE. To relocate, copy the complete folder including the database, relative music tree, data, and help.
+Use an approved pre-change ZIP before updating a working installation. Close Carillon and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the single-executable USB release, extract the Upgrade ZIP to the existing installation folder. To relocate a working installation, close it and copy the complete folder.
 
 ## Validation and packaging
 
 Run CarillonBells.exe --self-test on disposable data before deployment and on each updated installation. Verify the generated regression-results.txt and failure count alongside the process exit code. Run --audio-test followed by a local reference MP3 to test decoding, quiet WAV playback, serial repeats, pause and stop, dispatch with Clock open, time discontinuity, silence, endpoint mute, and cleanup. Audio tests exercise actual Windows audio, so run them in a safe test setting. Review audio-regression-results.txt. Exercise exact layouts, deployed resources, save and cancel, database import and restoration, and portability under a different working directory when those surfaces change.
 
-tools\package.ps1 creates architecture-specific Evaluation ZIPs and records file lengths, SHA-256 hashes, and the source commit in the package manifest. Audit the ZIP for private files and verify its manifest. Carry the license, notices, local help, and current guides into the package. Keep working databases, credentials, music, diagnostic logs, backups, and scratch output private. Record physical endpoint removal, USB disconnect behavior, real SMTP delivery, diverse monitor scaling, and long-running operation as separate deployment evidence when checked.
+Package the 64-bit USB release as separate New Install and Upgrade ZIPs. The New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each scheduled starter recording resolves inside Music and that the starter database contains only the intended time-marking rows. The Upgrade ZIP contains the executable and Documentation for extraction beside the existing database. Review archive contents and hashes. Keep private working databases, credentials, music libraries, diagnostic logs, backups, and scratch output out of the distribution. Record physical endpoint removal, USB disconnect behavior, real SMTP delivery, diverse monitor scaling, and long-running operation as separate deployment evidence when checked.
 
 ## Maintain the guides
 
-The editable manuscripts are under docs\guides\source. Run tools\build_guides.py with an output folder to generate the DOCX drafts. In LibreOffice Writer, update each table of contents, save the DOCX, and export the PDF from that document. Check the dotted leaders, page numbers, and links after updating the contents. The release package collects the finished DOCX guides from docs\guides and their PDFs from docs\pdf.
+The editable manuscripts are under docs\guides\source. Run tools\build_guides.py with an output folder to generate the DOCX drafts. In LibreOffice Writer, update each table of contents, save the DOCX, and export the PDF from that document. Check the dotted leaders, page numbers, and links after updating the contents. The USB package collects the finished DOCX guides from docs\guides and their PDFs from docs\pdf into Documentation.

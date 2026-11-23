@@ -1,17 +1,20 @@
 # Start and move Carillon
 
-Carillon Bells 9.0 schedules Westminster chimes and music on Windows. This guide covers setting up the portable installation, programming bells, controlling playback and silence, and looking after the local database. If you are moving from 8.1, keep the old installation available as a reference while you verify the new copy.
+Carillon Bells 9.0 schedules Westminster chimes and music on Windows. This guide covers setting up the portable installation, programming bells, controlling playback and silence, and looking after the local database.
 
 ## First start
 
-1. Extract the whole v9.0 package to a writable Windows folder. Use win-x64 on 64-bit Windows. For 32-bit Windows, use a win-x86 package built from the same release. Each package includes its own .NET runtime.
-2. Start CarillonBells.exe for normal operation. To suppress automatic mail while evaluating the installation, run Launch-Carillon-Evaluation.cmd or start CarillonBells.exe with the --evaluation option.
-3. If Carillon asks to create a blank database, choose Yes. You can then add music to this blank installation or import a copy of your existing Carillon database through Database import.
-4. Verify the date, organization name, Windows sound output, and volume. Review Today's schedule and Silence windows before leaving the app unattended. Carillon enables scheduling at startup. Evaluation mode also plays audio and controls Windows system volume, so use a suitable test output and volume.
+1. On 64-bit Windows, extract the entire **CarillonBells_9_0_USB_New_Install_win-x64.zip** to a new USB drive or writable Windows folder. The package supplies **CarillonBells.exe**, **data**, **databases**, **Documentation**, **Help**, **logs**, and **Music**. The executable includes its .NET runtime.
+2. Check the PC date and time, the Windows sound output, and the volume. Open **CarillonBells.exe** where you extracted it. The starter database contains 14 time-marking Westminster chime entries. **Today's schedule** shows the included times, such as 6:00 a.m. and 6:30 a.m.
+3. Set the organization name in **System**. Review **Today's schedule** and **Silence windows** before leaving the app unattended. A normal start enables scheduling. For setup or manual playback, clear **Schedule enabled** and use a suitable test output.
+
+For an existing 7.2.4 or 8.1 USB, close the old program and extract the **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. See the **Database Migration Guide** in **Documentation** for the one-time 7.2.4 confirmation, backup details, and verification.
+
+Start **CarillonBells.exe** with the **--evaluation** option to suppress automatic mail during a test. Evaluation mode still plays audio and controls Windows system volume.
 
 ## Copy the entire installation
 
-Close Carillon before copying its installation. Copy the complete folder, including CarillonBells.exe, its runtime files, databases, music, data, logs, and help. On the prepared USB drive the folder is D:\CarillonBells_9_0. The drive letter can change when the copy moves. Start the executable inside the copied folder to use that copy's database, music, log, and display settings. Use one running instance per installation.
+Close Carillon before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. Use one running instance per installation.
 
 Place new audio inside the installation before adding it. For example, a playlist path of .\Songs\Evening Bells.mp3 refers to Songs\Evening Bells.mp3 beside the executable. An imported path of C:\Songs\Evening Bells.mp3 resolves to the same Songs subfolder in the current installation. Use a local folder within the installation for each track and random music directory.
 
@@ -140,7 +143,7 @@ Click Clock hands below Clock in the sidebar. Select a style to see its preview 
 
 Open Themes from the main window or its Administration tab. Choosing a palette immediately applies and saves it. For your own colors, enter six-digit values such as #EFF3F6 for the background and #173650 for the text, then click Apply and save custom colors.
 
-Help opens the local HTML guide in your default browser. Its contents are available offline. Internet access is required for the optional GTranslate widget. Exit, File then Exit, and the window close button follow the same shutdown procedure and check for pending edits.
+Help opens the local HTML guide in your default browser. The single-executable release carries this guide inside the executable, and the new USB package also supplies an HTML copy in **Help**. Its contents are available offline. The optional GTranslate widget requires internet access. Exit, File then Exit, and the window close button follow the same shutdown procedure and check for pending edits.
 
 # Import and recover a database
 

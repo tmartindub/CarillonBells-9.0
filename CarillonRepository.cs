@@ -113,9 +113,10 @@ public sealed class CarillonRepository(string databasePath)
         var path=chosen is null?"":Text(chosen,"rand_music_dir"); if(string.IsNullOrWhiteSpace(path)) throw new IOException("No random music directory is configured.");
         return DataFormats.PortablePath(baseDirectory,path);
     }
-    public string BackupZip()
+    public string BackupZip(bool inDatabaseFolder=false)
     {
-        var folder=Path.Combine(Path.GetDirectoryName(DatabasePath)!,"backup"); Directory.CreateDirectory(folder);
+        var folder=Path.GetDirectoryName(DatabasePath)!;
+        if(!inDatabaseFolder) { folder=Path.Combine(folder,"backup"); Directory.CreateDirectory(folder); }
         var zipPath=Path.Combine(folder,"carillon_before_upgrade_"+DateTime.Now.ToString("yyyyMMdd_HHmmss_fff")+".zip");
         var snapshot=Path.Combine(folder,Guid.NewGuid()+".db");
         try {
@@ -124,11 +125,11 @@ public sealed class CarillonRepository(string databasePath)
         } finally { if(File.Exists(snapshot)) File.Delete(snapshot); }
         return zipPath;
     }
-    public void EnsureRuntimeTables()
+    public void EnsureRuntimeTables(bool backupInDatabaseFolder=false,bool alreadyBackedUp=false)
     {
         using var connection=Open(); using var command=connection.CreateCommand();
         command.CommandText="SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='Carillon9_Dispatched'";
-        if(Convert.ToInt32(command.ExecuteScalar())==0) BackupZip();
+        if(!alreadyBackedUp&&Convert.ToInt32(command.ExecuteScalar())==0) BackupZip(backupInDatabaseFolder);
         command.CommandText="CREATE TABLE IF NOT EXISTS Carillon9_Dispatched(event_id TEXT PRIMARY KEY,event_date TEXT NOT NULL)"; command.ExecuteNonQuery();
     }
     public IEnumerable<string> Dispatched(DateTime day)
@@ -152,7 +153,7 @@ public sealed class CarillonRepository(string databasePath)
         }
         transaction.Commit();return changed;
     }
-    public void EnsureCompatibleSchema()
+    public void EnsureCompatibleSchema(bool backupInDatabaseFolder=false,bool alreadyBackedUp=false)
     {
         using var connection=Open();
         HashSet<string> Fields(string table) { using var cmd=connection.CreateCommand(); cmd.CommandText=$"PRAGMA table_info([{table}])"; using var reader=cmd.ExecuteReader(); var fields=new HashSet<string>(StringComparer.OrdinalIgnoreCase); while(reader.Read()) fields.Add(reader.GetString(1)); return fields; }
@@ -163,7 +164,8 @@ public sealed class CarillonRepository(string databasePath)
         var stableIndex=false;using(var indexReader=settingsCheck.ExecuteReader()){while(indexReader.Read())if(indexReader.GetString(1)=="idx_pl_settings_settings_id"&&indexReader.GetInt32(2)==1)stableIndex=true;}
         var stableRows=false;if(settings.Contains("settings_id")){settingsCheck.CommandText="SELECT COUNT(*) FROM PL_SETTINGS";var totalRows=Convert.ToInt32(settingsCheck.ExecuteScalar());settingsCheck.CommandText="SELECT COUNT(*) FROM PL_SETTINGS WHERE settings_id=1";stableRows=totalRows==1&&Convert.ToInt32(settingsCheck.ExecuteScalar())==1;}
         if(missingSettings.Length==0&&!wide&&rotation.Contains("slot_no")&&silence.Contains("Purpose")&&stableIndex&&stableRows) return;
-        BackupZip(); using var transaction=connection.BeginTransaction();
+        if(!alreadyBackedUp) BackupZip(backupInDatabaseFolder);
+        using var transaction=connection.BeginTransaction();
         void Run(string sql) { using var cmd=connection.CreateCommand(); cmd.Transaction=transaction; cmd.CommandText=sql; cmd.ExecuteNonQuery(); }
         if(settings.Count==0){Run("CREATE TABLE PL_SETTINGS(settings_id INTEGER NOT NULL DEFAULT 1)");settings.Add("settings_id");}
         foreach(var f in missingSettings.Where(f=>!settings.Contains(f))) Run($"ALTER TABLE PL_SETTINGS ADD COLUMN [{f}] {(f=="settings_id"?"INTEGER NOT NULL DEFAULT 1":f is "email_enabled" or "LOGGING_STATUS" or "silence_enabled" or "smtp_port"?"INTEGER":"TEXT")}");

@@ -4,29 +4,21 @@ Experimental C# / WPF edition of Westminster Chimes and Carillon Bells. This is 
 
 The application uses the approved WPF composition, portable SQLite storage, independent managed MP3 decoding, PCM WAV playback, Windows endpoint volume/mute, scheduling, seasonal groups, annual random-directory rotation, both weekly and legacy silence systems, SMTP health reports, logs, themes, original analog clock artwork and local HTML help.
 
-## Running
+## Running from USB
 
-Extract the complete architecture-specific self-contained evaluation ZIP into a new writable folder and run `Launch-Carillon-Evaluation.cmd`. The included .NET runtime does not require a machine-wide installation. The deployment contains multiple runtime/native files; it is not a statically linked single EXE.
+- **New installation.** Extract the USB New Install ZIP to an empty USB root. Open `CarillonBells.exe`. The ZIP supplies a starter time-marking schedule in `databases\carillon.db` and the `data`, `Documentation`, `Help`, `logs`, and `Music` folders.
+- **Upgrade from 7.2.4.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. Confirm the one-step conversion. V9 verifies a backup ZIP in `databases`, converts the database in place, and opens with scheduling paused for review.
+- **Upgrade from 8.1.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. V9 uses the existing database. On the first run that needs the v9 dispatch table, it saves a backup ZIP in `databases` before adding the table.
 
-The first start can create an empty database. Database import copies a selected database read-only into the separate installation, backs up existing local data as ZIP, and upgrades only the copy. Music is not included or copied automatically. Do not run this application against production storage.
+The upgrade ZIP contains the EXE and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open the new EXE directly from the USB. The English x64 EXE includes the .NET runtime. To move a working installation to another writable USB, close Carillon and copy the complete working installation.
 
-To move a complete 7.2.4 or 8.1 installation, open **CarillonMigration.exe** beside the v9 executable. Select the closed legacy installation and a new destination folder. The wizard previews the detected format, music files and any missing paths, then creates a v9 copy with the database, music, a database backup ZIP and a report. It upgrades the 7.2.4 database copy. For 8.1 it preserves the existing schema during migration. See the Database Migration Guide for the review steps.
-
-The initialized USB installation is `D:\CarillonBells_9_0`. Run its `CarillonBells.exe` for normal operation. To move it, close Carillon and copy the **entire CarillonBells_9_0 folder**, including databases, music, runtime files and help, to a writable folder on another Windows device. The drive letter may change. The x64 USB build includes its .NET runtime; 32-bit Windows requires the separately published win-x86 build. Keep each installation's database separate.
+For a separate database copy, **Database import** opens the source read-only, backs up the local database, and applies compatibility changes to the imported copy. See the Database Migration Guide in `Documentation` for both upgrade routes and recovery.
 
 Scheduled and manual playback, including random music, resolve inside the running EXE's folder. Legacy drive-letter paths use their folder layout under that folder (for example, `C:\Songs\bell.mp3` resolves to `<EXE folder>\Songs\bell.mp3`). Store music and random directories as relative paths. Copy new audio into the portable installation before adding it; network paths and paths escaping the installation are rejected. Database import does not copy audio. Existing music folders are preserved during binary updates.
 
-After the approved pre-change ZIP backup, build and validate the application folder first. Update an initialized USB copy with:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x64 -Publish -PortableRoot 'D:\CarillonBells_9_0'
-```
-
-This republishes the application, copies and hash-verifies application files, and preserves the USB database, logs and music. Run the USB self-tests after updating. Database/settings edits in one installation are local to that installation; they are not silently synchronized over another installation's data.
-
 The interface uses an 18-pixel base font, with larger headings and 14–16-pixel supporting labels. The main workspace fits the window and reserves bottom rows for the player, volume and status, so those controls stay visible. The song list scrolls within its panel; very small windows can scroll navigation or editor content independently. System settings use three columns, and Email settings use two columns. Group play times display as HH:mm:ss without fractional seconds. These settings and layouts remain editable in XAML.
 
-Playback logs retain `Played Song:` entries and no longer add a separate `Playback completed` entry. Historical logs are preserved. The initialized USB music collection includes `Music`, `Random_songs`, `Random_songs-2`, and `Songs`, updated from the authorized F: source. Keep all four inside the v9 folder when copying the installation; seasonal rotation and random playback resolve there. Updating music does not change the scheduled play times.
+Playback logs record `Played Song:` entries. Existing `Songs`, `Random_songs`, and other personal music folders can still be used on upgraded USB drives when the database references them.
 
 `--evaluation` suppresses automatic email. It retains real scheduling, playback, power hold, and Windows volume control. Manual email test commands ask for confirmation.
 
@@ -37,7 +29,9 @@ Use a supported .NET 10 SDK and Windows desktop development tools. All windows a
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Debug -Runtime win-x86
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x64 -Publish
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x64 -Publish -SingleExe
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x64 -SingleExe -UsbUpgrade
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x64 -SingleExe -StarterDatabase <path-to-starter-db> -MusicDirectory <path-to-Music>
 ```
 
 The SDK used for development is installed locally under `tools\dotnet`, and caches are ignored. A fresh checkout can use an installed .NET 10 SDK. Build intermediates go to `dcu`.
@@ -54,6 +48,7 @@ Self-tests use disposable sanitized data. The audio test reads the supplied MP3 
 - `docs\guides\CarillonBells_9_0_User_Guide.docx`
 - `docs\guides\CarillonBells_9_0_Engineering_Guide.docx`
 - `docs\guides\CarillonBells_9_0_Database_Migration_Guide.docx`
+- `docs\guides\CarillonBells_9_0_Quick_Start_Guide.docx`
 - Companion PDFs under `docs\pdf`
 - `help\index.html` for offline help, search, glossary, index and print support; GTranslate requires internet access
 - `docs\guides\acceptance-matrix.md` for implemented behavior, executed tests and outstanding environmental acceptance
@@ -69,4 +64,4 @@ Missed events after sleep or clock jumps are skipped. A persisted dispatch ledge
 
 Source backup publication does not authorize replacing the live 8.1 release. Multiple actual DPI settings, storage disconnection, device removal, authorized SMTP delivery and extended soak testing remain deployment acceptance checks. See the acceptance matrix. Do not label this evaluation as production-approved.
 
-New code is Apache License 2.0. `NOTICE` retains the MIT notice for reused reference material. `third-party-notices` contains dependency notices. Private databases, credentials, logs, dumps and music must never enter public Git or packages.
+New code is Apache License 2.0. `NOTICE` retains the MIT notice for reused reference material. `third-party-notices` contains dependency notices. Keep working databases, credentials, logs, dumps, and personal music out of public Git and release packages. The New Install ZIP uses a sanitized starter database and the supplied `Music` collection.
