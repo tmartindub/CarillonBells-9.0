@@ -18,6 +18,7 @@ GUIDES = {
     "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 22)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 22)),
     "Migration": ("Database Migration Guide", "Upgrade Carillon 7.2.4 or 8.1 to v9.0 on the same USB drive.", datetime(2026, 11, 23)),
+    "QuickStart": ("Quick Start Guide", "Set up Carillon, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
 }
 
 
@@ -61,7 +62,7 @@ def add_figure(document, path, caption):
     document.add_paragraph(caption, style="Caption")
 
 
-def add_manuscript(document, source):
+def add_manuscript(document, source, *, quick_start=False):
     first_heading = True
     for line in source.read_text(encoding="utf-8-sig").splitlines():
         text = line.strip()
@@ -70,9 +71,10 @@ def add_manuscript(document, source):
         if text.startswith(("## ", "# ")):
             level = 2 if text.startswith("## ") else 1
             paragraph = document.add_heading(text.removeprefix("#" * level + " "), level)
-            if first_heading:
+            starts_page = (level == 1 and not first_heading) if quick_start else first_heading
+            if starts_page:
                 paragraph.paragraph_format.page_break_before = True
-                first_heading = False
+            first_heading = False
             continue
         figure = re.fullmatch(r"!\[([^\]]+)\]\((figures/[^)]+\.png)\)", text)
         if figure:
@@ -92,6 +94,7 @@ def add_manuscript(document, source):
 
 def make_guide(kind, destination):
     title, purpose, last_changed = GUIDES[kind]
+    quick_start = kind == "QuickStart"
     document = Document()
     section = document.sections[0]
     section.page_width = Inches(8.5)
@@ -118,7 +121,7 @@ def make_guide(kind, destination):
     styles["Title"].font.bold = True
     styles["Title"].paragraph_format.space_after = Pt(8)
     styles["Subtitle"].font.size = Pt(25)
-    styles["Subtitle"].paragraph_format.space_after = Pt(24)
+    styles["Subtitle"].paragraph_format.space_after = Pt(12 if quick_start else 24)
 
     for name, size, before, after in (("Heading 1", 21, 20, 6), ("Heading 2", 13, 12, 4)):
         style = styles[name]
@@ -167,15 +170,16 @@ def make_guide(kind, destination):
     caption.paragraph_format.keep_with_next = False
 
     cover = document.add_paragraph("Carillon Bells 9.0", "Title")
-    cover.paragraph_format.space_before = Pt(80)
+    cover.paragraph_format.space_before = Pt(22 if quick_start else 80)
     document.add_paragraph(title, "Subtitle")
     document.add_paragraph(purpose)
     document.add_paragraph(f"Last changed {last_changed:%B %d, %Y}")
-    document.add_page_break()
+    if not quick_start:
+        document.add_page_break()
     document.add_paragraph("Table of contents", "Guide contents title")
     add_field(document.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
 
-    add_manuscript(document, SOURCES / f"{kind}.md")
+    add_manuscript(document, SOURCES / f"{kind}.md", quick_start=quick_start)
     footer = section.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     footer.add_run("Page ").font.size = Pt(9)
