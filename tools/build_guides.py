@@ -14,11 +14,10 @@ from docx.shared import Emu, Inches, Pt, RGBColor
 
 PROJECT = Path(__file__).resolve().parents[1]
 SOURCES = PROJECT / "docs" / "guides" / "source"
-LAST_CHANGED = datetime(2026, 11, 22)
 GUIDES = {
-    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation."),
-    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release."),
-    "Migration": ("Database Migration Guide", "Use the Carillon Migration wizard to move a 7.2.4 or 8.1 installation and its music to v9.0."),
+    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 22)),
+    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 22)),
+    "Migration": ("Database Migration Guide", "Upgrade Carillon 7.2.4 or 8.1 to v9.0 on the same USB drive.", datetime(2026, 11, 23)),
 }
 
 
@@ -92,7 +91,7 @@ def add_manuscript(document, source):
 
 
 def make_guide(kind, destination):
-    title, purpose = GUIDES[kind]
+    title, purpose, last_changed = GUIDES[kind]
     document = Document()
     section = document.sections[0]
     section.page_width = Inches(8.5)
@@ -171,7 +170,7 @@ def make_guide(kind, destination):
     cover.paragraph_format.space_before = Pt(80)
     document.add_paragraph(title, "Subtitle")
     document.add_paragraph(purpose)
-    document.add_paragraph(f"Last changed {LAST_CHANGED:%B %d, %Y}")
+    document.add_paragraph(f"Last changed {last_changed:%B %d, %Y}")
     document.add_page_break()
     document.add_paragraph("Table of contents", "Guide contents title")
     add_field(document.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
@@ -187,7 +186,7 @@ def make_guide(kind, destination):
     properties.subject = purpose
     properties.author = "Carillon Bells Project"
     properties.keywords = "Carillon Bells, version 9.0, portable Windows application"
-    properties.modified = LAST_CHANGED
+    properties.modified = last_changed
     document.save(destination)
 
 
@@ -196,7 +195,7 @@ def main():
     parser.add_argument("output", type=Path, help="Directory for DOCX drafts before updating the contents in Writer")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    for kind, (title, _) in GUIDES.items():
+    for kind, (title, *_) in GUIDES.items():
         filename = f"CarillonBells_9_0_{title.replace(' ', '_')}.docx"
         destination = args.output / filename
         make_guide(kind, destination)
