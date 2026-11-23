@@ -19,7 +19,7 @@ PRODUCT_VERSION = "9.0"
 GUIDES = {
     "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 23)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 23)),
-    "Migration": ("Database Migration Guide", "Upgrade a 7.2.4 or 8.1 installation to version 9.0 on the same USB drive.", datetime(2026, 11, 23)),
+    "Migration": ("Database Migration Guide", "Upgrade a 7.2.4 or 8.1 USB or copy it to a separate version 9.0 installation.", datetime(2026, 11, 23)),
     "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
 }
 

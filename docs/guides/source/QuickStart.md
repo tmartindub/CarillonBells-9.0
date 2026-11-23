@@ -1,10 +1,12 @@
 # Start the app
 
-1. In File Explorer, right-click **CarillonBells_9_0_USB_New_Install_win-x64.zip** and choose **Extract All**. On 64-bit Windows, extract the entire ZIP to a new USB drive or a writable PC folder. Keep `CarillonBells.exe` beside the supplied folders, including `databases` and `Music`.
+On the PC that will run the app, open **Settings**, then **System**, then **About**. Under **System type**, use **win-x86** for 32-bit Windows or **win-x64** for 64-bit Windows on an x64 PC.
+
+1. Choose the matching **USB New Install** ZIP. If you have **Package Setup**, run it on the PC to save that ZIP first. In File Explorer, right-click the ZIP and choose **Extract All**. Extract it to a new USB drive or writable PC folder, keeping `CarillonBells.exe` beside `databases` and `Music`.
 2. Check the PC date and time and select the intended Windows speakers or amplifier. Set a low volume if you are testing.
 3. Open `CarillonBells.exe` where you extracted it. The included database opens with basic time-marking chimes already scheduled. Clear **Schedule enabled** while you set up and test.
 
-**Upgrading from 7.2.4 or 8.1?** Close the old program. Use the **USB Upgrade** ZIP on the existing USB and follow the **Database Migration Guide** in **Documentation**. Run the new executable from the USB so it uses the existing database and music.
+**Upgrading from 7.2.4 or 8.1?** Close the old program. Use the matching **USB Upgrade** ZIP on the existing USB. Follow the **Database Migration Guide** in **Documentation**, then run the new executable from the USB to use your database and music.
 
 Start the app from the USB to use its database and music, even if Windows assigns a different drive letter. Close the app before unplugging the USB or copying its installation folder to another drive.
 

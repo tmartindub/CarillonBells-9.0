@@ -4,17 +4,19 @@ Westminster Chimes and Carillon Bells schedules chimes and music on Windows. Thi
 
 ## First start
 
-1. On 64-bit Windows, extract the entire **CarillonBells_9_0_USB_New_Install_win-x64.zip** to a new USB drive or writable Windows folder. The package supplies **CarillonBells.exe**, **data**, **databases**, **Documentation**, **Help**, **logs**, and **Music**. The executable includes its .NET runtime.
+On the PC that will run the app, open **Settings**, then **System**, then **About**. Under **System type**, use the **32-bit** release folder with the **win-x86** suffix for 32-bit Windows, or the **64-bit** folder with **win-x64** for 64-bit Windows on an x64 PC. The same USB layout works with either build. The bundled .NET 10 runtime supports the Windows releases listed by Microsoft, including select Windows 10 LTSC or Enterprise releases and current Windows 11 releases.
+
+1. Choose **CarillonBells_9_0_USB_New_Install_win-x86.zip** or **CarillonBells_9_0_USB_New_Install_win-x64.zip** to match Windows. If you have **Package Setup** for that package, run it on the PC to save the ZIP to a folder. In File Explorer, use **Extract All** to put the entire ZIP on a new USB drive or in a writable Windows folder. It supplies **CarillonBells.exe**, **data**, **databases**, **Documentation**, **Help**, **logs**, and **Music**.
 2. Check the PC date and time, the Windows sound output, and the volume. Open **CarillonBells.exe** where you extracted it. The starter database contains 14 time-marking Westminster chime entries. **Today's schedule** shows the included times, such as 6:00 a.m. and 6:30 a.m.
 3. Set the organization name in **System**. Review **Today's schedule** and **Silence windows** before leaving the app unattended. A normal start enables scheduling. For setup or manual playback, clear **Schedule enabled** and use a suitable test output.
 
-For an existing 7.2.4 or 8.1 USB, close the old program and extract the **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. See the **Database Migration Guide** in **Documentation** for the one-time 7.2.4 confirmation, backup details, and verification.
+For an existing 7.2.4 or 8.1 USB, close the old program and extract the matching **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. The **Database Migration Guide** in **Documentation** covers the one-time 7.2.4 confirmation, backups, and creating a separate installation with **CarillonMigration.exe**.
 
 Start **CarillonBells.exe** with the **--evaluation** option to suppress automatic mail during a test. Evaluation mode still plays audio and controls Windows system volume.
 
 ## Copy the entire installation
 
-Close the app before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. Use one running instance per installation.
+Close the app before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. If you move to a PC with different Windows bitness, apply the matching **USB Upgrade** ZIP to the copied installation. Use one running instance per installation.
 
 Place new audio inside the installation before adding it. For example, a playlist path of .\Songs\Evening Bells.mp3 refers to Songs\Evening Bells.mp3 beside the executable. An imported path of C:\Songs\Evening Bells.mp3 resolves to the same Songs subfolder in the current installation. Use a local folder within the installation for each track and random music directory.
 

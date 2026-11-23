@@ -10,7 +10,13 @@ The application uses the approved WPF composition, portable SQLite storage, inde
 - **Upgrade from 7.2.4.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. Confirm the one-step conversion. V9 verifies a backup ZIP in `databases`, converts the database in place, and opens with scheduling paused for review.
 - **Upgrade from 8.1.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. V9 uses the existing database. On the first run that needs the v9 dispatch table, it saves a backup ZIP in `databases` before adding the table.
 
-The upgrade ZIP contains the EXE and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open the new EXE directly from the USB. The English x64 EXE includes the .NET runtime. To move a working installation to another writable USB, close Carillon and copy the complete working installation.
+The upgrade ZIP contains the EXE and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open the new EXE directly from the USB.
+
+Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).
+
+The `export\32-bit` and `export\64-bit` release folders each contain `CarillonBells.exe`, `CarillonMigration.exe`, the New Install and Upgrade USB ZIPs, and their Package Studio Pro setup executables. A Package Studio setup stages its matching ZIP in a PC folder. Extract that ZIP to the USB root. For the separate-folder Migration Assistant, keep the matching `CarillonBells.exe` beside `CarillonMigration.exe`.
+
+To move a working installation to another writable USB, close Carillon and copy the complete working installation. Choose the executable that matches the Windows system where you will run it.
 
 For a separate database copy, **Database import** opens the source read-only, backs up the local database, and applies compatibility changes to the imported copy. See the Database Migration Guide in `Documentation` for both upgrade routes and recovery.
 
@@ -28,11 +34,13 @@ Use a supported .NET 10 SDK and Windows desktop development tools. All windows a
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Debug -Runtime win-x86
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x64 -Publish -SingleExe
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x64 -SingleExe -UsbUpgrade
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x64 -SingleExe -StarterDatabase <path-to-starter-db> -MusicDirectory <path-to-Music>
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x86 -Publish -SingleExe
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build.ps1 -Configuration Release -Runtime win-x86 -Publish -MigrationSingleExe
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x86 -SingleExe -UsbUpgrade
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\package.ps1 -Runtime win-x86 -SingleExe -StarterDatabase <path-to-starter-db> -MusicDirectory <path-to-Music>
 ```
+
+Repeat the architecture-specific steps with `win-x64` to build the 64-bit release.
 
 The SDK used for development is installed locally under `tools\dotnet`, and caches are ignored. A fresh checkout can use an installed .NET 10 SDK. Build intermediates go to `dcu`.
 

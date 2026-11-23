@@ -1,4 +1,4 @@
-param([ValidateSet('Debug','Release')][string]$Configuration='Release',[ValidateSet('','win-x86','win-x64')][string]$Runtime='',[switch]$Publish,[string]$PortableRoot='',[switch]$SingleExe)
+param([ValidateSet('Debug','Release')][string]$Configuration='Release',[ValidateSet('','win-x86','win-x64')][string]$Runtime='',[switch]$Publish,[string]$PortableRoot='',[switch]$SingleExe,[switch]$MigrationSingleExe)
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $dotnet=Join-Path $PSScriptRoot 'dotnet\dotnet.exe'
@@ -10,14 +10,26 @@ $env:DOTNET_GENERATE_ASPNET_CERTIFICATE='false'
 Push-Location $projectRoot
 try {
     if($PortableRoot -and (-not $Publish -or -not $Runtime)){throw 'PortableRoot requires -Publish and a runtime.'}
-    if($SingleExe) {
-        if(-not $Publish -or -not $Runtime -or $PortableRoot){throw 'Use -Publish and select win-x64 or win-x86 for -SingleExe. Launch the executable to upgrade a USB drive.'}
-        $singleStage=Join-Path $projectRoot "export\staging-single-$Runtime"
-        & $dotnet publish CarillonBells.csproj -c $Configuration -r $Runtime --self-contained true -o $singleStage -p:CarillonSingleExe=true
-        if($LASTEXITCODE -ne 0){throw "Single-executable publish failed with exit code $LASTEXITCODE"}
+    if($SingleExe -or $MigrationSingleExe) {
+        if(-not $Publish -or -not $Runtime -or $PortableRoot -or ($SingleExe -and $MigrationSingleExe)){
+            throw 'Use -Publish, select win-x64 or win-x86, and choose either -SingleExe or -MigrationSingleExe.'
+        }
+        if($MigrationSingleExe) {
+            $project='tools\CarillonMigration\CarillonMigration.csproj'
+            $binaryName='CarillonMigration.exe'
+            $singleStage=Join-Path $projectRoot "export\staging-migration-single-$Runtime"
+            $singleFileProperty='-p:CarillonMigrationSingleExe=true'
+        } else {
+            $project='CarillonBells.csproj'
+            $binaryName='CarillonBells.exe'
+            $singleStage=Join-Path $projectRoot "export\staging-single-$Runtime"
+            $singleFileProperty='-p:CarillonSingleExe=true'
+        }
+        & $dotnet publish $project -c $Configuration -r $Runtime --self-contained true -o $singleStage $singleFileProperty
+        if($LASTEXITCODE -ne 0){throw "Single-executable publish failed for $binaryName with exit code $LASTEXITCODE"}
         $files=@(Get-ChildItem -LiteralPath $singleStage -File -Recurse -Force)
-        if($files.Count -ne 1 -or $files[0].FullName -ne (Join-Path $singleStage 'CarillonBells.exe')){
-            throw "Expected only CarillonBells.exe in $singleStage."
+        if($files.Count -ne 1 -or $files[0].FullName -ne (Join-Path $singleStage $binaryName)){
+            throw "Expected only $binaryName in $singleStage."
         }
         Get-FileHash -LiteralPath $files[0].FullName
         return

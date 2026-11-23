@@ -15,6 +15,18 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(CarillonMigrationSingleExe)' == 'true'">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <DebugType>None</DebugType>
+    <AllowedReferenceRelatedFileExtensions>.pri;.dll.config;.exe.config</AllowedReferenceRelatedFileExtensions>
+    <!-- Bundle the referenced WPF assembly without publishing its separate application files. -->
+    <_GetChildProjectCopyToPublishDirectoryItems>false</_GetChildProjectCopyToPublishDirectoryItems>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CarillonBells.csproj" />
     <Compile Remove="MigrationEngine.cs;MigrationWindow.xaml.cs;UsbUpgrade.cs" />

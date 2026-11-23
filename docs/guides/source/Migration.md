@@ -1,12 +1,14 @@
 # Prepare the USB upgrade
 
-Upgrade Westminster Chimes and Carillon Bells by putting the v9 executable beside the existing database and music on the USB. Use **CarillonBells_9_0_USB_Upgrade_win-x64.zip** on 64-bit Windows. It contains **CarillonBells.exe** and the **Documentation** folder.
+Upgrade Westminster Chimes and Carillon Bells by putting the v9 executable beside the existing database and music on the USB. In Windows **Settings**, open **System**, then **About**, and check **System type** on the PC that will run the app. Choose **win-x86** from the **32-bit** release folder for 32-bit Windows or **win-x64** from **64-bit** for 64-bit Windows on an x64 PC.
+
+Choose **CarillonBells_9_0_USB_Upgrade_win-x86.zip** or **CarillonBells_9_0_USB_Upgrade_win-x64.zip** to match Windows. Both contain **CarillonBells.exe** and **Documentation**. If you have the matching **Upgrade Package Setup**, run it on the PC to save the ZIP in your chosen folder.
 
 1. Close version 7.2.4 or 8.1 and any other program using its database.
 2. In File Explorer, locate the folder on the USB that contains the working **databases** folder. If **databases** is directly on the drive, use the drive root, such as **D:\**.
 3. Right-click the USB Upgrade ZIP and choose **Extract All**. Extract to the folder you identified. Check that **CarillonBells.exe** and **databases** are side by side. Then follow the instructions below for your current version.
 
-For a new USB, use **CarillonBells_9_0_USB_New_Install_win-x64.zip** and follow the **Quick Start Guide**. That package supplies the starter database and chimes.
+For a new USB, use the matching **USB New Install** package and follow the **Quick Start Guide**. It supplies the starter database and chimes.
 
 # Upgrade from version 7.2.4
 
@@ -43,9 +45,18 @@ Use these steps to return the upgraded USB to the old version.
 3. Start the original executable for version 7.2.4 or 8.1 from the USB. It uses the same music folders.
 4. Check the legacy playlist, schedule and output before resuming playback.
 
+# Create a separate v9 installation
+
+Use **CarillonMigration.exe** from the release folder when you want a new folder containing a copy of your older installation. Keep it beside **CarillonBells.exe** from the same architecture folder, either **32-bit** or **64-bit**. The assistant copies that main executable into the new installation.
+
+1. Close the older app and launch **CarillonMigration.exe**. Select its installation folder in **Source**.
+2. Enter a new folder path in **Destination**. Check the version, paths, music summary and any warnings in **Review**.
+3. Check the box and click **Back Up and Migrate**. Keep **migration-report.txt** and the ZIP in **databases\backup**.
+4. Click **Open v9 for review**. Check the copied songs, settings and playback.
+
 # Import only a database into an existing v9 installation
 
-Use **Database import** when v9 is already installed and you need to replace its local database. Arrange the music separately. For example, a record pointing to **.\Songs\Daily\Bell.mp3** needs **Songs\Daily\Bell.mp3** inside the v9 installation.
+Use **Database import** to replace a v9 database with a copy. Put the music in the folders named in the imported playlist, such as **Songs\Daily** beside the executable.
 
 1. Open **Database import** in the v9 sidebar. Verify the local v9 database path.
 2. Click **Analyze source database** and choose the legacy **.db**. Check for **SQLite integrity: ok**. Scroll through the schema to inspect tables, views, indexes and triggers. Click **Save report** if you want to keep the analysis.
@@ -53,6 +64,6 @@ Use **Database import** when v9 is already installed and you need to replace its
 ![The analysis shows the SQLite integrity result and directory format, followed by the scrollable schema.](figures/analysis.png)
 
 3. Click **Choose and import a database copy** and select the database you analyzed. V9 reads the source, validates the candidate and backs up the current v9 database before replacing it.
-4. Compare the reported playlist, random-directory and weekly silence counts with the expected data. Record the **Local ZIP backup** path under **databases\backup**. This backup restores the v9 database that was active before import.
+4. Check the playlist, random slot and silence counts. The **Local ZIP backup** under **databases\backup** holds the previous v9 database.
 
 ![The import report lists the local v9 backup ZIP and the imported playlist and directory counts.](figures/import.png)
