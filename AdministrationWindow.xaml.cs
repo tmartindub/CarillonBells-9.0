@@ -130,7 +130,7 @@ public partial class AdministrationWindow : Window
                 return;
 
             row["enabled"] = 0;
-            row["Purpose"] = DBNull.Value;
+            row["Purpose"] = $"Silence Window {row["silence_id"]}";
             row["start_time"] = DBNull.Value;
             row["end_time"] = DBNull.Value;
             foreach (var day in Song.DatabaseDays)
