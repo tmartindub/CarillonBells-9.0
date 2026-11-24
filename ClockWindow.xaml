@@ -1,4 +1,4 @@
-<Window FontSize="18" FontFamily="Bahnschrift" Language="en-US" x:Class="Carillon.ClockWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<Window FontSize="{DynamicResource UiFontSize18}" FontFamily="{DynamicResource BodyFontFamily}" Language="en-US" x:Class="Carillon.ClockWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  Title="Westminster Chimes and Carillon Bells v9.0 - Clock" Width="1200" Height="750" WindowState="Maximized" Background="#A72A29" Icon="images and icons/Carillon-Bells-9.0-icon.ico" Closed="ClockClosed">
  <DockPanel>
   <Menu DockPanel.Dock="Top"><MenuItem Header="_File"><MenuItem Header="_Close" Click="CloseClick"/></MenuItem></Menu>

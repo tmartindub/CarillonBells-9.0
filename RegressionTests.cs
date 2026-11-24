@@ -7,7 +7,7 @@ using Carillon.Migration;
 namespace Carillon;
 public static class RegressionTests
 {
-    public static int Run(string baseDirectory)
+    public static int Run(string baseDirectory,string? fontDatabase=null)
     {
         var results=new List<string>();
         void Check(string name,bool condition) { if(!condition) throw new Exception(name); results.Add("PASS "+name); }
@@ -82,8 +82,31 @@ public static class RegressionTests
             }
             ThemeManager.Apply(palettes[0]);
             TestDatabase(baseDirectory,Check);
+            if(fontDatabase is not null)
+            {
+                var fontScratch=Path.Combine(Path.GetTempPath(),"Carillon-font-review-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(fontScratch);
+                try
+                {
+                    var copy=Path.Combine(fontScratch,"carillon.db");
+                    using(var source=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder {DataSource=fontDatabase,Mode=Microsoft.Data.Sqlite.SqliteOpenMode.ReadOnly,Pooling=false}.ToString()))
+                    using(var target=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder {DataSource=copy,Pooling=false}.ToString())) {source.Open();target.Open();source.BackupDatabase(target);}
+                    var repository=new CarillonRepository(copy);repository.EnsureCompatibleSchema();
+                    using var fontRuntime=new CarillonRuntime(repository,fontScratch,Application.Current.Dispatcher,true,migrationReview:true);
+                    var passing=0;
+                    foreach(var profile in new[]{("Original",18.0),("Arial",14.0),("Arial",18.0)})
+                    {
+                        var fontWatch=System.Diagnostics.Stopwatch.StartNew();
+                        var failures=ThemeManager.CheckFonts(fontRuntime,profile.Item1,profile.Item2);
+                        Console.WriteLine($"Font review: {profile.Item1} {profile.Item2}: {failures.Count} fit issues; {fontWatch.Elapsed.TotalSeconds:F1} seconds.");
+                        results.Add($"FONT REVIEW {profile.Item1} {profile.Item2}: {failures.Count} fit issues");
+                        results.AddRange(failures);if(failures.Count==0)passing++;
+                    }
+                    Check("Copied installation data has at least one fully fitting font profile",passing>0);
+                }
+                finally {Directory.Delete(fontScratch,true);}
+            }
             File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 0;
-        } catch(Exception error) { results.Add("FAIL "+error.Message); File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 1; }
+        } catch(Exception error) { results.Add("FAIL "+error); File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 1; }
     }
     private static void TestDatabase(string baseDirectory,Action<string,bool> check)
     {
@@ -194,7 +217,7 @@ public static class RegressionTests
             using(var connection=repository.Open()) { using var command=connection.CreateCommand(); command.CommandText="UPDATE seasonalgroups SET PLAY_TIME='10:00:01.000'"; command.ExecuteNonQuery(); }
             var dateWindow=new AdministrationWindow(runtime,"ClockHands");
             check("Group time display omits fractions without changing storage",dateWindow.Groups.Rows[0]["PLAY_TIME"].ToString()=="10:00:01"&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="10:00:01.000");
-            check("Administration shows slash dates without pending changes",dateWindow.Groups.Rows[0]["PLAY_DATE_FROM"].ToString()=="01/02/2027"&&dateWindow.Groups.GetChanges() is null);
+            check("Group pickers use typed dates without pending changes",dateWindow.Groups.Rows[0]["PLAY_DATE_FROM"] is DateTime groupDate&&groupDate==new DateTime(2027,1,2)&&dateWindow.Groups.GetChanges() is null);
             var dateSettings=(System.Data.DataTable)typeof(AdministrationWindow).GetField("settings",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic)!.GetValue(dateWindow)!;
             check("System dates display U.S. format with blanks retained",dateSettings.Rows[0]["ash_wed_begin"].ToString()=="01/02/2027"&&dateSettings.Rows[0].IsNull("other_silence_begin_date")&&dateSettings.GetChanges() is null);
             var adminFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
@@ -233,7 +256,18 @@ public static class RegressionTests
             var window=new MainWindow(runtime);
             try
             {
+                window.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
                 var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                var silentWave=Path.Combine(scratch,"silent-validation.wav");
+                using(var writer=new NAudio.Wave.WaveFileWriter(silentWave,new NAudio.Wave.WaveFormat(22050,16,1))) writer.Write(new byte[4410],0,4410);
+                runtime.Play(new Song {Path=silentWave});runtime.Player.Stop();
+                var lastPlayed=window.PlayerTitle;window.SelectedSong=window.Songs.Last();
+                check("Player wording follows actual playback rather than grid selection",lastPlayed=="Last song played: silent-validation"&&window.PlayerTitle==lastPlayed);
+                var search=(TextBox)window.FindName("SearchBox");search.Text="second";
+                var beforeClear=runtime.ScheduleEnabled;typeof(MainWindow).GetMethod("ClearSearchClick",flags)!.Invoke(window,[null,new RoutedEventArgs()]);
+                check("Clear search empties the entry",search.Text.Length==0);
+                check("Clear search restores both songs; actual count "+((DataGrid)window.FindName("SongGrid")).Items.OfType<Song>().Count(),((DataGrid)window.FindName("SongGrid")).Items.OfType<Song>().Count()==2);
+                check("Clear search preserves the schedule state",runtime.ScheduleEnabled==beforeClear);
                 var begin=typeof(MainWindow).GetMethod("BeginEdit",flags)!; var save=typeof(MainWindow).GetMethod("Save",flags)!; var cancel=typeof(MainWindow).GetMethod("CancelClick",flags)!;
                 foreach(var enabled in new[]{false,true})
                 {
@@ -253,6 +287,24 @@ public static class RegressionTests
                     begin.Invoke(window,[null,null]); window.EditingSong!.Repeats=1; window.EditingSong.Group="Custom"; save.Invoke(window,null);
                 }
 
+                var scheduleBeforeFontCheck=runtime.ScheduleEnabled;
+                var databaseBeforeFontCheck=File.ReadAllBytes(repository.DatabasePath);
+                var bodyBeforeFontCheck=Application.Current.Resources["BodyFontFamily"];
+                var fontFailures=ThemeManager.CheckFonts(runtime,"Arial",14);
+                File.WriteAllLines(Path.Combine(baseDirectory,"font-layout-diagnostics.txt"),fontFailures);
+                check("A readable small font passes every application page",fontFailures.Count==0);
+                check("Oversized fonts are refused when a page cannot fit them",ThemeManager.CheckFonts(runtime,"Verdana",20).Count>0);
+                check("Font checks preserve the active appearance and schedule",ReferenceEquals(bodyBeforeFontCheck,Application.Current.Resources["BodyFontFamily"])&&runtime.ScheduleEnabled==scheduleBeforeFontCheck);
+                check("Font checks do not change the database",databaseBeforeFontCheck.SequenceEqual(File.ReadAllBytes(repository.DatabasePath)));
+                var invalidFontRejected=false;try{ThemeManager.SetFontResources(new ResourceDictionary(),"Arial",21);}catch(ArgumentException){invalidFontRejected=true;}
+                check("Font sizes above the program ceiling are rejected",invalidFontRejected);
+                var fontTestField=new TextBox {Text="A folder path that cannot possibly fit",Width=80,Height=35,FontFamily=new FontFamily("Arial"),FontSize=18};
+                var fontTestPanel=new Grid();fontTestPanel.Children.Add(fontTestField);fontTestPanel.Measure(new Size(100,50));fontTestPanel.Arrange(new Rect(0,0,100,50));fontTestPanel.UpdateLayout();
+                check("Font policing rejects a long field rather than allowing scrolling",ThemeManager.CheckFontLayout(fontTestPanel,"Validation").Count>0);
+                ThemeManager.SaveFonts(scratch,"Arial",14);
+                check("Validated font preferences persist beside the portable app",File.Exists(Path.Combine(scratch,"data","fonts.json"))&&ThemeManager.LoadFonts(runtime) is null&&ThemeManager.CurrentFontFamily=="Arial"&&ThemeManager.CurrentFontSize==14);
+                File.WriteAllText(Path.Combine(scratch,"data","fonts.json"),"{\"Family\":\"Unknown font\",\"Size\":80}");
+                check("Invalid saved fonts restore defaults with an explanation",ThemeManager.LoadFonts(runtime) is not null&&ThemeManager.CurrentFontFamily=="Original"&&ThemeManager.CurrentFontSize==18);
                 clockNow = new DateTime(2025, 4, 13, 5, 7, 9);
                 check("Uptime decomposes elapsed time into all seven units",
                     runtime.UptimeLabel == "1 year   1 month   2 weeks   1 day   4 hours   5 minutes   6 seconds");

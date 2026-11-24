@@ -19,7 +19,7 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        if(e.Args.Contains("--self-test")) { var code=RegressionTests.Run(AppContext.BaseDirectory); Shutdown(code); return; }
+        if(e.Args.Contains("--self-test")) { ShutdownMode=ShutdownMode.OnExplicitShutdown; var fontDataIndex=Array.IndexOf(e.Args,"--font-database");var fontData=fontDataIndex>=0&&fontDataIndex+1<e.Args.Length?e.Args[fontDataIndex+1]:null;var code=RegressionTests.Run(AppContext.BaseDirectory,fontData); Shutdown(code); return; }
         if(e.Args.Length==2&&e.Args[0]=="--audio-test") { ShutdownMode=ShutdownMode.OnExplicitShutdown;var code=await AudioRegressionTests.Run(AppContext.BaseDirectory,e.Args[1]);Shutdown(code);return; }
         try
         {
@@ -60,6 +60,7 @@ public partial class App : Application
             var handStyles = (ClockHandStyle[])FindResource("ClockHandCatalog");
             Resources["SelectedClockHands"] = handStyles.FirstOrDefault(style => style.Id == runtime.ClockHandStyleId) ?? handStyles[0];
             var window=new MainWindow(runtime); MainWindow=window; window.Show(); splash.Close();
+            if(ThemeManager.LoadFonts(runtime) is {} fontNotice) MessageBox.Show(window,fontNotice,"Font settings",MessageBoxButton.OK,MessageBoxImage.Information);
         }
         catch(Exception error) { MessageBox.Show("The application could not start: "+error.Message+"\n\nCheck that the portable folder is writable and another instance is not using it.",ProductTitle+" - Startup"); Shutdown(1); }
     }

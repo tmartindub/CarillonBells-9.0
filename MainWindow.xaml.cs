@@ -14,10 +14,12 @@ namespace Carillon;
 public partial class MainWindow : Window,INotifyPropertyChanged
 {
     private readonly CarillonRuntime runtime;
+    private readonly bool appearancePreview;
     private Song? selectedSong,editingSong;
     private string originalFingerprint="";
     private bool editSession,resumeSchedule,selecting,volumeUpdating;
     private ClockWindow? clock;
+    private bool checkingDisplayScale;
     public ObservableCollection<Song> Songs { get; private set; } = [];
     public ObservableCollection<string> ScheduleRows { get; } = [];
     public Song? SelectedSong
@@ -55,10 +57,11 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public string Status=>runtime.Error.Length>0?runtime.Error:$"Songs played today: {runtime.PlayedToday}";
     public event PropertyChangedEventHandler? PropertyChanged;
     private void Notify([System.Runtime.CompilerServices.CallerMemberName]string? name=null)=>PropertyChanged?.Invoke(this,new(name));
-    public MainWindow(CarillonRuntime runtime)
+    public MainWindow(CarillonRuntime runtime,bool appearancePreview=false)
     {
-        this.runtime=runtime; InitializeComponent(); DataContext=this; LoadSongs(); runtime.Changed+=UpdateStatus;
-        runtime.Audio.Changed+=UpdateVolume; UpdateVolume(); UpdateStatus();
+        this.runtime=runtime; this.appearancePreview=appearancePreview; InitializeComponent(); DataContext=this; LoadSongs();
+        if(!appearancePreview) {runtime.Changed+=UpdateStatus;runtime.Audio.Changed+=UpdateVolume;}
+        UpdateVolume(); UpdateStatus();
     }
     private void UpdateStatus()
     {
@@ -93,7 +96,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void BeginEdit(object sender,KeyboardFocusChangedEventArgs e)
     {
         if(editSession||EditingSong is null) return; editSession=true; resumeSchedule=runtime.ScheduleEnabled;
-        if(resumeSchedule) runtime.SetSchedule(false,"song maintenance");
+        if(resumeSchedule&&!appearancePreview) runtime.SetSchedule(false,"song maintenance");
     }
     private void EndEdit()
     {
@@ -169,7 +172,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void UpdateVolume() { volumeUpdating=true; VolumeSlider.Value=runtime.Audio.Volume*100; VolumeSlider.IsEnabled=!runtime.Audio.Muted; MuteButton.Content=runtime.Audio.Muted?"Unmute":"Mute"; volumeUpdating=false; }
     private void VolumeChanged(object sender,RoutedPropertyChangedEventArgs<double> e) { if(!volumeUpdating&&runtime is not null) runtime.Audio.Volume=(float)(e.NewValue/100); }
     private void MuteClick(object sender,RoutedEventArgs e)=>runtime.Audio.ToggleManualMute();
-    private void ScheduleClick(object sender,RoutedEventArgs e)
+    internal void ScheduleClick(object sender,RoutedEventArgs e)
     {
         ScheduleVisible=!ScheduleVisible; ScheduleRows.Clear();
         if(ScheduleVisible) { ScheduleRows.Add("FULL DAY"); foreach(var bell in runtime.FullDay(DateTime.Now)) ScheduleRows.Add(bell.ToString()); ScheduleRows.Add("REMAINING QUEUE"); foreach(var bell in runtime.Queue.Where(b=>b.When>=DateTime.Now)) ScheduleRows.Add(bell.ToString()); foreach(var rule in runtime.Rules) foreach(var day in new[]{DateTime.Today.AddDays(-1),DateTime.Today}) if(rule.Occurrence(day) is {} occurrence&&occurrence.End>DateTime.Now) ScheduleRows.Add($"Silence {occurrence.Start:MM/dd/yyyy h:mm tt} – {occurrence.End:MM/dd/yyyy h:mm tt} / {rule.Purpose}"); }
@@ -177,7 +180,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     }
     private void AdminClick(object sender,RoutedEventArgs e)
     {
-        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not ("Themes" or "ClockHands"); var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
+        if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not ("Themes" or "ClockHands" or "Fonts"); var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
         if(pauses) runtime.SetSchedule(false,page switch {"Groups"=>"Groups maintenance","Random"=>"random music maintenance","Silence"=>"silence-window maintenance","Email"=>"email/report maintenance","Database"=>"database maintenance",_=>"System maintenance"});
         AdministrationWindow? administration=null;
         try { administration=new AdministrationWindow(runtime,page){Owner=this};administration.ShowDialog(); }
@@ -210,6 +213,18 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         catch(Exception error) { ShowError(error); }
     }
     private void ExitClick(object sender,RoutedEventArgs e)=>Close();
+    private async void DisplayScaleChanged(object sender,DpiChangedEventArgs e)
+    {
+        if(appearancePreview||checkingDisplayScale||!IsLoaded) return;
+        checkingDisplayScale=true;
+        try
+        {
+            await Dispatcher.InvokeAsync(()=>{},System.Windows.Threading.DispatcherPriority.Render);
+            if(!IsLoaded) return;
+            if(ThemeManager.LoadFonts(runtime) is {} notice) MessageBox.Show(this,notice,"Font settings",MessageBoxButton.OK,MessageBoxImage.Information);
+        }
+        finally {checkingDisplayScale=false;}
+    }
     private void ShowError(Exception error) { runtime.Fail(error.Message); MessageBox.Show(this,error.Message,"Carillon"); }
-    private void WindowClosing(object? sender,CancelEventArgs e) { if(!ConfirmEdits()) { e.Cancel=true; return; } clock?.Close(); runtime.Changed-=UpdateStatus; runtime.Audio.Changed-=UpdateVolume; runtime.Dispose(); }
+    private void WindowClosing(object? sender,CancelEventArgs e) { if(appearancePreview) return; if(!ConfirmEdits()) { e.Cancel=true; return; } clock?.Close(); runtime.Changed-=UpdateStatus; runtime.Audio.Changed-=UpdateVolume; runtime.Dispose(); }
 }

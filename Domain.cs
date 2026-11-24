@@ -47,6 +47,7 @@ public static class DataFormats
     public static DateTime? Date(object? value)
     {
         if (value is null or DBNull || string.IsNullOrWhiteSpace(value.ToString())) return null;
+        if (value is DateTime typedDate) return typedDate.Date;
         if (value is double or float or long or int) return DateTime.FromOADate(Convert.ToDouble(value)).Date;
         var text=value.ToString()!.Trim();
         if (DateTime.TryParse(text,CultureInfo.InvariantCulture,DateTimeStyles.AllowWhiteSpaces,out var date) || DateTime.TryParse(text,CultureInfo.GetCultureInfo("en-US"),DateTimeStyles.AllowWhiteSpaces,out date)) return date.Date;

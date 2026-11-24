@@ -67,3 +67,40 @@ The button section begins approximately three centimeters lower at standard
 Windows scaling, with additional space around Today's schedule. All spacing
 is editable in MainWindow.xaml. The existing vertical scrollbar keeps lower
 buttons accessible at smaller window sizes.
+
+## 09 — Validated application fonts
+
+System → Font settings opens a Fonts tab. The choices are Original,
+Bahnschrift, Segoe UI, Arial, Tahoma, Verdana, and Calibri, with base sizes
+14–20. All original font values remain editable resources in App.xaml.
+Candidate resources are applied only to separate copies of the XAML screens.
+Validation covers every song, all administration rows/tabs, today's schedule,
+masked and visible passwords, native date calendars, the latest 1,000 log
+entries, the clock menu, and startup text. The checker completes deferred WPF
+layout before measuring the full text, including text that would be clipped or
+ellipsized. Input-field overflow is rejected rather than accepted as scrolling.
+Read-only reports/log lists retain vertical paging; long song titles and log
+entries wrap. The clock artwork and preview dimensions remain unchanged.
+
+The checker uses current data, minimum supported window sizes, the current
+work area, and the active window's display density. Apply rechecks before
+saving data\fonts.json. Saved choices are checked at startup and on main-window
+DPI changes; invalid choices restore Original with a notice. Restore defaults
+is always available. Pending data edits must be saved or cancelled first.
+No candidate changes the active appearance before validation succeeds.
+
+Visual review with Original and Arial covered the playlist, schedule overlay,
+Groups/calendar popup, System, Email/reports, Random music, Silence windows,
+Themes, Fonts, Clock hands, Database, Log, and the full clock. Review also fixed
+a malformed Themes arrow, cramped button padding, and narrow weekday columns.
+Group calendars use typed nullable date values so simply viewing them cannot
+create pending changes. Tests confirm previewing leaves database bytes,
+scheduling, and active font resources unchanged, rejects overflow/oversize,
+persists valid preferences, and safely handles invalid saved preferences.
+
+A read-only SQLite snapshot of the live D: data was tested privately and deleted
+afterward. Arial 14 passed all checks. Original 18 and Arial 18 were rejected for
+longer silence-purpose text at the minimum window size; Arial 18 also exceeded
+the organization/date line. This confirms the limits respond to actual data.
+Repeated grid layouts were replaced by checks of every distinct editor value
+plus the longest wrapped title, avoiding quadratic work on large song lists.

@@ -4,7 +4,7 @@
  Title="{Binding UptimeLabel, StringFormat='Westminster Chimes and Carillon Bells v9.0                    |    Uptime    {0}', FallbackValue='Westminster Chimes and Carillon Bells v9.0'}"
  Width="1280" Height="800" WindowState="Maximized"
  MinWidth="1200" MinHeight="740" WindowStartupLocation="CenterScreen"
- Closing="WindowClosing" Icon="images and icons/Carillon-Bells-9.0-icon.ico" Background="{DynamicResource Canvas}" FontFamily="Bahnschrift" FontSize="18">
+ Closing="WindowClosing" DpiChanged="DisplayScaleChanged" Icon="images and icons/Carillon-Bells-9.0-icon.ico" Background="{DynamicResource Canvas}" FontFamily="{DynamicResource BodyFontFamily}" FontSize="{DynamicResource UiFontSize18}">
  <Window.Resources>
   <CollectionViewSource x:Key="SongGroups" Source="{Binding Songs}">
    <CollectionViewSource.GroupDescriptions><PropertyGroupDescription PropertyName="Group"/></CollectionViewSource.GroupDescriptions>
@@ -16,7 +16,7 @@
   <Border Background="#15354F" Margin="8,0,0,0">
    <Grid Margin="12">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="76"/></Grid.RowDefinitions>
-    <TextBlock Text="Playlist" Foreground="White" FontSize="19" Margin="8,0,0,12"/>
+    <TextBlock Text="Playlist" Foreground="White" FontSize="{DynamicResource UiFontSize19}" Margin="8,0,0,12"/>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
      <StackPanel Margin="0,96,0,0">
       <Button Content="Today's schedule" Click="ScheduleClick" Background="Transparent" Foreground="#C8D8E5" BorderThickness="0" Margin="0,18,0,18" Padding="3,3"/>
@@ -35,7 +35,7 @@
       <Button Content="Exit" Click="ExitClick" Margin="0,1" Padding="6,3"/>
      </StackPanel>
     </ScrollViewer>
-    <StackPanel Grid.Row="2" VerticalAlignment="Bottom"><TextBlock Text="{Binding Organization}" Foreground="White" FontSize="14" TextWrapping="Wrap" MaxHeight="51" TextTrimming="CharacterEllipsis"/><TextBlock Text="v9.0" Foreground="#91AEC4" FontSize="14" Margin="0,4,0,0"/></StackPanel>
+    <StackPanel Grid.Row="2" VerticalAlignment="Bottom"><TextBlock Text="{Binding Organization}" Foreground="White" FontSize="{DynamicResource UiFontSize14}" TextWrapping="Wrap" MaxHeight="51" TextTrimming="CharacterEllipsis"/><TextBlock Text="v9.0" Foreground="#91AEC4" FontSize="{DynamicResource UiFontSize14}" Margin="0,4,0,0"/></StackPanel>
    </Grid>
   </Border>
   <Grid Grid.Column="1" Margin="16,10">
@@ -43,8 +43,8 @@
    <Grid>
     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
     <StackPanel>
-     <TextBlock Text="Westminster Chimes and Carillon Bells" FontFamily="Georgia" FontSize="30" TextTrimming="CharacterEllipsis"/>
-     <TextBlock Text="{Binding TodayLabel}" Foreground="{DynamicResource Muted}" FontSize="16" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+     <TextBlock Text="Westminster Chimes and Carillon Bells" FontFamily="{DynamicResource HeadingFontFamily}" FontSize="{DynamicResource UiFontSize30}" TextTrimming="CharacterEllipsis"/>
+     <TextBlock Text="{Binding TodayLabel}" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize16}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
     </StackPanel>
     <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0,0,0">
      <Button Content="Themes" Tag="Themes" Click="AdminClick" Margin="0,0,14,0"/>
@@ -59,46 +59,46 @@
      <StackPanel>
       <Grid>
        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-       <TextBlock Text="NEXT SONG" FontSize="14" Foreground="{DynamicResource Muted}"/>
-       <TextBlock Grid.Column="1" Text="{Binding NextSongTiming}" FontSize="14" FontWeight="SemiBold" Margin="8,0,0,0"/>
+       <TextBlock Text="NEXT SONG" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}"/>
+       <TextBlock Grid.Column="1" Text="{Binding NextSongTiming}" FontSize="{DynamicResource UiFontSize14}" FontWeight="SemiBold" Margin="8,0,0,0"/>
       </Grid>
-      <TextBlock Text="{Binding NextSongTitle}" FontSize="16" Margin="0,3,0,0"
+      <TextBlock Text="{Binding NextSongTitle}" FontSize="{DynamicResource UiFontSize16}" Margin="0,3,0,0"
        TextWrapping="Wrap" TextTrimming="CharacterEllipsis" LineHeight="20" LineStackingStrategy="BlockLineHeight" MaxHeight="40"
        ToolTip="{Binding NextSongTitle}"/>
      </StackPanel>
     </Border>
-    <Border Grid.Column="1" Style="{StaticResource Card}" Padding="12,8" Margin="0,0,12,0"><StackPanel><TextBlock Text="TODAY'S SCHEDULE" FontSize="14" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding ScheduleCountLabel}" FontSize="18" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
-    <Border Grid.Column="2" Style="{StaticResource Card}" Padding="12,8"><StackPanel><TextBlock Text="SILENCE WINDOW" FontSize="14" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding SilenceLabel}" FontSize="18" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
+    <Border Grid.Column="1" Style="{StaticResource Card}" Padding="12,8" Margin="0,0,12,0"><StackPanel><TextBlock Text="TODAY'S SCHEDULE" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding ScheduleCountLabel}" FontSize="{DynamicResource UiFontSize18}" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
+    <Border Grid.Column="2" Style="{StaticResource Card}" Padding="12,8"><StackPanel><TextBlock Text="SILENCE WINDOW" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}"/><TextBlock Text="{Binding SilenceLabel}" FontSize="{DynamicResource UiFontSize18}" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Border>
    </Grid>
    <Grid Grid.Row="2">
     <Grid.ColumnDefinitions><ColumnDefinition Width="1.08*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
     <Border Style="{StaticResource Card}" Padding="10">
      <Grid>
       <Grid.RowDefinitions><RowDefinition Height="46"/><RowDefinition Height="48"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-      <Grid><TextBlock Text="Songs" FontFamily="Georgia" FontSize="28"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="Expand" Click="ExpandClick" Padding="10,6" Margin="0,0,6,12"/><Button Content="Collapse" Click="CollapseClick" Padding="10,6" Margin="0,0,0,12"/></StackPanel></Grid>
+      <Grid><TextBlock Text="Songs" FontFamily="{DynamicResource HeadingFontFamily}" FontSize="{DynamicResource UiFontSize28}"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="Expand" Click="ExpandClick" Padding="10,5" Margin="0,0,6,12"/><Button Content="Collapse" Click="CollapseClick" Padding="10,5" Margin="0,0,0,12"/></StackPanel></Grid>
       <Grid Grid.Row="1" Margin="0,0,0,8">
        <TextBox x:Name="SearchBox" TextChanged="SearchChanged" Padding="9,7,42,7" ToolTip="Search song titles or groups" AutomationProperties.Name="Search music"/>
-       <Button x:Name="ClearSearchButton" Content="×" Click="ClearSearchClick" Width="30" Height="28" FontSize="22" Padding="0" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Clear search" AutomationProperties.Name="Clear music search">
+       <Button x:Name="ClearSearchButton" Content="×" Click="ClearSearchClick" Width="30" Height="28" FontSize="{DynamicResource UiFontSize22}" Padding="0" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Clear search" AutomationProperties.Name="Clear music search">
         <Button.Style><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding Text,ElementName=SearchBox}" Value=""><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Button.Style>
        </Button>
-       <TextBlock Text="Search songs or groups..." IsHitTestVisible="False" Foreground="{DynamicResource Muted}" Margin="10,0" VerticalAlignment="Center" FontSize="16">
+       <TextBlock Text="Search songs or groups..." IsHitTestVisible="False" Foreground="{DynamicResource Muted}" Margin="10,0" VerticalAlignment="Center" FontSize="{DynamicResource UiFontSize16}">
         <TextBlock.Style><Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Text,ElementName=SearchBox}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
        </TextBlock>
       </Grid>
       <DataGrid Grid.Row="2" x:Name="SongGrid" ItemsSource="{Binding Source={StaticResource SongGroups}}" SelectedItem="{Binding SelectedSong, Mode=TwoWay}"
        AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True"
        HeadersVisibility="Column" GridLinesVisibility="None" BorderThickness="0" Background="Transparent" RowBackground="{DynamicResource Surface}" AlternatingRowBackground="{DynamicResource Surface}"
-       SelectionMode="Single" SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False" RowHeight="34" FontSize="18" EnableRowVirtualization="False"
+       SelectionMode="Single" SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False" RowHeight="NaN" MinRowHeight="34" FontSize="{DynamicResource UiFontSize18}" EnableRowVirtualization="False"
        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
        <DataGrid.RowStyle><Style TargetType="DataGridRow"><EventSetter Event="MouseDoubleClick" Handler="SongDoubleClick"/></Style></DataGrid.RowStyle>
        <DataGrid.Columns>
-        <DataGridTextColumn Header="SONG NAME" Binding="{Binding Title}" Width="*"/>
+        <DataGridTextColumn Header="SONG NAME" Binding="{Binding Title}" Width="*"><DataGridTextColumn.ElementStyle><Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Margin" Value="0,4"/></Style></DataGridTextColumn.ElementStyle></DataGridTextColumn>
         <DataGridTextColumn Header="LENGTH" Binding="{Binding Duration}" Width="100"/>
        </DataGrid.Columns>
        <DataGrid.GroupStyle>
         <GroupStyle><GroupStyle.ContainerStyle><Style TargetType="GroupItem"><Setter Property="Template"><Setter.Value>
          <ControlTemplate TargetType="GroupItem"><Expander IsExpanded="True" Margin="0,2">
-          <Expander.Header><StackPanel Orientation="Horizontal" Margin="3,4"><TextBlock Text="{Binding Name}" FontWeight="SemiBold"/><TextBlock Text="{Binding ItemCount, StringFormat='  /  {0} songs'}" Foreground="{DynamicResource Muted}" FontSize="15" VerticalAlignment="Center"/><TextBlock Text="{Binding Items,Converter={StaticResource GroupDuration}}" FontSize="15" VerticalAlignment="Center"/></StackPanel></Expander.Header>
+          <Expander.Header><StackPanel Orientation="Horizontal" Margin="3,4"><TextBlock Text="{Binding Name}" FontWeight="SemiBold"/><TextBlock Text="{Binding ItemCount, StringFormat='  /  {0} songs'}" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize15}" VerticalAlignment="Center"/><TextBlock Text="{Binding Items,Converter={StaticResource GroupDuration}}" FontSize="{DynamicResource UiFontSize15}" VerticalAlignment="Center"/></StackPanel></Expander.Header>
           <ItemsPresenter/>
          </Expander></ControlTemplate>
         </Setter.Value></Setter></Style></GroupStyle.ContainerStyle></GroupStyle>
@@ -107,7 +107,7 @@
       <StackPanel Grid.Row="3" Orientation="Horizontal" Height="42" Margin="0,10,0,0">
        <Button Content="|&lt;" Tag="First" Click="NavigateClick" Padding="8,7" ToolTip="First song"/><Button Content="&lt;" Tag="Prior" Click="NavigateClick" Padding="10,7" Margin="4,0" ToolTip="Previous song"/>
        <Button Content="&gt;" Tag="Next" Click="NavigateClick" Padding="10,7" ToolTip="Next song"/><Button Content="&gt;|" Tag="Last" Click="NavigateClick" Padding="8,7" Margin="4,0,0,0" ToolTip="Last song"/>
-       <TextBlock Text="{Binding LibraryLabel}" FontSize="14" Margin="12,0,0,0" VerticalAlignment="Center"/>
+       <TextBlock Text="{Binding LibraryLabel}" FontSize="{DynamicResource UiFontSize14}" Margin="12,0,0,0" VerticalAlignment="Center"/>
       </StackPanel>
      </Grid>
     </Border>
@@ -128,28 +128,28 @@
          <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel>
-         <TextBlock Text="Play schedule" FontFamily="Georgia" FontSize="28"/>
-         <TextBlock Text="{Binding SelectedSong.Title}" Foreground="{DynamicResource Muted}" FontSize="16" Margin="0,8,0,0" TextTrimming="CharacterEllipsis"/>
+         <TextBlock Text="Play schedule" FontFamily="{DynamicResource HeadingFontFamily}" FontSize="{DynamicResource UiFontSize28}"/>
+         <TextBlock Text="{Binding SelectedSong.Title}" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize16}" Margin="0,8,0,0" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="2">
-         <TextBlock Text="PLAY ON THESE DAYS" FontSize="14" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
-         <ItemsControl ItemsSource="{Binding EditingSong.Days}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="7"/></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding Name}" IsChecked="{Binding Enabled,Mode=TwoWay}" FontSize="16"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+         <TextBlock Text="PLAY ON THESE DAYS" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
+         <ItemsControl ItemsSource="{Binding EditingSong.Days}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="7"/></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding Name}" IsChecked="{Binding Enabled,Mode=TwoWay}" FontSize="{DynamicResource UiFontSize16}"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
         </StackPanel>
         <Grid Grid.Row="4">
          <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="14"/><ColumnDefinition/></Grid.ColumnDefinitions>
-         <StackPanel><TextBlock Text="FROM" Foreground="{DynamicResource Muted}" FontSize="14" Margin="0,0,0,5"/><DatePicker Padding="2" SelectedDate="{Binding EditingSong.From,Mode=TwoWay}"/></StackPanel>
-         <StackPanel Grid.Column="2"><TextBlock Text="UNTIL" Foreground="{DynamicResource Muted}" FontSize="14" Margin="0,0,0,5"/><DatePicker Padding="2" SelectedDate="{Binding EditingSong.To,Mode=TwoWay}"/></StackPanel>
+         <StackPanel><TextBlock Text="FROM" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize14}" Margin="0,0,0,5"/><DatePicker Padding="2" SelectedDate="{Binding EditingSong.From,Mode=TwoWay}"/></StackPanel>
+         <StackPanel Grid.Column="2"><TextBlock Text="UNTIL" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize14}" Margin="0,0,0,5"/><DatePicker Padding="2" SelectedDate="{Binding EditingSong.To,Mode=TwoWay}"/></StackPanel>
         </Grid>
         <Grid Grid.Row="6">
          <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="14"/><ColumnDefinition Width="145"/></Grid.ColumnDefinitions>
-         <StackPanel><TextBlock Text="GROUP" Foreground="{DynamicResource Muted}" FontSize="14" Margin="0,0,0,5"/><TextBox Text="{Binding EditingSong.Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="38"/></StackPanel>
-         <StackPanel Grid.Column="2"><TextBlock Text="TIMES TO PLAY" Foreground="{DynamicResource Muted}" FontSize="14" Margin="0,0,0,5"/><TextBox Text="{Binding EditingSong.Repeats,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="38"/></StackPanel>
+         <StackPanel><TextBlock Text="GROUP" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize14}" Margin="0,0,0,5"/><TextBox Text="{Binding EditingSong.Group,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="38"/></StackPanel>
+         <StackPanel Grid.Column="2"><TextBlock Text="TIMES TO PLAY" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize14}" Margin="0,0,0,5"/><TextBox Text="{Binding EditingSong.Repeats,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="38"/></StackPanel>
         </Grid>
         <StackPanel Grid.Row="8">
-         <TextBlock Text="PLAY TIMES  /  UP TO 12 EACH DAY" Foreground="{DynamicResource Muted}" FontSize="14" Margin="0,0,0,6"/>
+         <TextBlock Text="PLAY TIMES  /  UP TO 12 EACH DAY" Foreground="{DynamicResource Muted}" FontSize="{DynamicResource UiFontSize14}" Margin="0,0,0,6"/>
          <ItemsControl ItemsSource="{Binding EditingSong.Times}">
           <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Columns="4"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate><DataTemplate><TextBox Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,4" Padding="6,3" FontSize="16" Height="32" AutomationProperties.Name="Scheduled play time"/></DataTemplate></ItemsControl.ItemTemplate>
+          <ItemsControl.ItemTemplate><DataTemplate><TextBox Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,4" Padding="6,3" FontSize="{DynamicResource UiFontSize16}" Height="32" AutomationProperties.Name="Scheduled play time"/></DataTemplate></ItemsControl.ItemTemplate>
          </ItemsControl>
         </StackPanel>
        </Grid>
@@ -173,14 +173,14 @@
        <Button Content="Play" Click="PlayClick" Style="{StaticResource Primary}" Padding="18,7"/><Button Content="Pause" Click="PauseClick" Padding="13,7" Margin="7,0"/><Button Content="Stop" Click="StopClick" Padding="13,7"/>
       </StackPanel>
       <StackPanel Grid.Column="2">
-       <TextBlock Text="PLAYER" FontSize="14" Foreground="{DynamicResource Muted}"/>
-       <TextBlock Text="{Binding PlayerTitle}" Margin="0,3,0,0" FontSize="19" TextWrapping="Wrap"/>
+       <TextBlock Text="PLAYER" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}"/>
+       <TextBlock Text="{Binding PlayerTitle}" Margin="0,3,0,0" FontSize="{DynamicResource UiFontSize19}" TextWrapping="Wrap"/>
       </StackPanel>
       <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" x:Name="PlayerProgress" Maximum="3" Width="520" Height="6" HorizontalAlignment="Left" Margin="0,8,0,0" Foreground="#D87732" Background="#E7EDF1" BorderThickness="0"/>
      </Grid>
      <Border Grid.Column="1" BorderBrush="{DynamicResource Line}" BorderThickness="1,0,0,0" Padding="20,0,0,0">
       <StackPanel VerticalAlignment="Center">
-       <TextBlock Text="SYSTEM VOLUME" FontSize="14" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
+       <TextBlock Text="SYSTEM VOLUME" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
        <Grid>
         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="32"/><ColumnDefinition Width="105"/></Grid.ColumnDefinitions>
         <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="35" ValueChanged="VolumeChanged" VerticalAlignment="Center"/>
@@ -190,13 +190,13 @@
      </Border>
     </Grid>
    </Border>
-   <Grid Grid.Row="4"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock TextTrimming="CharacterEllipsis" Margin="0,0,10,0" Text="{Binding Status}" FontSize="15" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Footer}" FontSize="14" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
+   <Grid Grid.Row="4"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock TextTrimming="CharacterEllipsis" Margin="0,0,10,0" Text="{Binding Status}" FontSize="{DynamicResource UiFontSize15}" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="{Binding Footer}" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
   </Grid>
   <Border Grid.Column="1" Background="#D9173650" Visibility="{Binding ScheduleVisible,Converter={StaticResource BoolVisibility}}">
    <Border Style="{StaticResource Card}" Width="780" MaxHeight="780" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="28">
     <Grid><Grid.RowDefinitions><RowDefinition Height="70"/><RowDefinition/><RowDefinition Height="55"/></Grid.RowDefinitions>
-     <StackPanel><TextBlock Text="Today's schedule" FontFamily="Georgia" FontSize="30"/><TextBlock Text="Full day and remaining events; silence exclusions applied." Foreground="{DynamicResource Muted}" Margin="0,10,0,0"/></StackPanel>
-     <ListBox Grid.Row="1" ItemsSource="{Binding ScheduleRows}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource Ink}" FontFamily="Bahnschrift" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"><ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" Margin="0,8" TextWrapping="Wrap"/></DataTemplate></ListBox.ItemTemplate></ListBox>
+     <StackPanel><TextBlock Text="Today's schedule" FontFamily="{DynamicResource HeadingFontFamily}" FontSize="{DynamicResource UiFontSize30}"/><TextBlock Text="Full day and remaining events; silence exclusions applied." Foreground="{DynamicResource Muted}" Margin="0,10,0,0"/></StackPanel>
+     <ListBox Grid.Row="1" ItemsSource="{Binding ScheduleRows}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource Ink}" FontFamily="{DynamicResource BodyFontFamily}" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"><ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" Margin="0,8" TextWrapping="Wrap"/></DataTemplate></ListBox.ItemTemplate></ListBox>
      <Button Grid.Row="2" Content="Back to playlist" Click="ScheduleClick" Style="{StaticResource Primary}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     </Grid>
    </Border>

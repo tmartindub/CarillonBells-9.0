@@ -12,23 +12,38 @@ namespace Carillon;
 public partial class AdministrationWindow : Window
 {
     private readonly CarillonRuntime runtime;
+    private readonly bool appearancePreview;
     public DataTable Groups { get; private set; } = new();
     public DataTable RandomDirectories { get; private set; } = new();
     public DataTable Silence { get; private set; } = new();
     private DataTable settings=new();
     private string originalPassword="";
     private bool loading;
+    private bool checkingFonts;
+    private string? checkedFontFamily;
+    private double checkedFontSize;
     public bool RequiresScheduleResume { get; private set; }
-    public AdministrationWindow(CarillonRuntime runtime,string page)
+    public AdministrationWindow(CarillonRuntime runtime,string page,bool appearancePreview=false)
     {
-        this.runtime=runtime; RequiresScheduleResume=page is not ("Themes" or "ClockHands"); loading=true; InitializeComponent(); LoadData();
+        this.runtime=runtime; this.appearancePreview=appearancePreview; RequiresScheduleResume=!appearancePreview&&page is not ("Themes" or "ClockHands" or "Fonts"); loading=true; InitializeComponent(); LoadData();
         loading=true;ThemeList.SelectedItem=((CarillonPalette[])FindResource("ThemeCatalog")).FirstOrDefault(p=>p.Name==ThemeManager.CurrentPalette.Name);CustomBackground.Text=ThemeManager.CurrentPalette.Canvas;CustomText.Text=ThemeManager.CurrentPalette.Ink;
-        Pages.SelectedItem=Pages.Items.OfType<TabItem>().FirstOrDefault(t=>t.Tag?.ToString()==page); loading=false;
+        Pages.SelectedItem=Pages.Items.OfType<TabItem>().FirstOrDefault(t=>t.Tag?.ToString()==page);
+        FontChoice.SelectedItem=FontChoice.Items.OfType<ComboBoxItem>().FirstOrDefault(item=>item.Content.ToString()==ThemeManager.CurrentFontFamily);
+        FontSizeChoice.SelectedItem=FontSizeChoice.Items.OfType<ComboBoxItem>().FirstOrDefault(item=>item.Content.ToString()==ThemeManager.CurrentFontSize.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        loading=false;
     }
     private void LoadData()
     {
         loading=true;
-        Groups=runtime.Repository.Table("seasonalgroups"); RandomDirectories=runtime.Repository.Table("PL_RAND_DIR_ROTATION"); Silence=runtime.Repository.Table("silence_schedule"); settings=runtime.Repository.Table("PL_SETTINGS");
+        var storedGroups=runtime.Repository.Table("seasonalgroups");Groups=storedGroups.Clone();
+        foreach(var field in new[]{"PLAY_DATE_FROM","PLAY_DATE_TO"}) Groups.Columns[field]!.DataType=typeof(DateTime);
+        foreach(DataRow source in storedGroups.Rows)
+        {
+            var values=source.ItemArray;
+            foreach(var field in new[]{"PLAY_DATE_FROM","PLAY_DATE_TO"}) values[Groups.Columns[field]!.Ordinal]=(object?)DataFormats.Date(source[field])??DBNull.Value;
+            Groups.Rows.Add(values);
+        }
+        RandomDirectories=runtime.Repository.Table("PL_RAND_DIR_ROTATION"); Silence=runtime.Repository.Table("silence_schedule"); settings=runtime.Repository.Table("PL_SETTINGS");
         // Format only the editable view; repository writes keep ISO dates.
         foreach(DataRow row in Groups.Rows) row["PLAY_TIME"]=(object?)DataFormats.Time(row["PLAY_TIME"])?.ToString("HH:mm:ss",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
         foreach(var table in new[]{Groups,RandomDirectories,settings})
@@ -36,6 +51,7 @@ public partial class AdministrationWindow : Window
             foreach(DataColumn column in table.Columns)
             {
                 var field=column.ColumnName.ToLowerInvariant();
+                if(column.DataType==typeof(DateTime)) continue;
                 if(field is not ("play_date_from" or "play_date_to" or "frm_date" or "to_date" or "ash_wed_begin" or "ash_wed_end" or "holy_thu_begin" or "holy_sat_end" or "all_souls_day" or "other_silence_begin_date" or "other_silence_end_date")) continue;
                 foreach(DataRow row in table.Rows) row[column]=(object?)DataFormats.Date(row[column])?.ToString(table==RandomDirectories?"M/d":"MM/dd/yyyy",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
             }
@@ -50,6 +66,12 @@ public partial class AdministrationWindow : Window
     }
     private void CommitEditors()
     {
+        foreach(var picker in ThemeManager.FontElements(GroupsGrid).OfType<DatePicker>())
+        {
+            if(!string.IsNullOrWhiteSpace(picker.Text)) DataFormats.Date(picker.Text);
+            picker.GetBindingExpression(DatePicker.SelectedDateProperty)?.UpdateSource();
+            if(Validation.GetHasError(picker)) throw new ArgumentException("Correct the invalid group date before saving.");
+        }
         foreach(var grid in new[]{GroupsGrid,RandomGrid,SilenceGrid}) { if(!grid.CommitEdit(DataGridEditingUnit.Cell,true)||!grid.CommitEdit(DataGridEditingUnit.Row,true)) throw new ArgumentException("Finish or cancel the invalid grid edit first."); }
         settings.DefaultView[0].EndEdit();
     }
@@ -59,6 +81,7 @@ public partial class AdministrationWindow : Window
     private bool Dirty=>SettingsDirty || ClockHandsDirty;
     private bool Save()
     {
+        if(checkingFonts) return false;
         try
         {
             CommitEditors();
@@ -106,7 +129,7 @@ public partial class AdministrationWindow : Window
         }
     }
     private void SaveClick(object sender,RoutedEventArgs e)=>Save();
-    private void CancelClick(object sender,RoutedEventArgs e) { LoadData(); ResultLabel.Text="Changes cancelled"; }
+    private void CancelClick(object sender,RoutedEventArgs e) { if(checkingFonts) return; LoadData(); ResultLabel.Text="Changes cancelled"; }
     private bool ConfirmPending()
     {
         try { CommitEditors(); } catch(Exception error) { MessageBox.Show(this,error.Message); return false; }
@@ -114,8 +137,66 @@ public partial class AdministrationWindow : Window
         var answer=MessageBox.Show(this,"Save administration changes before closing?","Pending changes",MessageBoxButton.YesNoCancel);
         return answer==MessageBoxResult.Yes?Save():answer==MessageBoxResult.No;
     }
-    private void WindowClosing(object? sender,CancelEventArgs e) { if(!ConfirmPending()) e.Cancel=true; }
+    private void WindowClosing(object? sender,CancelEventArgs e) { if(checkingFonts||!appearancePreview&&!ConfirmPending()) e.Cancel=true; }
     private void CloseClick(object sender,RoutedEventArgs e)=>Close();
+    private void OpenFontsClick(object sender,RoutedEventArgs e)=>Pages.SelectedItem=Pages.Items.OfType<TabItem>().First(tab=>tab.Tag?.ToString()=="Fonts");
+    private void FontCandidateChanged(object sender,SelectionChangedEventArgs e)
+    {
+        if(loading||FontChoice is null||FontSizeChoice is null||FontSample is null) return;
+        checkedFontFamily=null;ApplyFontButton.IsEnabled=false;
+        var family=(FontChoice.SelectedItem as ComboBoxItem)?.Content.ToString()??"Original";
+        var size=double.TryParse((FontSizeChoice.SelectedItem as ComboBoxItem)?.Content.ToString(),out var selected)?selected:18;
+        FontSample.FontFamily=new System.Windows.Media.FontFamily(family=="Original"?"Bahnschrift":family);FontSample.FontSize=size;
+        FontReviewReport.Text="Candidate changed. Check every page before applying. Current appearance is unchanged.";
+    }
+    private async void CheckFontsClick(object sender,RoutedEventArgs e)
+    {
+        if(checkingFonts) return;
+        try
+        {
+            CommitEditors();
+            if(SettingsDirty) throw new ArgumentException("Save or cancel other administration edits before checking fonts.");
+            checkingFonts=true;checkedFontFamily=null;ApplyFontButton.IsEnabled=false;CheckFontButton.IsEnabled=false;FontChoice.IsEnabled=false;FontSizeChoice.IsEnabled=false;Pages.IsEnabled=false;
+            FontReviewReport.Text="Checking all pages, labels, and field values. Current appearance is unchanged…";
+            await Dispatcher.InvokeAsync(()=>{},System.Windows.Threading.DispatcherPriority.Render);
+            var family=(FontChoice.SelectedItem as ComboBoxItem)?.Content.ToString()??"Original";
+            var size=double.Parse(((ComboBoxItem)FontSizeChoice.SelectedItem).Content.ToString()!,System.Globalization.CultureInfo.InvariantCulture);
+            var failures=ThemeManager.CheckFonts(runtime,family,size);
+            if(failures.Count==0)
+            {
+                checkedFontFamily=family;checkedFontSize=size;ApplyFontButton.IsEnabled=true;
+                FontReviewReport.Text="Passed: Playlist and song fields; Groups; System; Email / reports; Random music; Silence windows; Themes; Fonts; Clock hands; Database; Log; Clock menu; Startup.\n\nChecked at the minimum supported window sizes and this display's work area/scaling. Apply checked font will save this choice. No changes have been applied.";
+            }
+            else FontReviewReport.Text=$"Not applied: {failures.Count} layout checks failed.\n\n"+string.Join("\n\n",failures);
+        }
+        catch(Exception error) {FontReviewReport.Text="Not applied: "+error.Message;}
+        finally {checkingFonts=false;CheckFontButton.IsEnabled=true;FontChoice.IsEnabled=true;FontSizeChoice.IsEnabled=true;Pages.IsEnabled=true;}
+    }
+    private void ApplyFontsClick(object sender,RoutedEventArgs e)
+    {
+        if(checkedFontFamily is null) return;
+        try
+        {
+            var failures=ThemeManager.CheckFonts(runtime,checkedFontFamily,checkedFontSize);
+            if(failures.Count>0) {ApplyFontButton.IsEnabled=false;FontReviewReport.Text="Not applied: data or layout changed since checking.\n"+string.Join("\n",failures);return;}
+            ThemeManager.SaveFonts(runtime.BaseDirectory,checkedFontFamily,checkedFontSize);
+            FontReviewReport.Text="Font applied and saved. All checked pages passed. Restore defaults returns to the original appearance.";
+            ApplyFontButton.IsEnabled=false;runtime.Log.Append("Application font changed after page validation");
+        }
+        catch(Exception error) {FontReviewReport.Text="Not applied: "+error.Message;}
+    }
+    private void ResetFontsClick(object sender,RoutedEventArgs e)
+    {
+        if(checkingFonts) return;
+        try
+        {
+            ThemeManager.SaveFonts(runtime.BaseDirectory,"Original",18);
+            loading=true;FontChoice.SelectedIndex=0;FontSizeChoice.SelectedIndex=4;loading=false;
+            checkedFontFamily=null;ApplyFontButton.IsEnabled=false;FontSample.ClearValue(TextBlock.FontFamilyProperty);FontSample.ClearValue(TextBlock.FontSizeProperty);
+            FontReviewReport.Text="Original fonts and sizes restored. No database or schedule settings were changed.";
+        }
+        catch(Exception error) {loading=false;FontReviewReport.Text="Could not restore defaults: "+error.Message;}
+    }
     private void NavigateClick(object sender,RoutedEventArgs e)
     {
         var page=(Pages.SelectedItem as TabItem)?.Tag?.ToString();var grid=page switch {"Groups"=>GroupsGrid,"Random"=>RandomGrid,"Silence"=>SilenceGrid,_=>null};if(grid is null)return;
@@ -143,16 +224,16 @@ public partial class AdministrationWindow : Window
     private void DeleteGroupClick(object sender,RoutedEventArgs e) {if(GroupsGrid.SelectedItem is DataRowView row&&MessageBox.Show(this,"Delete the selected group? Playlist songs are retained.","Delete group",MessageBoxButton.YesNo)==MessageBoxResult.Yes)row.Delete();}
     private void PageChanged(object sender,SelectionChangedEventArgs e)
     {
-        if(loading||e.Source!=Pages) return; ResultLabel.Text="";
+        if(loading||appearancePreview||e.Source!=Pages) return; ResultLabel.Text="";
         var page=(Pages.SelectedItem as TabItem)?.Tag?.ToString();
-        if(page is "Themes" or "ClockHands") return;
+        if(page is "Themes" or "ClockHands" or "Fonts") return;
         var reason=page switch {"Groups"=>"Groups maintenance","Random"=>"random music maintenance","Silence"=>"silence-window maintenance","Email"=>"email/report maintenance","Database"=>"database maintenance",_=>"System maintenance"};
         if(!RequiresScheduleResume) {runtime.SetSchedule(false,reason);RequiresScheduleResume=true;}
         else runtime.Log.Append("Schedule remains disabled - "+reason);
     }
     private void RecalculateGroupsClick(object sender,RoutedEventArgs e)
     {
-        try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From.ToString("MM/dd/yyyy");row["PLAY_DATE_TO"]=dates.To.ToString("MM/dd/yyyy");} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
+        try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From;row["PLAY_DATE_TO"]=dates.To;} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
     }
     private void RecalculateSettingsClick(object sender,RoutedEventArgs e)
     {
@@ -194,7 +275,7 @@ public partial class AdministrationWindow : Window
         }
         catch(Exception error) { MessageBox.Show(this,error.Message,"Portable music directory"); }
     }
-    private void ShowPasswordClick(object sender,RoutedEventArgs e)
+    internal void ShowPasswordClick(object sender,RoutedEventArgs e)
     {
         var show=ShowPassword.IsChecked==true;
         if(show) VisiblePassword.Text=EmailPassword.Password; else EmailPassword.Password=VisiblePassword.Text;
