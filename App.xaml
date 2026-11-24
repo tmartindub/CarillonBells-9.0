@@ -67,6 +67,24 @@
    <Setter Property="FontFamily" Value="{DynamicResource BodyFontFamily}"/><Setter Property="FontSize" Value="{DynamicResource UiFontSize18}"/>
    <Setter Property="Foreground" Value="{DynamicResource Ink}"/><Setter Property="Background" Value="{DynamicResource Surface}"/>
    <Setter Property="Padding" Value="5"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="DatePicker">
+    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+     <Grid x:Name="PART_Root" Background="Transparent">
+      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="24"/></Grid.ColumnDefinitions>
+      <DatePickerTextBox x:Name="PART_TextBox" Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" VerticalContentAlignment="Center"/>
+      <Button x:Name="PART_Button" Grid.Column="1" Width="22" Padding="0" Margin="0,0,2,0" Focusable="False" Visibility="Hidden" Style="{x:Null}" AutomationProperties.Name="Show calendar" ToolTip="Choose a date">
+       <Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent" Padding="2"><Viewbox Width="16" Height="16"><Path Width="24" Height="24" Stroke="{DynamicResource Ink}" StrokeThickness="1.5" Data="M4,5 H20 V21 H4 Z M4,9 H20 M8,3 V7 M16,3 V7 M7,12 H10 M14,12 H17 M7,16 H10 M14,16 H17"/></Viewbox></Border></ControlTemplate></Button.Template>
+      </Button>
+      <Popup x:Name="PART_Popup" Placement="Bottom" PlacementTarget="{Binding ElementName=PART_Root}" StaysOpen="False" AllowsTransparency="True" Focusable="False"/>
+     </Grid>
+    </Border>
+    <ControlTemplate.Triggers>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="PART_Button" Property="Visibility" Value="Visible"/></Trigger>
+     <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="PART_Button" Property="Visibility" Value="Visible"/></Trigger>
+     <Trigger Property="IsDropDownOpen" Value="True"><Setter TargetName="PART_Button" Property="Visibility" Value="Visible"/></Trigger>
+     <Trigger Property="IsEnabled" Value="False"><Setter TargetName="PART_Root" Property="Opacity" Value="0.5"/></Trigger>
+    </ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
   </Style>
   <Style TargetType="DataGridColumnHeader">
    <Setter Property="Background" Value="{DynamicResource Surface}"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/>

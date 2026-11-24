@@ -375,6 +375,35 @@ Executable SHA-256:
 - win-x64: `DA3F0A7010732B1F4D30EEEF61D320259576E80E8515CBC7E858A4273FB2C7A3`
 - win-x86: `EB90276F51F529097B5AFE140445F29F21271BC241202DD4D0105496587A2DE8`
 
+## 21 — Calendar buttons on hover or keyboard focus
+
+November 24, 2026. The shared editable XAML DatePicker template hides its
+calendar button at rest while reserving the button's space. It appears when
+the date field is hovered or has keyboard focus and remains visible while the
+calendar is open. Standard DatePicker template parts retain typed dates,
+native calendar selection, date bindings, and popup behavior. A compact calendar
+symbol is drawn in XAML. This applies to playlist and group date pickers;
+there is no runtime positioning/hover code or new helper class.
+
+Both native Windows builds passed **184 checks**, zero failures. Six additional
+checks verify hidden-but-reserved button space, stable editor width, and
+unchanged date values at Arial 14, Tahoma 16 and Arial 18. The actual UI was
+tested with fictitious data: hidden buttons at rest, hover and keyboard focus
+independently visible, opening the calendar, selecting September 10, 2027,
+saving and verifying that value, and hiding the buttons after leaving both
+fields. The isolated test app was closed and its disposable data removed.
+
+The pre-change source ZIP is **Before_calendar_hover_20261124.zip** on H:.
+The after-change checkpoint includes both executables and test evidence from
+**export/Calendar-hover-20261124**. At this source checkpoint, D: installation
+was pending: the running administration window reported unsaved changes.
+No pending edits were saved or discarded without the user's decision.
+
+Executable SHA-256:
+
+- win-x64: `F9444F1EC8116C2A1104B587113E64F35F4E3390C70E0CCC2751594E705A18F9`
+- win-x86: `B5CE64E2FFDE1836616E6DB481B58B9267B6B9D8466D7627A208A46367050961`
+
 Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`

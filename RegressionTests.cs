@@ -294,6 +294,18 @@ public static class RegressionTests
             var organizationLine=(TextBlock)window.FindName("OrganizationLine");
             var dateTimeLine=(TextBlock)window.FindName("DateTimeLine");
             check("Organization and date/time use separate wrapping header lines",organizationLine!=dateTimeLine&&organizationLine.TextWrapping==TextWrapping.Wrap&&dateTimeLine.TextWrapping==TextWrapping.Wrap&&DateTime.TryParseExact(window.TodayLabel,"dddd, MM/dd/yyyy  h:mm:ss tt",System.Globalization.CultureInfo.CurrentCulture,System.Globalization.DateTimeStyles.None,out _));
+            foreach(var profile in new[]{("Arial",14.0),("Tahoma",16.0),("Arial",18.0)})
+            {
+                var datePicker=new DatePicker {SelectedDate=new DateTime(2027,9,11),SelectedDateFormat=DatePickerFormat.Short,Language=System.Windows.Markup.XmlLanguage.GetLanguage("en-US")};
+                ThemeManager.SetFontResources(datePicker.Resources,profile.Item1,profile.Item2);
+                var datePanel=new Grid();datePanel.Children.Add(datePicker);datePanel.Measure(new Size(220,42));datePanel.Arrange(new Rect(0,0,220,42));datePanel.UpdateLayout();
+                var calendarButton=(Button)datePicker.Template.FindName("PART_Button",datePicker);
+                var dateEditor=(System.Windows.Controls.Primitives.DatePickerTextBox)datePicker.Template.FindName("PART_TextBox",datePicker);
+                var editorWidth=dateEditor.ActualWidth;
+                check($"Calendar button starts hidden with its space reserved: {profile.Item1} {profile.Item2}",calendarButton.Visibility==Visibility.Hidden&&calendarButton.ActualWidth==22&&editorWidth>100);
+                calendarButton.Visibility=Visibility.Visible;datePanel.Measure(new Size(220,42));datePanel.Arrange(new Rect(0,0,220,42));datePanel.UpdateLayout();
+                check($"Revealing the calendar does not shift the date or change its value: {profile.Item1} {profile.Item2}",Math.Abs(dateEditor.ActualWidth-editorWidth)<0.1&&datePicker.SelectedDate==new DateTime(2027,9,11)&&dateEditor.Text.Contains("2027"));
+            }
             try
             {
                 window.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
