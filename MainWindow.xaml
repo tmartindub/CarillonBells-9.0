@@ -77,7 +77,10 @@
       <Grid.RowDefinitions><RowDefinition Height="46"/><RowDefinition Height="48"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
       <Grid><TextBlock Text="Songs" FontFamily="Georgia" FontSize="28"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="Expand" Click="ExpandClick" Padding="10,6" Margin="0,0,6,12"/><Button Content="Collapse" Click="CollapseClick" Padding="10,6" Margin="0,0,0,12"/></StackPanel></Grid>
       <Grid Grid.Row="1" Margin="0,0,0,8">
-       <TextBox x:Name="SearchBox" TextChanged="SearchChanged" ToolTip="Search song titles or groups" AutomationProperties.Name="Search music"/>
+       <TextBox x:Name="SearchBox" TextChanged="SearchChanged" Padding="9,7,42,7" ToolTip="Search song titles or groups" AutomationProperties.Name="Search music"/>
+       <Button x:Name="ClearSearchButton" Content="×" Click="ClearSearchClick" Width="30" Height="28" FontSize="22" Padding="0" Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Clear search" AutomationProperties.Name="Clear music search">
+        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding Text,ElementName=SearchBox}" Value=""><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Button.Style>
+       </Button>
        <TextBlock Text="Search songs or groups..." IsHitTestVisible="False" Foreground="{DynamicResource Muted}" Margin="10,0" VerticalAlignment="Center" FontSize="16">
         <TextBlock.Style><Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Text,ElementName=SearchBox}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
        </TextBlock>

@@ -46,3 +46,9 @@ Gothic, Vienna, and Nouveau. Their tips stop inside the minute track and their
 decoration remains near the center. Cards use five columns and smaller thumbnails.
 The right preview and full clock face/layout are unchanged. Prior numbered
 preferences select the replacement at that number; Original remains ID zero.
+
+## 06 — Clear song search
+
+An accessible × button appears inside the search field when text is present.
+It clears the filter, preserves the selected song when present, and returns
+keyboard focus to the search field. It does not change scheduling.

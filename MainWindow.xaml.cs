@@ -127,6 +127,12 @@ public partial class MainWindow : Window,INotifyPropertyChanged
         var text=SearchBox.Text; var view=CollectionViewSource.GetDefaultView(SongGrid.ItemsSource);
         if(view is not null) view.Filter=item=>item is Song song&&(song.Title.Contains(text,StringComparison.OrdinalIgnoreCase)||song.Group.Contains(text,StringComparison.OrdinalIgnoreCase));
     }
+    private void ClearSearchClick(object sender,RoutedEventArgs e)
+    {
+        var song=SelectedSong; SearchBox.Clear();
+        if(song is not null) SongGrid.SetCurrentValue(DataGrid.SelectedItemProperty,song);
+        SearchBox.Focus();
+    }
     private void ExpandClick(object sender,RoutedEventArgs e) { foreach(var expander in Descendants<Expander>(SongGrid)) expander.IsExpanded=true; }
     private void CollapseClick(object sender,RoutedEventArgs e) { foreach(var expander in Descendants<Expander>(SongGrid)) expander.IsExpanded=false; }
     private void NavigateClick(object sender,RoutedEventArgs e)
