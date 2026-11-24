@@ -314,6 +314,29 @@ The restarted D: layout was visually confirmed: player details start directly
 after the fixed button gap, System Volume is separate, all 120 songs loaded,
 and scheduling remains enabled. No manual playback or test email was triggered.
 
+## 19 — Shift player details right by approximately 2.5 cm
+
+November 24, 2026. At the user's request, the fixed gap after the playback
+buttons was increased from 24 to 118.5 Windows layout units. This moves the
+PLAYER/Last song played display right by 94.5 units (approximately 2.5 cm at
+standard Windows scaling). Wrapping and the clear boundary before System
+Volume remain. No other layout, font preference, or song data was changed.
+
+Both native Windows builds passed 167 checks, zero failures. The existing
+long-title checks were updated to verify the revised fixed position and
+separation from volume controls across fonts and narrow/wide window sizes.
+The pre-change source ZIP is **Before_player_position_adjustment_20261124.zip**
+on H:. D: was closed cleanly and backed up (executable/database/settings) to
+**H:\CarillonBells v 9_0\D_before_Player_position_adjustment_20261124.zip**.
+Only D:\CarillonBells.exe was replaced and restarted. The after-change
+checkpoint contains source, both executables, and results from
+**export/Player-position-adjustment-20261124**.
+
+Executable SHA-256:
+
+- win-x64: `FED56473AFF5BA6624E88B3715275C0BE707225BE1E1C687FC74CE387CEFCDE9`
+- win-x86: `64C184D1DF9A0E11AD40C002013188E16D3C687BC2ADCDCC5B06D3D45F6F173D`
+
 Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`

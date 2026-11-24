@@ -168,7 +168,7 @@
     <Grid>
      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="300"/><ColumnDefinition Width="48"/></Grid.ColumnDefinitions>
      <Grid Margin="0,0,20,0" ClipToBounds="True">
-      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="24"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="118.5"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
       <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
       <StackPanel x:Name="PlaybackButtons" Orientation="Horizontal" VerticalAlignment="Center">
        <Button Content="Play" Click="PlayClick" Style="{StaticResource Primary}" Padding="18,7"/><Button Content="Pause" Click="PauseClick" Padding="13,7" Margin="7,0"/><Button Content="Stop" Click="StopClick" Padding="13,7"/>

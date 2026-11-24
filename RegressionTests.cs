@@ -305,7 +305,7 @@ public static class RegressionTests
                             var buttonRight=buttons.TranslatePoint(new Point(buttons.ActualWidth,0),content).X;
                             var titleRight=title.TranslatePoint(new Point(title.ActualWidth,0),content).X;
                             var volumeLeft=volume.TranslatePoint(new Point(),content).X;
-                            check($"Player title stays left of volume with a fixed button gap: {profile.Item1} {profile.Item2}, width {width}, title length {text.Length}",Math.Abs(left-buttonRight-24)<1&&title.ActualWidth>0&&titleRight<=volumeLeft-19);
+                            check($"Player title stays left of volume with the adjusted button gap: {profile.Item1} {profile.Item2}, width {width}, title length {text.Length}",Math.Abs(left-buttonRight-118.5)<1&&title.ActualWidth>0&&titleRight<=volumeLeft-19);
                         }
                     }
                 }
