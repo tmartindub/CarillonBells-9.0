@@ -87,6 +87,11 @@ public sealed class CarillonRepository(string databasePath)
     {
         if(value is DBNull) return null;
         var f=field.ToLowerInvariant();
+        if(f is "frm_date" or "to_date")
+        {
+            var text=Convert.ToString(value,CultureInfo.InvariantCulture)?.Trim()??"";
+            return (DateTime.TryParseExact(text,"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out var stored)?stored:DataFormats.AnnualDate(value))?.ToString("yyyy-MM-dd");
+        }
         if(f.Contains("date") || f is "frm_date" or "to_date" or "all_souls_day" or "ash_wed_begin" or "ash_wed_end" or "holy_thu_begin" or "holy_sat_end") return DataFormats.Date(value)?.ToString("yyyy-MM-dd");
         if(f.Contains("time") && f!="num_times_to_play") return DataFormats.Time(value)?.ToString("HH:mm:ss");
         return value;

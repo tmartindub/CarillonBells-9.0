@@ -95,7 +95,7 @@
     </StackPanel>
    </Grid></ScrollViewer></TabItem>
    <TabItem Header="Random music" Tag="Random"><DockPanel Margin="18">
-    <TextBlock DockPanel.Dock="Top" Text="Slot 1 is the fallback. Slots 2–7 are annual date overrides; the first matching slot wins." TextWrapping="Wrap" Margin="0,0,0,12"/>
+    <TextBlock DockPanel.Dock="Top" Text="Slot 1 is the fallback. Slots 2–7 repeat every year; enter month/day, such as 10/1 through 10/31. The first matching slot wins." TextWrapping="Wrap" Margin="0,0,0,12"/>
     <DataGrid x:Name="RandomGrid" ItemsSource="{Binding RandomDirectories.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
      <DataGrid.Columns>
       <DataGridTextColumn Header="Slot" Binding="{Binding [slot_no]}" Width="75" IsReadOnly="True"/>
@@ -108,8 +108,8 @@
         </DataTemplate>
        </DataGridTemplateColumn.CellTemplate>
       </DataGridTemplateColumn>
-      <DataGridTextColumn Header="From (annual)" Binding="{Binding [frm_date]}" Width="190"/>
-      <DataGridTextColumn Header="Until (annual)" Binding="{Binding [to_date]}" Width="190"/>
+      <DataGridTextColumn Header="From (month/day)" Binding="{Binding [frm_date]}" Width="190"/>
+      <DataGridTextColumn Header="Until (month/day)" Binding="{Binding [to_date]}" Width="190"/>
      </DataGrid.Columns>
     </DataGrid>
    </DockPanel></TabItem>

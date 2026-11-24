@@ -28,3 +28,11 @@ The redundant lower text line was removed. Playback controls are unchanged.
 Both group date columns now contain native WPF calendar pickers defined in XAML.
 Typed dates, blank dates, pending changes, Save/Cancel, U.S. slash display, and
 ISO database storage are retained. Group range validation still runs on Save.
+
+## 04 — Annual random-music dates
+
+Random-music dates display as `10/1`, without a year or forced leading zeros.
+Input validation accepts real month/day values only, including February 29,
+and rejects a typed year. The internal reference year for newly entered values
+is 2000 so leap day remains representable. Existing ISO stored dates remain
+compatible; matching still ignores the year and includes cross-year ranges.

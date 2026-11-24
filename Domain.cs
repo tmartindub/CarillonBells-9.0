@@ -37,6 +37,13 @@ public sealed class Song
 
 public static class DataFormats
 {
+    public static DateTime? AnnualDate(object? value)
+    {
+        var text=value is null or DBNull?"":value.ToString()!.Trim();
+        if(text.Length==0) return null;
+        if(DateTime.TryParseExact(text+"/2000",["M/d/yyyy","MM/dd/yyyy","M/dd/yyyy","MM/d/yyyy"],CultureInfo.InvariantCulture,DateTimeStyles.None,out var date)) return date.Date;
+        throw new FormatException("Enter an annual date as month/day, such as 10/1 or 12/25, without a year.");
+    }
     public static DateTime? Date(object? value)
     {
         if (value is null or DBNull || string.IsNullOrWhiteSpace(value.ToString())) return null;

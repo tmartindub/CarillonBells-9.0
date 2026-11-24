@@ -26,6 +26,13 @@ public static class RegressionTests
             Check("Overnight starting weekday",overnight.Contains(now.Date.AddDays(1).AddMinutes(30))&&!overnight.Contains(now.Date.AddDays(2).AddMinutes(30)));
             Check("Equal silence start/end inactive",!(rule with{Start=rule.End}).Contains(now));
             Check("Cross-year directory override",CalendarRules.AnnualMatch(new(2027,1,4),new(2026,12,1),new(2027,1,5)));
+            Check("Annual input preserves month/day without a displayed year",DataFormats.AnnualDate("10/1")?.ToString("M/d")=="10/1");
+            Check("Annual leap day is valid independently of the current year",DataFormats.AnnualDate("2/29")==new DateTime(2000,2,29));
+            foreach(var invalid in new[]{"2/30","13/1","10/1/2026","10-1","1/2026"})
+            {
+                var rejected=false;try {DataFormats.AnnualDate(invalid);}catch(FormatException){rejected=true;}
+                Check("Reject invalid annual input "+invalid,rejected);
+            }
             Check("Christmas range retained while active",CalendarRules.GroupDates("Christmas",new(2026,12,24))?.From==new DateTime(2026,12,22));
             Check("Custom groups preserved",CalendarRules.GroupDates("Custom",now) is null);
             Check("Easter 2027",CalendarRules.Easter(2027)==new DateTime(2027,3,28));

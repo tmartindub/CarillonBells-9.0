@@ -37,7 +37,7 @@ public partial class AdministrationWindow : Window
             {
                 var field=column.ColumnName.ToLowerInvariant();
                 if(field is not ("play_date_from" or "play_date_to" or "frm_date" or "to_date" or "ash_wed_begin" or "ash_wed_end" or "holy_thu_begin" or "holy_sat_end" or "all_souls_day" or "other_silence_begin_date" or "other_silence_end_date")) continue;
-                foreach(DataRow row in table.Rows) row[column]=(object?)DataFormats.Date(row[column])?.ToString("MM/dd/yyyy",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
+                foreach(DataRow row in table.Rows) row[column]=(object?)DataFormats.Date(row[column])?.ToString(table==RandomDirectories?"M/d":"MM/dd/yyyy",System.Globalization.CultureInfo.InvariantCulture)??DBNull.Value;
             }
             table.AcceptChanges();
         }
@@ -101,7 +101,7 @@ public partial class AdministrationWindow : Window
         }
         foreach(DataRow rotation in RandomDirectories.Rows)
         {
-            var from=DataFormats.Date(rotation["frm_date"]); var to=DataFormats.Date(rotation["to_date"]);
+            var from=DataFormats.AnnualDate(rotation["frm_date"]); var to=DataFormats.AnnualDate(rotation["to_date"]);
             if(CarillonRepository.Int(rotation,"slot_no")>1&&((from is null)!=(to is null))) throw new ArgumentException("An annual override requires both From and Until dates.");
         }
     }
