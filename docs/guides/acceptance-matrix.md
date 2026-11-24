@@ -1,6 +1,6 @@
 # Westminster Chimes and Carillon Bells 9.0 acceptance record
 
-Last changed November 21, 2026.
+Last changed November 24, 2026.
 
 This is an experimental separate application. Implementation is present across the handoff domains. Verification below records only checks actually performed; it does not declare production acceptance or authorize replacement of Delphi 8.1.
 
@@ -224,3 +224,14 @@ Release win-x64 and win-x86 publishes succeeded. The application folder and x86 
 The win-x86 and win-x64 single-file application builds each passed 106 self-tests. Restore checks covered backup discovery, damaged ZIP rejection, exact recovery of the original 7.2.4 database, exact preservation of the v9 database in a new ZIP, and retention of the pre-upgrade ZIP.
 
 The self-contained 32-bit Migration Assistant completed a restore through its visible controls on the development PC. The wizard found the dated ZIP, showed the destination database and backup before confirmation, and reported the v9 safety ZIP after success. Hashes verified the restored database and safety ZIP. The test used a disposable installation with neither bells executable running from it.
+
+
+## UI improvements and Groups acceptance November 24 2026
+
+The current native x64 and x86 executables each passed 204 regression checks at source commit 67caf53. User testing confirmed that the corrected Groups open/close behavior tests well on D:. The separate checkpoint record documents the earlier incremental UI changes and their evidence.
+
+Verified behavior includes actual-value pending checks for Groups; retained prompts for real edits/additions/deletions; Save/Cancel and reverted values; hidden calendar buttons with reserved space and hover/focus/open-popup triggers; single-field Ash Wednesday UI with synchronized compatibility storage and startup repair; annual M/d random dates; last-played recording independent of selection; search × and automatic reload; maintenance pause reasons; stale email-failure clearing; eighteen black hand alternatives; and whole-choice font validation/persistence/fallback.
+
+The Groups fault was reproduced before changing logic, using close-time binding commits. A private copy of actual installation data produced 16 Modified rows with no differing values. The corrected UI closed untouched Groups twice on D: without a prompt, and the group-table digest was unchanged. A genuine GUI edit still prompted and saved in fictitious test data. Original 18, Arial 14, Arial 18 and Tahoma 16 passed the copied-data page checks.
+
+No real email was sent during these UI checks. Physical device removal, additional monitor/DPI combinations, real SMTP delivery and extended unattended operation remain separately evidenced deployment checks. Earlier dated entries below/above remain historical records; current UI details supersede old fourteen-style and year-bearing annual-date descriptions.

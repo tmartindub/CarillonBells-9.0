@@ -41,6 +41,14 @@ When publishing v9, add the two files to the website repository and place an aud
 
 ## Release handoff
 
+The November 24 documentation refresh updates the local proposed pages, their
+four guide PDFs and screenshots for fonts, annual random dates, calendar buttons,
+the player and eighteen black clock hand alternatives. Demonstration screenshots
+use Example Church. Production pages and version 8.1 remain unchanged.
+The release packages listed below predate these UI changes; rebuild and validate
+them from the approved release source before publishing. Keep the proposed pages
+marked noindex/nofollow until publication is approved.
+
 1. After release approval, use `C:\New Delphi Projects\CarillonBells v 9_0\export\32-bit` for Windows x86 and `C:\New Delphi Projects\CarillonBells v 9_0\export\64-bit` for Windows x64. Verify the New Install and Upgrade ZIPs and their matching Package Studio Pro Setup executables. Keep private databases, logs, credentials and local music outside the public site and release.
 2. Publish the authorized v9 assets through the [v9 GitHub repository](https://github.com/tmartindub/CarillonBells-9.0). Add the confirmed download links and verified SHA-256 checksums to the New Install and Upgrade cards under `#software`. Label links by Windows version and package type. Keep an accessible route to the archived 8.1 release.
 3. Put the reviewed pages at their production URLs with the required relative assets, audio files, and guides. Set canonical URLs, Open Graph and Twitter URLs and image metadata to the public destinations. Remove the local `noindex` and update `robots.txt` and the sitemap for public indexing. Keep the host's verification and GitHub Pages files. Review the analytics and privacy text together if analytics are enabled.

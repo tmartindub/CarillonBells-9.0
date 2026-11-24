@@ -17,10 +17,10 @@ SOURCES = PROJECT / "docs" / "guides" / "source"
 PRODUCT_NAME = "Westminster Chimes and Carillon Bells"
 PRODUCT_VERSION = "9.0"
 GUIDES = {
-    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 23)),
-    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 23)),
-    "Migration": ("Database Migration Guide", "This illustrated guide takes you through upgrading your existing USB to version 9, from choosing the download and making a backup to checking the result and recovering an older version if needed.", datetime(2026, 11, 23)),
-    "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
+    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 24)),
+    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 24)),
+    "Migration": ("Database Migration Guide", "This illustrated guide takes you through upgrading your existing USB to version 9, from choosing the download and making a backup to checking the result and recovering an older version if needed.", datetime(2026, 11, 24)),
+    "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 24)),
 }
 
 
@@ -183,7 +183,7 @@ def make_guide(kind, destination):
     caption.paragraph_format.keep_with_next = False
 
     cover = document.add_paragraph(PRODUCT_NAME, "Title")
-    cover.paragraph_format.space_before = Pt(22 if quick_start else 80)
+    cover.paragraph_format.space_before = Pt(0 if quick_start else 80)
     document.add_paragraph(f"Version {PRODUCT_VERSION}")
     document.add_paragraph(title, "Subtitle")
     document.add_paragraph(purpose)
@@ -191,7 +191,7 @@ def make_guide(kind, destination):
     if not quick_start:
         document.add_page_break()
     document.add_paragraph("Table of contents", "Guide contents title")
-    add_field(document.add_paragraph(), 'TOC \\o "1-1" \\h \\z \\u' if migration else 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
+    add_field(document.add_paragraph(), 'TOC \\o "1-1" \\h \\z \\u' if migration or quick_start else 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
 
     add_manuscript(document, SOURCES / f"{kind}.md", quick_start=quick_start, migration=migration)
     footer = section.footer.paragraphs[0]

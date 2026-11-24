@@ -54,9 +54,9 @@ Choose a smaller size or a narrower font and check again. Changing the candidate
 requires another check. **Restore defaults** returns to the original appearance.
 
 The size range is 14–20; 18 is the original size. The usable maximum can be lower
-for your data. In the private snapshot check, **Arial 14 passed every page**.
-Larger choices were refused where the organization/date line or silence-purpose
-text did not fit at the minimum window size.
+for your data. After widening Purpose and separating the organization/date
+lines, **Original 18, Arial 14, Arial 18 and Tahoma 16 passed** with the test data.
+Each installation must check its own values and display.
 
 Save or cancel other edits before checking fonts. Checks include the current
 field values, minimum window sizes, and current display density. Saved choices
@@ -66,8 +66,8 @@ reports and lists retain vertical scrolling; input-field overflow does not count
 as fitting.
 
 The clock artwork and the size/layout of its right-hand preview are preserved.
-The PDF guides have not been rewritten as part of this application change;
-the embedded HTML Help and these review notes describe the new behavior.
+The four guides, HTML Help and proposed website pages were refreshed on
+November 24 to describe the current behavior, with new demonstration screenshots.
 
 ## Rollback checkpoints
 

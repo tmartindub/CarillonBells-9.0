@@ -24,7 +24,7 @@ For a separate database copy, **Database import** opens the source read-only, ba
 
 Scheduled and manual playback, including random music, resolve inside the running EXE's folder. Legacy drive-letter paths use their folder layout under that folder (for example, `C:\Songs\bell.mp3` resolves to `<EXE folder>\Songs\bell.mp3`). Store music and random directories as relative paths. Copy new audio into the portable installation before adding it; network paths and paths escaping the installation are rejected. Database import does not copy audio. Existing music folders are preserved during binary updates.
 
-The interface uses an 18-pixel base font, with larger headings and 14–16-pixel supporting labels. The main workspace fits the window and reserves bottom rows for the player, volume and status, so those controls stay visible. The song list scrolls within its panel; very small windows can scroll navigation or editor content independently. System settings use three columns, and Email settings use two columns. Group play times display as HH:mm:ss without fractional seconds. These settings and layouts remain editable in XAML.
+The original interface uses an 18-unit base font, with larger headings and 14–16-unit supporting labels. System → Font settings offers seven family choices and base sizes 14–20; Check every page validates current data and minimum-window layouts before Apply checked font can save a choice. Apply shows a clear applied-and-saved confirmation. Custom preferences in data\fonts.json are revalidated at startup/display-scale changes. The main workspace fits the window and reserves bottom rows for the player, volume and status, so those controls stay visible. The song list scrolls within its panel; very small windows can scroll navigation or editor content independently. System settings use three columns, and Email settings use two columns. Group play times display as HH:mm:ss without fractional seconds. These settings and layouts remain editable in XAML.
 
 Playback logs record `Played Song:` entries. Existing `Songs`, `Random_songs`, and other personal music folders can still be used on upgraded USB drives when the database references them.
 
@@ -69,6 +69,17 @@ The guides have title pages, last-changed dates and changeable TOC fields. In Li
 ## Behavioral decisions
 
 Missed events after sleep or clock jumps are skipped. A persisted dispatch ledger prevents replay of an already dispatched local-date occurrence. Full-day reports do not consume the live queue. The source distinction between inclusive compile-time silence ends and exclusive live silence ends is preserved. Playlist edits and administration restore the previous schedule state when finished; an already paused schedule stays paused. The playlist reloads automatically after changes and import, preserving the selected song by its stable key, current search, and group expansion. There is no manual playlist Refresh button.
+
+## Current UI and editing behavior
+
+- Calendar buttons appear on date-field hover or keyboard focus and remain visible while the popup is open. Reserved space prevents text movement.
+- Groups prompts only for actual value changes, additions or deletions; opening/closing and reverting all edits do not prompt.
+- Random music uses annual month/day input such as 10/1, without a year, and supports ranges crossing New Year.
+- PLAYER records the actual last-started recording independently of selection, with wrapping clear of System Volume.
+- Clock hands preserves Original and supplies eighteen slender black alternatives, with the original face and preview geometry.
+- The legacy Ash Wednesday end remains stored but hidden and synchronized to the visible date. Startup repairs stale values after a database ZIP backup.
+- Search × clears the filter. Playlist refresh is automatic, maintenance logs identify pause reasons, and successful email clears a stale email-failure notice.
+- Both final native Windows builds passed 204 checks. Tommy also confirmed that the corrected Groups behavior tests well on D:. This is specific acceptance evidence, not blanket production qualification.
 
 ## Release status
 

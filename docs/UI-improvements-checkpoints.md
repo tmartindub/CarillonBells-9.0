@@ -472,3 +472,43 @@ Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`
 - win-x86: `612E19C814763F6029ED068A7C4CCE117A8AF6BC11BA5D7052EC6A82734F10FC`
+
+## 24. Documentation and proposed website refresh — November 24
+
+Updated the User, Engineering, Database Migration and Quick Start manuscripts,
+DOCX guides and companion PDFs, searchable HTML Help, README and proposed v9
+home/download pages. These cover the font check/apply confirmation, annual
+month/day random dates, automatic playlist updates and search clearing, actual
+last-played recording, hidden synchronized Ash Wednesday compatibility date,
+calendar hover/focus behavior, genuine Groups change detection, maintenance
+reasons, email status/recipients, header/player spacing and eighteen black clock
+hand alternatives. The illustrated migration steps and recovery procedures remain.
+
+Seven current app screenshots were taken from a disposable Example Church
+installation with synthetic settings and silent WAV files. D: was left running.
+No application code, executable, live database, release package or production
+website was changed. The current D: binary's SHA-256 is
+`5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B`.
+
+LibreOffice updated all four editable tables of contents and exported the PDFs.
+The packaged DOCX renderer produced page images; every page was visually checked:
+User 13, Engineering 13, Migration 19 and Quick Start 4 (49 total). A sparse Quick
+Start spillover page was corrected, and the font workflow now has an illustration.
+All 120 local HTML references, manuscript figure paths, populated TOC fields,
+PDF page counts, site/guide PDF hashes and preserved translation/noindex settings
+passed checks. The existing shared stylesheet retains the one-column mobile
+breakpoint. Browser preview of the local pages was blocked by browser URL policy;
+desktop/mobile browser appearance and live translation were not runtime-tested.
+
+The private-data audit's two matches were the unchanged pre-existing public
+contact mailto lines in the proposed pages. Comparison with HEAD confirmed no new
+private credential or recipient disclosure. New screenshots contain demonstration
+data only. The Help builder now uses the maintained User manuscript instead of
+an obsolete import, keeping future Help updates aligned with the guide.
+
+Pre-change ZIP: `H:\CarillonBells v 9_0\Before_docs_web_refresh_20261124.zip`.
+The requested completion checkpoint ZIP uses prefix `Checkpoint24_DocsWeb_`
+and the resulting Git commit. PDF validation hashes are recorded in
+`guides/documentation-refresh-validation.json`. The refreshed Help is available
+as local HTML source; embedding it into an executable requires the next approved
+application build. Existing release packages must be rebuilt before publication.

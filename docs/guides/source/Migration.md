@@ -116,7 +116,7 @@ Version 9 adapts the old settings to the format it needs and prepares the random
 
 1. On the USB, double-click **CarillonBells.exe**. Version 9 opens your existing database and uses the existing music paths.
 2. Once the main window is open, clear the **Schedule enabled** checkbox at the upper right while you inspect the installation.
-3. Version 9 may create a dated **carillon_before_upgrade_** ZIP inside databases before adding information that helps prevent duplicate scheduled plays after a restart. If that information is already present, that particular startup may not create a new backup.
+3. Version 9 may create a dated **carillon_before_upgrade_** ZIP inside databases before adding information that helps prevent duplicate scheduled plays after a restart, or before correcting an old Ash Wednesday compatibility end date to match the visible Ash Wednesday date. If that information is already present, that particular startup may not create a new backup.
 
 Keep the complete backup you made earlier regardless of whether an automatic ZIP appears. It is your record of the installation before this upgrade.
 
@@ -127,7 +127,7 @@ Work through these checks while **Schedule enabled** is cleared. Seeing a famili
 1. In the main window, look under **Songs** for several familiar titles and groups. Select a title and compare its weekdays, From and Until dates, and play times with the schedule you expect.
 2. Open **Database import** in the sidebar. Read **Current local database**. It should refer to the USB you upgraded—for example, **D:\Carillon\databases\carillon.db**. Close that page after checking the path; you do not need to import anything during this check.
 3. At a low test volume, select a familiar song and click **Play**. Confirm that it is the recording you expected, then click **Stop**. Try another song from a different group.
-4. Open **Music groups** and **Today's schedule**. Compare important dates and play times, including the first event due after you intend to return the system to service.
+4. Open **Music groups** and **Today's schedule**. Hover over a group date field to reveal its calendar button, or reach it with the keyboard. Opening and closing Groups without editing does not ask to save. Compare important dates and play times, including the first event due after you intend to return the system to service.
 
 ![Figure 1. The main window with demonstration songs. Songs are in the center, the player is below, and Schedule enabled is at the upper right. This overview shows where to look; your playlist and colors may differ.](figures/main.png)
 
@@ -137,9 +137,9 @@ If songs are missing or do not play, use **If something does not look right** la
 
 These settings can change what you hear even when an ordinary song plays successfully. Take a few minutes to review them before normal service.
 
-1. Open **Random music**. Slot **1** is the usual music folder. Slots **2 through 7** can choose a different folder during particular date ranges, such as Christmas. Check that the folders are the ones you intend to use and contain recordings.
+1. Open **Random music**. Its annual From and Until dates now show only month and day, such as **10/1** and **10/31**. These ranges repeat every year; do not add a year. Slot **1** is the usual music folder. Slots **2 through 7** can choose a different folder during particular date ranges, such as Christmas. Check that the folders are the ones you intend to use and contain recordings.
 2. A path such as **.\random_songs** means a folder named random_songs beside the program. For example, if the program is **D:\Carillon\CarillonBells.exe**, that music folder is **D:\Carillon\random_songs**. Do not type the example drive letter unless it matches your USB. If you use Browse to correct a folder, click **Save**.
-3. Open **Silence windows** and check the enabled days and times. Under **System**, also review liturgical and funeral silence dates. A current silence period can intentionally mute the system even when the player is running.
+3. Open **Silence windows** and check the enabled days and times. V9 shows one Ash Wednesday date and keeps its hidden compatibility end date synchronized. Under **System**, also review liturgical and funeral silence dates. A current silence period can intentionally mute the system even when the player is running.
 4. Open **Email / reports**. Use **Preview report** to choose where to save the report, then open that saved file to review it. It is an HTML file, which opens in a web browser. Check the organization, playlist information, and missing-file messages. Preview does not send email.
 5. If you use email, confirm the recipient addresses before choosing **Test morning report**. That test sends a real message after confirmation. Check that it arrives at the intended address before relying on automatic reports.
 
@@ -152,7 +152,7 @@ Choose a suitable time to reconnect the intended speakers or amplifier. Keep the
 1. If you just upgraded from **7.2.4**, close the first review session and reopen **CarillonBells.exe** from the USB. The automatic email suppression for that review session ends when you restart normally. Clear Schedule enabled again if you still need time to finish checking.
 2. Confirm the Windows output and volume, then check **Schedule enabled** when you are ready for automatic playback.
 3. Look at **Today's schedule** and the **Next song** card. Confirm that an upcoming song and time are reasonable. Allow one scheduled event to run through the intended output and look in **Log** for its recorded play.
-4. Keep the complete backup and any automatic database ZIPs. Close the application before removing the USB or making a copy of its working files.
+4. Keep the complete backup and any automatic database ZIPs. If you want a different font after the functional checks, open System, then Font settings. Check every page before applying the choice; the confirmation says when it is already applied and saved. Close the application before removing the USB or making a copy of its working files.
 
 If you want an overnight check, leave the computer awake, the USB connected, and scheduling and logging enabled. Normal operation rebuilds the schedule at midnight and performs daily schedule maintenance at or after **12:05 a.m.**. An enabled morning email is attempted at or after **5:00 a.m.**; start the application before that time to test it.
 

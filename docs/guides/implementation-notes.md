@@ -2,6 +2,17 @@
 
 Last changed November 21, 2026.
 
+## November 24 continuation
+
+The UI follow-up is complete through source commit 67caf53. Both architectures
+passed 204 native checks; Tommy confirmed that Groups now opens and closes
+without a false save prompt. The current font, calendar, seasonal-date, player,
+email-status and clock-hand behavior is described in the refreshed four guides,
+HTML Help and proposed website. See `../UI-improvements-checkpoints.md` for the
+individual changes and validation. Earlier evidence below records the initial
+implementation, rather than the current release package status. Documentation
+updates do not replace the running D: executable or publish the proposed site.
+
 The original handoff is preserved in `FMX2CSharp-handoff.md`. The separate application is implemented in this repository; evaluation and acceptance evidence is recorded in `acceptance-matrix.md`. This does not promote it to the live production release.
 
 The user approved Apache 2.0 for new code with prior MIT notices retained, skipping missed events after discontinuities, and creating a separate GitHub repository. Delphi 8.1 source, its repository/releases and website are protected and unchanged.
