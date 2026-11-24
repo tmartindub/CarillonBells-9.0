@@ -404,6 +404,21 @@ Executable SHA-256:
 - win-x64: `F9444F1EC8116C2A1104B587113E64F35F4E3390C70E0CCC2751594E705A18F9`
 - win-x86: `B5CE64E2FFDE1836616E6DB481B58B9267B6B9D8466D7627A208A46367050961`
 
+## 22 — Calendar-hover installation on D:
+
+November 24, 2026. The user stopped D: and authorized continuation after the
+pending-edits pause. Its executable, database and settings were backed up to
+**H:\CarillonBells v 9_0\D_before_Calendar_hover_20261124.zip**; the executable
+inside the ZIP was hash-verified against the prior installed file.
+
+The validated 64-bit executable from checkpoint 21 was copied to
+**D:\CarillonBells.exe**, verified against its recorded SHA-256, and restarted.
+Visual startup review confirmed all 120 songs loaded, scheduling enabled, and
+calendar buttons hidden at rest. No live dates or font settings were edited,
+and no manual playback/test email was triggered. Music and Carillon.exe were
+preserved. The after-install checkpoint includes source and the same tested
+executables/results from **export/Calendar-hover-20261124**.
+
 Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`
