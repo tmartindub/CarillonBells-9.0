@@ -114,6 +114,7 @@ public partial class AdministrationWindow : Window
         try
         {
             CommitEditors();
+            settings.Rows[0]["ash_wed_end"]=settings.Rows[0]["ash_wed_begin"];
             if (SettingsDirty)
             {
                 Validate();
@@ -270,7 +271,7 @@ public partial class AdministrationWindow : Window
     private void RecalculateSettingsClick(object sender,RoutedEventArgs e)
     {
         var easter=CalendarRules.Easter(DateTime.Today.Year); if(easter<DateTime.Today) easter=CalendarRules.Easter(DateTime.Today.Year+1);
-        var row=settings.Rows[0]; row["ash_wed_begin"]=easter.AddDays(-46).ToString("MM/dd/yyyy"); row["holy_thu_begin"]=easter.AddDays(-3).ToString("MM/dd/yyyy"); row["holy_sat_end"]=easter.AddDays(-1).ToString("MM/dd/yyyy");
+        var row=settings.Rows[0]; row["ash_wed_begin"]=easter.AddDays(-46).ToString("MM/dd/yyyy"); row["ash_wed_end"]=row["ash_wed_begin"]; row["holy_thu_begin"]=easter.AddDays(-3).ToString("MM/dd/yyyy"); row["holy_sat_end"]=easter.AddDays(-1).ToString("MM/dd/yyyy");
         var souls=new DateTime(DateTime.Today.Year,11,2); if(souls<DateTime.Today) souls=souls.AddYears(1); row["all_souls_day"]=souls.ToString("MM/dd/yyyy"); ResultLabel.Text="Dates recalculated; click Save";
     }
     private void ClearFuneralClick(object sender,RoutedEventArgs e) { foreach(var field in new[]{"other_silence_begin_date","other_silence_end_date","other_silence_begin_time","other_silence_end_time"}) settings.Rows[0][field]=DBNull.Value; }

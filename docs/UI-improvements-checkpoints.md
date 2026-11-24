@@ -337,6 +337,44 @@ Executable SHA-256:
 - win-x64: `FED56473AFF5BA6624E88B3715275C0BE707225BE1E1C687FC74CE387CEFCDE9`
 - win-x86: `64C184D1DF9A0E11AD40C002013188E16D3C687BC2ADCDCC5B06D3D45F6F173D`
 
+## 20 — Hide and synchronize the legacy Ash Wednesday end
+
+November 24, 2026. The legacy end editor remains defined in editable XAML but
+is collapsed in v9. The visible Ash Wednesday date is authoritative. Manual
+System saves and manual/background recalculation synchronize both fields.
+Repository writes also enforce the pair, including clearing both dates and
+refusing a conflicting legacy-end-only update. No column was removed.
+
+The existing compatibility check detects stale/missing legacy end values,
+makes its normal database ZIP backup, and copies the visible/start date to the
+end in a transaction. Reopening an already synchronized database does not
+repeat the repair. Ash Wednesday silence still uses one day and its existing
+time boundaries; Holy Week/All Souls calculations were not changed.
+
+Both self-contained native Windows executables passed **178 checks**, zero
+failures. Eleven added checks cover individual/conflicting date writes, blank
+dates, stale database repair and repeated checks, hidden UI, pending manual
+recalculation, manual save, January annual maintenance, and single-day silence.
+Builds completed with zero warnings/errors.
+
+D: was closed cleanly and backed up (executable/database/settings) to
+**H:\CarillonBells v 9_0\D_before_Ash_Wednesday_sync_20261124.zip** before
+replacement/restart. Read-only verification against this backup confirmed that
+both live fields are **2027-02-10** and every other System setting is unchanged.
+The temporary verification database was removed. The System page was visually
+checked: only Ash Wednesday 02/10/2027 is shown. All 120 songs loaded and the
+schedule was enabled after closing the unchanged review window. No manual
+playback or test email was triggered. Music and Carillon.exe were untouched.
+
+The pre-change source ZIP is **Before_Ash_Wednesday_sync_20261124.zip** on H:.
+The numbered after-change ZIP contains source, both executables and results
+from **export/Ash-Wednesday-sync-20261124**.
+
+Executable SHA-256:
+
+- win-x64: `DA3F0A7010732B1F4D30EEEF61D320259576E80E8515CBC7E858A4273FB2C7A3`
+- win-x86: `EB90276F51F529097B5AFE140445F29F21271BC241202DD4D0105496587A2DE8`
+
 Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`

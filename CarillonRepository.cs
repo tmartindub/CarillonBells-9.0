@@ -54,11 +54,16 @@ public sealed class CarillonRepository(string databasePath)
     }
     public void SaveSettings(IReadOnlyDictionary<string,object> values,IEnumerable<string> ownedFields)
     {
-        var fields=ownedFields.ToArray();
+        var fields=ownedFields.Distinct().ToArray();
+        if(fields.Contains("ash_wed_begin")&&!fields.Contains("ash_wed_end")) fields=[..fields,"ash_wed_end"];
         if(fields.Any(f=>!SystemFields.Concat(EmailFields).Concat(new[]{"form_bgcolor","form_fontcolor"}).Contains(f))) throw new ArgumentException("Invalid settings field.");
         using var connection=Open(); using var transaction=connection.BeginTransaction(); using var command=connection.CreateCommand(); command.Transaction=transaction;
-        command.CommandText=$"UPDATE PL_SETTINGS SET {string.Join(',',fields.Select((f,i)=>f+"=@p"+i))} WHERE settings_id=1";
-        for(var i=0;i<fields.Length;i++) command.Parameters.AddWithValue("@p"+i,Normalize(fields[i],values[fields[i]])??DBNull.Value);
+        command.CommandText=$"UPDATE PL_SETTINGS SET {string.Join(',',fields.Select((f,i)=>f+"="+(f=="ash_wed_end"&&!fields.Contains("ash_wed_begin")?"ash_wed_begin":"@p"+i)))} WHERE settings_id=1";
+        for(var i=0;i<fields.Length;i++)
+        {
+            if(fields[i]=="ash_wed_end"&&!fields.Contains("ash_wed_begin")) continue;
+            command.Parameters.AddWithValue("@p"+i,Normalize(fields[i],values[fields[i]=="ash_wed_end"?"ash_wed_begin":fields[i]])??DBNull.Value);
+        }
         if(command.ExecuteNonQuery()!=1) throw new DBConcurrencyException("Exactly one settings row with settings_id=1 is required.");
         transaction.Commit();
     }
@@ -168,7 +173,9 @@ public sealed class CarillonRepository(string databasePath)
         using var settingsCheck=connection.CreateCommand();settingsCheck.CommandText="PRAGMA index_list(PL_SETTINGS)";
         var stableIndex=false;using(var indexReader=settingsCheck.ExecuteReader()){while(indexReader.Read())if(indexReader.GetString(1)=="idx_pl_settings_settings_id"&&indexReader.GetInt32(2)==1)stableIndex=true;}
         var stableRows=false;if(settings.Contains("settings_id")){settingsCheck.CommandText="SELECT COUNT(*) FROM PL_SETTINGS";var totalRows=Convert.ToInt32(settingsCheck.ExecuteScalar());settingsCheck.CommandText="SELECT COUNT(*) FROM PL_SETTINGS WHERE settings_id=1";stableRows=totalRows==1&&Convert.ToInt32(settingsCheck.ExecuteScalar())==1;}
-        if(missingSettings.Length==0&&!wide&&rotation.Contains("slot_no")&&silence.Contains("Purpose")&&stableIndex&&stableRows) return;
+        var ashDatesMatch=true;
+        if(settings.Contains("ash_wed_begin")&&settings.Contains("ash_wed_end")) {settingsCheck.CommandText="SELECT COUNT(*) FROM PL_SETTINGS WHERE ash_wed_end IS NOT ash_wed_begin";ashDatesMatch=Convert.ToInt32(settingsCheck.ExecuteScalar())==0;}
+        if(missingSettings.Length==0&&!wide&&rotation.Contains("slot_no")&&silence.Contains("Purpose")&&stableIndex&&stableRows&&ashDatesMatch) return;
         if(!alreadyBackedUp) BackupZip(backupInDatabaseFolder);
         using var transaction=connection.BeginTransaction();
         void Run(string sql) { using var cmd=connection.CreateCommand(); cmd.Transaction=transaction; cmd.CommandText=sql; cmd.ExecuteNonQuery(); }
@@ -177,6 +184,7 @@ public sealed class CarillonRepository(string databasePath)
         using(var count=connection.CreateCommand()) { count.Transaction=transaction; count.CommandText="SELECT COUNT(*) FROM PL_SETTINGS"; if(Convert.ToInt32(count.ExecuteScalar())>1) throw new InvalidDataException("Multiple settings rows require review; no rows were discarded."); }
         Run("UPDATE PL_SETTINGS SET settings_id=1; CREATE UNIQUE INDEX IF NOT EXISTS idx_pl_settings_settings_id ON PL_SETTINGS(settings_id)");
         Run($"INSERT INTO PL_SETTINGS(settings_id,ORGANIZATION_NAME,LOGGING_STATUS,email_enabled,silence_enabled) SELECT 1,'{App.ProductName}',1,0,0 WHERE NOT EXISTS(SELECT 1 FROM PL_SETTINGS)");
+        Run("UPDATE PL_SETTINGS SET ash_wed_end=ash_wed_begin WHERE ash_wed_end IS NOT ash_wed_begin");
         if(wide)
         {
             var backupName="PL_RAND_DIR_ROTATION_WIDE_BACKUP";

@@ -232,6 +232,19 @@ public static class RegressionTests
             repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
             var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
             check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
+            check("Saving Ash Wednesday alone also saves its legacy end",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
+            repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"},{"ash_wed_end","05/14/2025"}},["ash_wed_begin","ash_wed_end"]);
+            check("A conflicting legacy end cannot override Ash Wednesday",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
+            repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_end","05/14/2025"}},["ash_wed_end"]);
+            check("Saving only the legacy end preserves the canonical date",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
+            repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin",DBNull.Value}},["ash_wed_begin"]);
+            check("Clearing Ash Wednesday clears both stored dates",repository.Settings()["ash_wed_begin"] is DBNull&&repository.Settings()["ash_wed_end"] is DBNull);
+            repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
+            using(var connection=repository.Open()) {using var command=connection.CreateCommand();command.CommandText="UPDATE PL_SETTINGS SET ash_wed_end='2025-05-14' WHERE settings_id=1";command.ExecuteNonQuery();}
+            repository.EnsureCompatibleSchema();
+            check("Opening an existing database repairs a stale legacy end",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
+            repository.EnsureCompatibleSchema();
+            check("Repeated compatibility checks keep both dates synchronized",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
             using(var connection=repository.Open()) { using var command=connection.CreateCommand(); command.CommandText="UPDATE seasonalgroups SET PLAY_TIME='10:00:01.000'"; command.ExecuteNonQuery(); }
             var dateWindow=new AdministrationWindow(runtime,"ClockHands");
             check("Group time display omits fractions without changing storage",dateWindow.Groups.Rows[0]["PLAY_TIME"].ToString()=="10:00:01"&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="10:00:01.000");
@@ -242,6 +255,12 @@ public static class RegressionTests
             var cancelHands = typeof(AdministrationWindow).GetMethod("CancelClick", adminFlags)!;
             try
             {
+                check("The legacy Ash Wednesday editor remains defined but hidden",((StackPanel)dateWindow.FindName("LegacyAshWednesdayEnd")).Visibility==Visibility.Collapsed);
+                typeof(AdministrationWindow).GetMethod("RecalculateSettingsClick",adminFlags)!.Invoke(dateWindow,[null,new RoutedEventArgs()]);
+                check("Manual recalculation updates both pending Ash Wednesday values",Equals(dateSettings.Rows[0]["ash_wed_begin"],dateSettings.Rows[0]["ash_wed_end"])&&repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02");
+                dateSettings.Rows[0]["ash_wed_begin"]="02/10/2027";
+                dateSettings.Rows[0]["ash_wed_end"]="05/14/2025";
+                check("Saving a manual Ash Wednesday edit synchronizes storage",(bool)typeof(AdministrationWindow).GetMethod("Save",adminFlags)!.Invoke(dateWindow,null)!&&repository.Settings()["ash_wed_begin"].ToString()=="2027-02-10"&&repository.Settings()["ash_wed_end"].ToString()=="2027-02-10");
                 var picker = (ListBox)dateWindow.FindName("ClockHandPicker");
                 var preference = Path.Combine(scratch, "data", "clock-hands.txt");
                 check("Clock hands opens on Original without pausing scheduling",
@@ -398,6 +417,10 @@ public static class RegressionTests
                 check("Validated font preferences persist beside the portable app",File.Exists(Path.Combine(scratch,"data","fonts.json"))&&ThemeManager.LoadFonts(runtime) is null&&ThemeManager.CurrentFontFamily=="Arial"&&ThemeManager.CurrentFontSize==14);
                 File.WriteAllText(Path.Combine(scratch,"data","fonts.json"),"{\"Family\":\"Unknown font\",\"Size\":80}");
                 check("Invalid saved fonts restore defaults with an explanation",ThemeManager.LoadFonts(runtime) is not null&&ThemeManager.CurrentFontFamily=="Original"&&ThemeManager.CurrentFontSize==18);
+                runtime.SetSchedule(false);clockNow=new DateTime(2027,1,2,0,16,0);runtime.EvaluateCurrentTime();
+                check("Annual liturgical maintenance synchronizes both Ash Wednesday dates",repository.Settings()["ash_wed_begin"].ToString()=="2027-02-10"&&repository.Settings()["ash_wed_end"].ToString()=="2027-02-10");
+                runtime.Settings["silence_enabled"]=1;
+                check("Ash Wednesday remains a single-day silence period",runtime.SilenceReasons(new DateTime(2027,2,10,12,0,0)).Contains("Ash Wednesday")&&!runtime.SilenceReasons(new DateTime(2027,2,11,12,0,0)).Contains("Ash Wednesday"));
                 clockNow = new DateTime(2025, 4, 13, 5, 7, 9);
                 check("Uptime decomposes elapsed time into all seven units",
                     runtime.UptimeLabel == "1 year   1 month   2 weeks   1 day   4 hours   5 minutes   6 seconds");

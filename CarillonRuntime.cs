@@ -231,9 +231,9 @@ public sealed class CarillonRuntime : IDisposable
     public void RecalculateSettings()
     {
         var settings=Repository.Settings(); var easter=CalendarRules.Easter(Now.Date.Year); if(easter<Now.Date) easter=CalendarRules.Easter(Now.Date.Year+1);
-        settings["ash_wed_begin"]=easter.AddDays(-46).ToString("yyyy-MM-dd"); settings["holy_thu_begin"]=easter.AddDays(-3).ToString("yyyy-MM-dd"); settings["holy_sat_end"]=easter.AddDays(-1).ToString("yyyy-MM-dd");
+        settings["ash_wed_begin"]=easter.AddDays(-46).ToString("yyyy-MM-dd"); settings["ash_wed_end"]=settings["ash_wed_begin"]; settings["holy_thu_begin"]=easter.AddDays(-3).ToString("yyyy-MM-dd"); settings["holy_sat_end"]=easter.AddDays(-1).ToString("yyyy-MM-dd");
         var souls=new DateTime(Now.Date.Year,11,2); if(souls<Now.Date) souls=souls.AddYears(1); settings["all_souls_day"]=souls.ToString("yyyy-MM-dd");
-        Repository.SaveSettings(settings,["ash_wed_begin","holy_thu_begin","holy_sat_end","all_souls_day"]); Reload();
+        Repository.SaveSettings(settings,["ash_wed_begin","ash_wed_end","holy_thu_begin","holy_sat_end","all_souls_day"]); Reload();
     }
     public void Dispose()
     {
