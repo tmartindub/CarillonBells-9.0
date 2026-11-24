@@ -138,7 +138,7 @@ public sealed class CarillonRuntime : IDisposable
         }
         if(!File.Exists(path)) throw new FileNotFoundException("Music file not found:\n"+path+"\n\nDatabase import does not copy audio files. Copy the music folder into this installation so the file is available at the path shown above.",path);
         Player.Play(path,song.Repeats);
-        Log.Append("Played Song: "+path); if(Log.Enabled) PlayedToday++; LastPlayed=$"{Path.GetFileNameWithoutExtension(path)} at {DateTime.Now:T}"; Changed?.Invoke();
+        Log.Append("Played Song: "+path); if(Log.Enabled) PlayedToday++; LastPlayed="Last song played: "+Path.GetFileNameWithoutExtension(path); Changed?.Invoke();
     }
     public List<string> SilenceReasons(DateTime now)
     {

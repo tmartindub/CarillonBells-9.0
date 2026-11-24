@@ -48,8 +48,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public string NextSongTitle=>NextSong?.Song.Title??(runtime.ScheduleEnabled?"No remaining songs":"Schedule paused");
     public string ScheduleCountLabel=>$"{runtime.FullDay(DateTime.Now).Count} today / {runtime.Queue.Count} queued";
     public string SilenceLabel=>runtime.SilenceLabel;
-    public string PlayerTitle=>runtime.Player.Busy?runtime.Player.CurrentTitle:SelectedSong?.Title??"Select a song";
-    public string PlaybackLabel=>runtime.Player.Busy?$"{(runtime.Player.Paused?"Paused":"Playing")} · {DataFormats.DurationText(runtime.Player.Duration-runtime.Player.Position)} remaining":runtime.LastPlayed;
+    public string PlayerTitle=>runtime.LastPlayed;
     public string LibraryLabel=>$"{Songs.Count} songs · {DataFormats.DurationText(TimeSpan.FromTicks(Songs.Sum(s=>DataFormats.Duration(s.Duration).Ticks)))}";
     public string UptimeLabel=>runtime.UptimeLabel;
     public string Footer=>$"v9.0 · {(runtime.Evaluation?"Evaluation":"Portable")}";
@@ -64,7 +63,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void UpdateStatus()
     {
         if(!Dispatcher.CheckAccess()) { Dispatcher.BeginInvoke(UpdateStatus); return; }
-        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongTiming),nameof(NextSongTitle),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(PlaybackLabel),nameof(UptimeLabel),nameof(Status),nameof(Organization)}) Notify(property);
+        foreach(var property in new[]{nameof(TodayLabel),nameof(NextSongTiming),nameof(NextSongTitle),nameof(ScheduleCountLabel),nameof(SilenceLabel),nameof(PlayerTitle),nameof(UptimeLabel),nameof(Status),nameof(Organization)}) Notify(property);
         ScheduleToggle.IsChecked=runtime.ScheduleEnabled;
         PlayerProgress.Maximum=Math.Max(1,runtime.Player.Duration.TotalSeconds); PlayerProgress.Value=runtime.Player.Position.TotalSeconds;
     }

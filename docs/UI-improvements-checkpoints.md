@@ -15,3 +15,10 @@ unrelated errors. Missing or invalid recipients identify the relevant field.
 A blank test recipient does not affect morning reports. SMTP login names no
 longer have to be email addresses when a valid From address is configured.
 No messages were sent during validation. Automatic retry policy is unchanged.
+
+## 02 — Player wording
+
+The player shows `Last song played: [actual recording]` after playback begins,
+including the actual randomly selected recording. Grid selection no longer
+changes this text. Before the first play it reads `No songs played this session`.
+The redundant lower text line was removed. Playback controls are unchanged.

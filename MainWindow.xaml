@@ -172,7 +172,6 @@
       <StackPanel Grid.Column="2">
        <TextBlock Text="PLAYER" FontSize="14" Foreground="{DynamicResource Muted}"/>
        <TextBlock Text="{Binding PlayerTitle}" Margin="0,3,0,0" FontSize="19" TextWrapping="Wrap"/>
-       <TextBlock Text="{Binding PlaybackLabel}" FontSize="14" Foreground="{DynamicResource Muted}" Margin="0,2,0,0" TextWrapping="Wrap"/>
       </StackPanel>
       <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" x:Name="PlayerProgress" Maximum="3" Width="520" Height="6" HorizontalAlignment="Left" Margin="0,8,0,0" Foreground="#D87732" Background="#E7EDF1" BorderThickness="0"/>
      </Grid>
