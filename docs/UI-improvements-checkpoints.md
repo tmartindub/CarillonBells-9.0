@@ -36,3 +36,13 @@ Input validation accepts real month/day values only, including February 29,
 and rejects a typed year. The internal reference year for newly entered values
 is 2000 so leap day remains representable. Existing ISO stored dates remain
 compatible; matching still ignores the year and includes cross-year ranges.
+
+## 05 — Black clock-hand catalogue
+
+Original is unchanged. Eighteen new black vector pairs replace all fourteen
+previous alternatives: Taper, Needle, Sword, Lancet, Spade, Open spade, Diamond,
+Open diamond, Leaf, Open leaf, Breguet, Serpentine, Twin scroll, Lyre, Fleur,
+Gothic, Vienna, and Nouveau. Their tips stop inside the minute track and their
+decoration remains near the center. Cards use five columns and smaller thumbnails.
+The right preview and full clock face/layout are unchanged. Prior numbered
+preferences select the replacement at that number; Original remains ID zero.

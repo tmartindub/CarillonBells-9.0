@@ -131,7 +131,7 @@
       ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
       ScrollViewer.CanContentScroll="False">
       <ListBox.ItemsPanel>
-       <ItemsPanelTemplate><UniformGrid Columns="4" VerticalAlignment="Top"/></ItemsPanelTemplate>
+       <ItemsPanelTemplate><UniformGrid Columns="5" VerticalAlignment="Top"/></ItemsPanelTemplate>
       </ListBox.ItemsPanel>
       <ListBox.ItemContainerStyle>
        <Style TargetType="ListBoxItem">
@@ -166,7 +166,7 @@
       <ListBox.ItemTemplate>
        <DataTemplate>
         <StackPanel>
-         <Viewbox Height="80" HorizontalAlignment="Center">
+         <Viewbox Height="66" HorizontalAlignment="Center">
           <Grid Width="460" Height="460">
            <Ellipse Fill="#F7FBFD" Stroke="#BCD0DE" StrokeThickness="5"/>
            <Path Stroke="#7690A2" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
@@ -176,7 +176,7 @@
            <Rectangle Fill="{Binding Cap}"/>
           </Grid>
          </Viewbox>
-         <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,6,0,0"
+         <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,6,0,0"
           TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}"/>
         </StackPanel>
        </DataTemplate>

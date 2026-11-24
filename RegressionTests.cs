@@ -46,10 +46,11 @@ public static class RegressionTests
             Check("Invalid historical date retained",CarillonLog.Parse("2/29/2026 12:00:00 PM - test").Timestamp is null);
             Check("Hour and minute geometry",((11%12)*30+59*0.5)==359.5);
             var handStyles = (ClockHandStyle[])Application.Current.FindResource("ClockHandCatalog");
-            Check("Original and the fourteen numbered clock hand styles have renderable geometry",
-                handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 15)) &&
+            Check("Original and eighteen numbered clock hand styles have renderable geometry",
+                handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 19)) &&
                 handStyles.All(style => style.Hour.Drawing is not null && style.Minute.Drawing is not null && style.Cap.Drawing is not null));
             var originalHands = handStyles[0];
+            Check("New minute hands end inside the minute track",handStyles.Skip(1).All(style=>style.Minute.Drawing.Bounds.Top>=49&&style.Minute.Drawing.Bounds.Left>=205&&style.Minute.Drawing.Bounds.Right<=255));
             Check("Original clock hand proportions and pivot match the previous clock",
                 originalHands.Minute.Drawing.Bounds == new Rect(220, 13, 20, 217) &&
                 originalHands.Hour.Drawing.Bounds == new Rect(220, 60, 20, 170) &&
