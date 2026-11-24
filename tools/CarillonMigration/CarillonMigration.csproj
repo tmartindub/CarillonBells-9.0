@@ -29,7 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CarillonBells.csproj" />
-    <Compile Remove="MigrationEngine.cs;MigrationWindow.xaml.cs;UsbUpgrade.cs" />
+    <Compile Remove="MigrationEngine.cs;MigrationWindow.xaml.cs;UsbUpgrade.cs;LegacyRestore.cs" />
     <Page Remove="MigrationWindow.xaml;MigrationStyles.xaml" />
   </ItemGroup>
 </Project>

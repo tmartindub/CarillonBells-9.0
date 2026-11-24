@@ -320,7 +320,7 @@ public static partial class MigrationEngine
         }
         catch (IOException error)
         {
-            throw new IOException("Close every Carillon window and any other program using its database before upgrading this USB.", error);
+            throw new IOException("Close every Carillon window and any other program using this USB's database, then try again.", error);
         }
     }
 

@@ -24,7 +24,9 @@ if($SingleExe) {
     }
 
     $packageKind='Upgrade'
-    if(!$UsbUpgrade) {
+    if($UsbUpgrade) {
+        $payload['CarillonMigration.exe']=Get-Item -LiteralPath (Join-Path $projectRoot "export\staging-migration-single-$Runtime\CarillonMigration.exe")
+    } else {
         if(!$MusicDirectory -or !$StarterDatabase){throw 'Select the Music folder and a prepared starter database for a new USB installation.'}
         $packageKind='New_Install'
         $folders+=@('data/','databases/','Help/','logs/','Music/')

@@ -198,7 +198,7 @@ public static partial class MigrationEngine
                 CheckPath(sidecar);
                 if (Attributes(sidecar) is { } attributes && (attributes.HasFlag(FileAttributes.Directory) ||
                     suffix == "-shm" || new FileInfo(sidecar).Length > 0))
-                    throw new IOException("Close the older Carillon application before migrating. SQLite recovery or transaction files are present.");
+                    throw new IOException("SQLite recovery or transaction files are present. Close Carillon and any database tools, then try again.");
             }
             return guard;
         }

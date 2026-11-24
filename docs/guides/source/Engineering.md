@@ -126,7 +126,11 @@ A consistent ZIP of the current local database precedes replacement. The app val
 
 ## Recovery and backups
 
-Close the copy being restored and make a separate ZIP of the current database. Confirm the exact destination and its drive letter. Extract carillon.db from the chosen backup into the installation's databases directory. In-place startup backups are beside the database under databases. The Database import action keeps its local backups under databases\backup. Reopen in Evaluation mode and verify settings, paths, and upcoming events before resuming normal on-site operation.
+The 32-bit and 64-bit builds of CarillonMigration.exe provide the same **Restore 7.2.4…** workflow. The assistant lists dated carillon_before_upgrade_*.zip backups beside the selected installation's database and accepts a ZIP from another location. It checks the original 7.2.4 schema and SQLite integrity before installing the saved database. The ZIP contains carillon.db at its root or under databases.
+
+Close both Carillon.exe and CarillonBells.exe before restoration. The assistant checks that the target database is eligible and available, verifies a dated carillon_before_restore_*.zip of the current database, and replaces only databases\carillon.db. It rechecks the database fingerprints before replacement and stops if either database changed after review. Users open Carillon.exe themselves when ready to check the schedule and audio. The existing audio, executable files, and upgrade backup stay available.
+
+Database import saves its local snapshots under databases\backup. For recovery of a v9 import, close the app and preserve the current database before replacing it with the selected snapshot. When reopening a v9 database, use Evaluation mode to verify the settings, paths, and upcoming events before resuming onsite operation.
 
 # Audio output and clock visuals
 
@@ -169,7 +173,7 @@ Open CarillonBells.sln in a Windows IDE with .NET 10 and WPF support. CarillonBe
 
 Run tools\build.ps1 with Release or Debug. Publish the main executable with -Publish, -SingleExe, and -Runtime win-x86 or -Runtime win-x64. Each executable bundles the matching .NET 10 Desktop runtime and native SQLite component. The script uses tools\dotnet when installed and otherwise uses the system dotnet executable. It directs CLI settings and NuGet packages into project-local caches. The lock file and project file identify dependency versions.
 
-Publish CarillonMigration.exe with -MigrationSingleExe, -Publish, and the same runtime selection. The staging folder is export\staging-migration-single-win-x86 or export\staging-migration-single-win-x64. Place it beside the matching CarillonBells.exe so the assistant has the payload for a separate v9 installation.
+Publish CarillonMigration.exe with -MigrationSingleExe, -Publish, and the same runtime selection. The staging folder is export\staging-migration-single-win-x86 or export\staging-migration-single-win-x64. Place it beside the matching CarillonBells.exe so the assistant has the payload for a separate v9 installation. The Restore 7.2.4 workflow runs directly from the migration executable.
 
 Use an approved pre-change ZIP before updating a working installation. Close the app and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the single-executable USB release, extract the Upgrade ZIP to the existing installation folder. To relocate a working installation, close it and copy the complete folder.
 
@@ -179,7 +183,7 @@ Run CarillonBells.exe --self-test on disposable data before deployment and on ea
 
 Publish separate New Install and Upgrade ZIPs for both architectures. Use the win-x86 suffix in export\32-bit and win-x64 in export\64-bit. Each release folder holds the two EXEs, two ZIPs and two Package Setup EXEs. Each setup saves its own ZIP to the chosen PC folder for subsequent extraction to the USB.
 
-The New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each starter recording resolves inside Music and that the database contains only the intended time-marking rows. The Upgrade ZIP contains the executable and Documentation for extraction beside the existing database.
+The New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each starter recording resolves inside Music and that the database contains only the intended time-marking rows. The Upgrade ZIP contains CarillonBells.exe, the matching CarillonMigration.exe, and Documentation for extraction beside the existing database.
 
 Check the architecture and hashes of both main and migration executables, the contents of both ZIPs, and the ZIP saved by each corresponding setup. Match the package to the installed Windows system type. Both builds use the same USB folder layout. The Windows support baseline follows Microsoft's .NET 10 support table for Windows 10 LTSC or Enterprise and Windows 11.
 

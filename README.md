@@ -10,7 +10,9 @@ The application uses the approved WPF composition, portable SQLite storage, inde
 - **Upgrade from 7.2.4.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. Confirm the one-step conversion. V9 verifies a backup ZIP in `databases`, converts the database in place, and opens with scheduling paused for review.
 - **Upgrade from 8.1.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. V9 uses the existing database. On the first run that needs the v9 dispatch table, it saves a backup ZIP in `databases` before adding the table.
 
-The upgrade ZIP contains the EXE and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open the new EXE directly from the USB.
+The upgrade ZIP contains `CarillonBells.exe`, the matching `CarillonMigration.exe`, and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open `CarillonBells.exe` directly from the USB.
+
+**Restore 7.2.4.** Close `Carillon.exe` and `CarillonBells.exe`. From `CarillonMigration.exe`, choose **Restore 7.2.4…**, select the USB and its pre-upgrade ZIP, then review the restore. The assistant backs up the current database and restores the verified original. Start the original `Carillon.exe` from the USB when ready to check the schedule.
 
 Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).
 
