@@ -19,7 +19,7 @@ PRODUCT_VERSION = "9.0"
 GUIDES = {
     "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 23)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 23)),
-    "Migration": ("Database Migration Guide", "Upgrade a 7.2.4 or 8.1 installation, restore a 7.2.4 database, or migrate to a separate folder.", datetime(2026, 11, 23)),
+    "Migration": ("Database Migration Guide", "This illustrated guide takes you through upgrading your existing USB to version 9, from choosing the download and making a backup to checking the result and recovering an older version if needed.", datetime(2026, 11, 23)),
     "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 23)),
 }
 
@@ -49,7 +49,7 @@ def add_inline(paragraph, text):
             paragraph.add_run(segment)
 
 
-def add_figure(document, path, caption):
+def add_figure(document, path, caption, *, max_height=3.6):
     paragraph = document.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     paragraph.paragraph_format.line_spacing = 1
@@ -57,36 +57,42 @@ def add_figure(document, path, caption):
     paragraph.paragraph_format.space_after = Pt(3)
     paragraph.paragraph_format.keep_with_next = True
     picture = paragraph.add_run().add_picture(str(path))
-    scale = min(1, Inches(6.6) / picture.width, Inches(3.6) / picture.height)
+    scale = min(1, Inches(6.6) / picture.width, Inches(max_height) / picture.height)
     picture.width = Emu(round(picture.width * scale))
     picture.height = Emu(round(picture.height * scale))
     picture._inline.docPr.set("descr", caption)
     document.add_paragraph(caption, style="Caption")
 
 
-def add_manuscript(document, source, *, quick_start=False):
+def add_manuscript(document, source, *, quick_start=False, migration=False):
     first_heading = True
     for line in source.read_text(encoding="utf-8-sig").splitlines():
         text = line.strip()
         if not text:
             continue
+        if text == "<!-- page break -->":
+            document.add_page_break()
+            continue
         if text.startswith(("## ", "# ")):
             level = 2 if text.startswith("## ") else 1
             paragraph = document.add_heading(text.removeprefix("#" * level + " "), level)
-            starts_page = (level == 1 and not first_heading) if quick_start else first_heading
+            starts_page = level == 1 if migration else ((level == 1 and not first_heading) if quick_start else first_heading)
             if starts_page:
                 paragraph.paragraph_format.page_break_before = True
             first_heading = False
             continue
-        figure = re.fullmatch(r"!\[([^\]]+)\]\((figures/[^)]+\.png)\)", text)
+        figure = re.fullmatch(r"!\[([^\]]+)\]\((figures/[^)]+\.(?:png|jpg))\)", text)
         if figure:
             caption, path = figure.groups()
-            add_figure(document, source.parent / path, caption)
+            add_figure(document, source.parent / path, caption, max_height=5.2 if migration else 3.6)
             continue
         item = re.fullmatch(r"(\d+)\.\s+(.*)", text)
         if item:
             paragraph = document.add_paragraph(style="Procedure step")
-            paragraph.add_run(f"{item[1]}.\t")
+            number = paragraph.add_run(f"{item[1]}.\t")
+            if migration:
+                number.bold = True
+                number.font.color.rgb = RGBColor(0, 0, 0)
             add_inline(paragraph, item[2])
         elif text.startswith("- "):
             add_inline(document.add_paragraph(style="List Bullet"), text[2:])
@@ -97,6 +103,7 @@ def add_manuscript(document, source, *, quick_start=False):
 def make_guide(kind, destination):
     title, purpose, last_changed = GUIDES[kind]
     quick_start = kind == "QuickStart"
+    migration = kind == "Migration"
     document = Document()
     section = document.sections[0]
     section.page_width = Inches(8.5)
@@ -115,7 +122,7 @@ def make_guide(kind, destination):
         style.font.name = "Calibri"
         style.font.color.rgb = RGBColor(0, 0, 0)
     normal = styles["Normal"]
-    normal.font.size = Pt(11)
+    normal.font.size = Pt(12 if migration else 11)
     normal.paragraph_format.line_spacing = 1.16
     normal.paragraph_format.space_after = Pt(7)
     normal.paragraph_format.widow_control = True
@@ -159,6 +166,10 @@ def make_guide(kind, destination):
     steps.paragraph_format.tab_stops.add_tab_stop(Inches(.29))
     steps.paragraph_format.space_after = Pt(5)
     styles["List Bullet"].paragraph_format.space_after = Pt(5)
+    if migration:
+        styles["List Bullet"].paragraph_format.left_indent = Inches(.22)
+        styles["List Bullet"].paragraph_format.first_line_indent = Inches(-.15)
+        styles["List Bullet"].paragraph_format.tab_stops.add_tab_stop(Inches(.22))
 
     caption = styles["Caption"]
     caption.base_style = normal
@@ -180,9 +191,9 @@ def make_guide(kind, destination):
     if not quick_start:
         document.add_page_break()
     document.add_paragraph("Table of contents", "Guide contents title")
-    add_field(document.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
+    add_field(document.add_paragraph(), 'TOC \\o "1-1" \\h \\z \\u' if migration else 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
 
-    add_manuscript(document, SOURCES / f"{kind}.md", quick_start=quick_start)
+    add_manuscript(document, SOURCES / f"{kind}.md", quick_start=quick_start, migration=migration)
     footer = section.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     footer.add_run("Page ").font.size = Pt(9)
