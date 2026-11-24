@@ -272,6 +272,9 @@ public static class RegressionTests
             catch(FileNotFoundException error) { missingReported=error.FileName==missingPath&&error.Message.Contains("Database import does not copy audio files"); }
             check("Missing music reports resolved path and recovery",missingReported&&!runtime.Player.Busy);
             var window=new MainWindow(runtime);
+            var organizationLine=(TextBlock)window.FindName("OrganizationLine");
+            var dateTimeLine=(TextBlock)window.FindName("DateTimeLine");
+            check("Organization and date/time use separate wrapping header lines",organizationLine!=dateTimeLine&&organizationLine.TextWrapping==TextWrapping.Wrap&&dateTimeLine.TextWrapping==TextWrapping.Wrap&&DateTime.TryParseExact(window.TodayLabel,"dddd, MM/dd/yyyy  h:mm:ss tt",System.Globalization.CultureInfo.CurrentCulture,System.Globalization.DateTimeStyles.None,out _));
             try
             {
                 window.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);

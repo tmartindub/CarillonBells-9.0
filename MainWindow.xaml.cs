@@ -35,7 +35,7 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     public Song? EditingSong=>editingSong;
     public bool ScheduleVisible { get; private set; }
     public string Organization=>runtime.Setting("ORGANIZATION_NAME");
-    public string TodayLabel=>$"{Organization}  ·  {DateTime.Now:dddd, MM/dd/yyyy  h:mm:ss tt}";
+    public string TodayLabel=>$"{DateTime.Now:dddd, MM/dd/yyyy  h:mm:ss tt}";
     private ScheduledBell? NextSong=>runtime.ScheduleEnabled?runtime.Queue.FirstOrDefault():null;
     public string NextSongTiming
     {

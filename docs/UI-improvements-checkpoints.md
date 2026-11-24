@@ -222,3 +222,37 @@ new minimum-window column allocation and descriptive Purpose coverage. This
 checkpoint precedes the separately authorized organization/date header change;
 it was not installed on D: independently. The after-change ZIP includes both
 validated intermediate executables, source, and evidence for rollback.
+
+## 16 — Separate organization and date/time header
+
+November 24, 2026. The user additionally approved giving Organization a wrapping
+line and moving date/time beneath it. Both are separate editable XAML controls;
+the header row grows automatically instead of clipping to a fixed height.
+TodayLabel now contains only the existing USA date/time format. The font-check
+messages distinguish Organization name from Date/time line. No font limits or
+overflow checks were bypassed.
+
+With the same unchanged private snapshot of D: data, all four tested profiles
+passed every page: Original 18, Arial 14, Arial 18, and Tahoma 16. Both final
+native self-contained Windows executables passed **155 checks**, zero failures.
+Builds completed with zero warnings/errors. The snapshot was deleted after use.
+The final packages/results are in **export/Header-and-silence-fit-20261124**.
+
+The user authorized closing D:. Its administration and main windows closed
+cleanly without unsaved-edit prompts. The pre-install ZIP is
+**H:\CarillonBells v 9_0\D_before_Header_silence_fit_20261124.zip**, containing
+the prior executable, databases and settings. Only D:\CarillonBells.exe was
+replaced; database bytes were verified unchanged during replacement. The app
+was reopened, and the separate header lines and compact time columns were
+visually reviewed. All 120 songs loaded; scheduling was enabled after closing
+the unchanged review window. Existing descriptions/font preferences were
+preserved. No manual playback or test email was triggered.
+
+Executable SHA-256:
+
+- win-x64: `0C53E8A3A77DC735251C6C604C3C2304A80FCFE5DED8BF76F2F80774699F0288`
+- win-x86: `045FCC381FBD3F89B99EFD6CA522E9680ACE000E122DE845C89F97B168243134`
+
+Checkpoint 15 is the pre-header source/runnable snapshot. The numbered
+checkpoint 16 after-change ZIP contains the final source, both review packages,
+and validation evidence. The Delphi 8.1 executable/music were not replaced.
