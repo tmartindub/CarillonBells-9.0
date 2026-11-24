@@ -169,3 +169,38 @@ at 12:30 PM. No manual playback or test email was triggered.
 Music folders and the separate Carillon.exe were not replaced.
 An after-change executable ZIP is saved as
 **H:\CarillonBells v 9_0\D_after_UI_review_20261124.zip**.
+
+## 14 — Silence purpose entry limit
+
+November 24, 2026. The user approved limiting Purpose to the editor's available
+width with a character of spare room. The existing editable XAML column now
+connects its editor to width validation in AdministrationWindow. Text is measured
+with the actual font, size and display density; an M-width reserve is left.
+Oversized additions and multiline pastes are refused as a whole, keeping the
+prior accepted text and displaying a short explanation. No fixed character
+count or silent truncation is used. Existing long values are preserved and can
+be shortened incrementally. The all-page font checker remains unchanged;
+existing long descriptions must be shortened before a larger font can pass.
+
+Both self-contained Windows executables passed **152 checks**, zero failures.
+New checks cover variable-width letters, the entry boundary, oversized and
+multiline replacements, clearing, preservation/shortening of old long values,
+and Arial/Tahoma/Verdana at sizes 14, 16, 18 and 20. An isolated fictitious-data
+editor test also accepted Night service, rejected an oversized replacement,
+and saved only the accepted value, verified by reading back the test database.
+
+Review packages and results are in **export/Purpose-limit-20261124**. The D:
+application was already closed; its executable/databases/settings were backed
+up in **H:\CarillonBells v 9_0\D_before_Purpose_limit_20261124.zip** before the
+validated 64-bit executable was installed. Music and Carillon.exe were untouched.
+After reopening, D: displayed all 120 songs with scheduling enabled, 51 events
+today and 28 queued. No manual playback or test email was triggered.
+
+Executable SHA-256:
+
+- win-x64: `FCC0ABEBB6E3757983EC798205D95C260F2F6033CB32A454FB546D3F96066DBE`
+- win-x86: `5E78D035ED24844269924E7F60AB3B4F1310B78BAF9B738806D5D0D0ACD84851`
+
+The pre-change source ZIP is **Before_purpose_entry_limit_20261124.zip** on H:.
+The numbered after-change checkpoint includes source plus runnable review
+packages and validation evidence for rollback.

@@ -79,6 +79,35 @@ public partial class AdministrationWindow : Window
     private bool SettingsDirty=>Groups.GetChanges() is not null||RandomDirectories.GetChanges() is not null||Silence.GetChanges() is not null||settings.GetChanges() is not null||Password!=originalPassword;
     private bool ClockHandsDirty=>ClockHandPicker.SelectedItem is ClockHandStyle style && style.Id != runtime.ClockHandStyleId;
     private bool Dirty=>SettingsDirty || ClockHandsDirty;
+    private void SilencePurposeLoaded(object sender,RoutedEventArgs e)
+    {
+        if(sender is TextBox field) field.Tag=field.Text;
+    }
+    internal static double SilencePurposeWidth(TextBox field,string text)
+    {
+        var measured=new System.Windows.Media.FormattedText(text,System.Globalization.CultureInfo.GetCultureInfo("en-US"),field.FlowDirection,
+            new System.Windows.Media.Typeface(field.FontFamily,field.FontStyle,field.FontWeight,field.FontStretch),field.FontSize,
+            System.Windows.Media.Brushes.Black,System.Windows.Media.VisualTreeHelper.GetDpi(field).PixelsPerDip);
+        return measured.WidthIncludingTrailingWhitespace;
+    }
+    internal static bool SilencePurposeFits(TextBox field,string text)
+    {
+        var available=field.ActualWidth-field.Padding.Left-field.Padding.Right-field.BorderThickness.Left-field.BorderThickness.Right-2;
+        return !text.Contains('\r')&&!text.Contains('\n')&&SilencePurposeWidth(field,text)+SilencePurposeWidth(field,"M")<=available;
+    }
+    private void SilencePurposeChanged(object sender,TextChangedEventArgs e)
+    {
+        if(sender is not TextBox field||field.Tag is not string previous||field.Text==previous) return;
+        var candidate=field.Text;
+        // Existing long descriptions remain intact and can be shortened incrementally.
+        if(SilencePurposeFits(field,candidate)||(!candidate.Contains('\r')&&!candidate.Contains('\n')&&SilencePurposeWidth(field,candidate)<SilencePurposeWidth(field,previous)))
+        {
+            field.Tag=candidate;return;
+        }
+        var caret=Math.Clamp(field.CaretIndex-(candidate.Length-previous.Length),0,previous.Length);
+        field.Text=previous;field.CaretIndex=caret;
+        ResultLabel.Text="Purpose is full. Use a shorter description; the extra text was not accepted.";
+    }
     private bool Save()
     {
         if(checkingFonts) return false;

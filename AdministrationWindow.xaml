@@ -117,7 +117,14 @@
    <TabItem Header="Silence windows" Tag="Silence"><DockPanel Margin="18,12"><TextBlock DockPanel.Dock="Top" Text="Twelve reusable rules. Overnight rules use the starting weekday. Equal start/end is inactive. Purpose appears in logs." TextWrapping="Wrap" Margin="0,0,0,8"/>
     <DataGrid x:Name="SilenceGrid" EnableRowVirtualization="False" EnableColumnVirtualization="False" ItemsSource="{Binding Silence.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="34"><DataGrid.Columns>
      <DataGridTextColumn Header="ID" Binding="{Binding [silence_id]}" IsReadOnly="True" Width="60"/><DataGridCheckBoxColumn Header="On" Binding="{Binding [enabled], Converter={StaticResource IntBool}}" Width="60"/>
-     <DataGridTextColumn Header="Purpose" Binding="{Binding [Purpose]}" Width="*"/><DataGridTextColumn Header="Start" Binding="{Binding [start_time]}" Width="130"/><DataGridTextColumn Header="End" Binding="{Binding [end_time]}" Width="130"/>
+     <DataGridTextColumn Header="Purpose" Binding="{Binding [Purpose], UpdateSourceTrigger=LostFocus}" Width="*">
+      <DataGridTextColumn.EditingElementStyle><Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+       <Setter Property="AutomationProperties.Name" Value="Silence purpose"/>
+       <Setter Property="ToolTip" Value="Keep the purpose short enough to fit. Extra typing or pasted text is refused; existing descriptions are preserved."/>
+       <EventSetter Event="Loaded" Handler="SilencePurposeLoaded"/>
+       <EventSetter Event="TextChanged" Handler="SilencePurposeChanged"/>
+      </Style></DataGridTextColumn.EditingElementStyle>
+     </DataGridTextColumn><DataGridTextColumn Header="Start" Binding="{Binding [start_time]}" Width="130"/><DataGridTextColumn Header="End" Binding="{Binding [end_time]}" Width="130"/>
      <DataGridCheckBoxColumn Header="Mon" Binding="{Binding [monday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Tue" Binding="{Binding [tuesday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Wed" Binding="{Binding [wednesday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Thu" Binding="{Binding [thursday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Fri" Binding="{Binding [friday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Sat" Binding="{Binding [saturday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Sun" Binding="{Binding [sunday], Converter={StaticResource IntBool}}" Width="60"/>
     </DataGrid.Columns></DataGrid>
    </DockPanel></TabItem>

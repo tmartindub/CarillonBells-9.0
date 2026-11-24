@@ -301,6 +301,43 @@ public static class RegressionTests
                 var fontTestField=new TextBox {Text="A folder path that cannot possibly fit",Width=80,Height=35,FontFamily=new FontFamily("Arial"),FontSize=18};
                 var fontTestPanel=new Grid();fontTestPanel.Children.Add(fontTestField);fontTestPanel.Measure(new Size(100,50));fontTestPanel.Arrange(new Rect(0,0,100,50));fontTestPanel.UpdateLayout();
                 check("Font policing rejects a long field rather than allowing scrolling",ThemeManager.CheckFontLayout(fontTestPanel,"Validation").Count>0);
+                var purposeWindow=new AdministrationWindow(runtime,"Silence",appearancePreview:true);
+                try
+                {
+                    var purposeField=new TextBox {Width=180,Height=34,FontFamily=new FontFamily("Arial"),FontSize=16,Text="Night"};
+                    purposeField.Measure(new Size(180,34));purposeField.Arrange(new Rect(0,0,180,34));purposeField.UpdateLayout();
+                    var purposeLoaded=typeof(AdministrationWindow).GetMethod("SilencePurposeLoaded",flags)!;
+                    var purposeChanged=typeof(AdministrationWindow).GetMethod("SilencePurposeChanged",flags)!;
+                    purposeLoaded.Invoke(purposeWindow,[purposeField,new RoutedEventArgs()]);
+                    purposeField.TextChanged+=(sender,args)=>purposeChanged.Invoke(purposeWindow,[sender,args]);
+                    purposeField.Text="Night service";
+                    check("Purpose accepts a description that fits with spare room",purposeField.Text=="Night service"&&(string)purposeField.Tag=="Night service");
+                    purposeField.Text+=new string('W',80);
+                    check("Purpose rejects an oversized paste without cutting the accepted description",purposeField.Text=="Night service");
+                    purposeField.Text="Night\nservice";
+                    check("Purpose rejects multiline pasted text",purposeField.Text=="Night service");
+                    check("Purpose measures letter widths instead of counting characters",AdministrationWindow.SilencePurposeWidth(purposeField,"WWWW")>AdministrationWindow.SilencePurposeWidth(purposeField,"iiii"));
+                    var boundary="";
+                    while(AdministrationWindow.SilencePurposeFits(purposeField,boundary+"W")) boundary+="W";
+                    purposeField.Text=boundary;purposeField.Text+="W";
+                    check("Purpose refuses the next character at the measured boundary",purposeField.Text==boundary);
+                    purposeField.Text="";
+                    check("Purpose can be cleared",purposeField.Text.Length==0);
+                    // Reinitialize as an existing value, just as an editor is loaded from the database.
+                    purposeField.Tag=null;purposeField.Text=new string('W',80);purposeLoaded.Invoke(purposeWindow,[purposeField,new RoutedEventArgs()]);
+                    var preserved=purposeField.Text;
+                    check("Opening an existing long purpose does not truncate it",purposeField.Text==preserved&&preserved.Length==80);
+                    purposeField.Text=preserved[..^1];
+                    check("An existing long purpose can be shortened incrementally",purposeField.Text==preserved[..^1]);
+                    purposeField.Text+="WW";
+                    check("An existing long purpose cannot be extended further",purposeField.Text==preserved[..^1]);
+                    foreach(var family in new[]{"Arial","Tahoma","Verdana"}) foreach(var size in new[]{14,16,18,20})
+                    {
+                        purposeField.FontFamily=new FontFamily(family);purposeField.FontSize=size;
+                        check($"Purpose width limit remains valid for {family} {size}",AdministrationWindow.SilencePurposeFits(purposeField,"Night")&&!AdministrationWindow.SilencePurposeFits(purposeField,new string('W',80)));
+                    }
+                }
+                finally {purposeWindow.Close();}
                 ThemeManager.SaveFonts(scratch,"Arial",14);
                 check("Validated font preferences persist beside the portable app",File.Exists(Path.Combine(scratch,"data","fonts.json"))&&ThemeManager.LoadFonts(runtime) is null&&ThemeManager.CurrentFontFamily=="Arial"&&ThemeManager.CurrentFontSize==14);
                 File.WriteAllText(Path.Combine(scratch,"data","fonts.json"),"{\"Family\":\"Unknown font\",\"Size\":80}");
