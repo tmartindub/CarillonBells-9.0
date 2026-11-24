@@ -419,6 +419,55 @@ and no manual playback/test email was triggered. Music and Carillon.exe were
 preserved. The after-install checkpoint includes source and the same tested
 executables/results from **export/Calendar-hover-20261124**.
 
+## 23 — Groups prompts only for actual changes
+
+November 24, 2026. The deep dive reproduced the fault before changing logic:
+rendering Groups and running the real close-time CommitEditors marked a row
+Modified even though all Current values equalled Original values. The old
+SettingsDirty test used GetChanges, so that row flag produced a false prompt.
+The before-fix failing test evidence is retained in the validation folder.
+
+The fix changes only the Groups portion of SettingsDirty. Added/deleted rows
+still need saving; Modified rows need saving only if at least one column value
+differs from Original. It does not clear row state indiscriminately, call
+AcceptChanges over genuine edits, remove date editor commits, or suppress the
+prompt itself. Existing handling of other administration tables/passwords and
+clock-hand choices is unchanged. No helper class or runtime UI was added.
+
+Twenty new regression checks exercise actual binding/layout and close-time
+commits; untouched close and unchanged database bytes; changing/reverting group
+name, From, Until and play time; adding/removing a new group; deleting/undoing
+an existing group; bound calendar changes/reversion; genuine Save; clean state
+after Save; and Cancel restoring clean values without writing the edit.
+Both native self-contained builds passed **204 checks**, zero failures.
+
+A temporary read-only-source snapshot of actual D: data reproduced **16 rows
+marked Modified with zero differing values**. The fixed version correctly
+reported clean. Original 18, Arial 14, Arial 18 and Tahoma 16 also passed the
+existing all-page checks. The private snapshot was removed after testing.
+The GUI was separately tested with fictitious data: untouched Groups closed
+without a prompt, while a real group-name edit prompted and saved correctly
+(confirmed by reading back the fictitious database).
+
+The pre-change source ZIP is **Before_Groups_dirty_fix_20261124.zip** on H:.
+D: was closed cleanly, backed up (executable/database/settings) to
+**H:\CarillonBells v 9_0\D_before_Groups_dirty_fix_20261124.zip**, and restarted
+with the verified 64-bit executable. Review artifacts and before/after evidence
+are in **export/Groups-save-prompt-20261124**. The after-change ZIP includes
+source, both runnable executables, and validation evidence.
+
+Executable SHA-256:
+
+- win-x64: `5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B`
+- win-x86: `E38E047EF373216204F9525817D1177378178291FC702D9C594369D9AFA588BA`
+
+After restart, untouched Groups was opened and closed **twice on D:** without
+a save prompt. The group-table digest matched its pre-install value afterward;
+no live group records changed. All 120 songs loaded, and scheduling returned
+to enabled after both maintenance windows closed. No manual live playback or
+test email was triggered. The fictitious test app and private snapshots were
+removed; rollback ZIPs and required evidence were preserved.
+
 Executable SHA-256:
 
 - win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`

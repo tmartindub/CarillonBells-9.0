@@ -119,6 +119,20 @@ public static class RegressionTests
                         }
                         finally {silenceReview.Close();}
                     }
+                    var actualGroups=new AdministrationWindow(fontRuntime,"Groups",appearancePreview:true);
+                    try
+                    {
+                        var content=(FrameworkElement)actualGroups.Content;
+                        content.Measure(new Size(1284,801));content.Arrange(new Rect(0,0,1284,801));content.UpdateLayout();
+                        content.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                        content.InvalidateMeasure();content.Measure(new Size(1284,801));content.Arrange(new Rect(0,0,1284,801));content.UpdateLayout();
+                        var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                        typeof(AdministrationWindow).GetMethod("CommitEditors",flags)!.Invoke(actualGroups,null);
+                        var marked=actualGroups.Groups.Rows.Cast<System.Data.DataRow>().Count(row=>row.RowState==System.Data.DataRowState.Modified);
+                        var different=actualGroups.Groups.Rows.Cast<System.Data.DataRow>().Where(row=>row.RowState==System.Data.DataRowState.Modified).Sum(row=>actualGroups.Groups.Columns.Cast<System.Data.DataColumn>().Count(column=>!Equals(row[column,System.Data.DataRowVersion.Current],row[column,System.Data.DataRowVersion.Original])));
+                        Check($"Actual installation Groups open/close is clean (marked rows {marked}, changed values {different})",!(bool)typeof(AdministrationWindow).GetProperty("SettingsDirty",flags)!.GetValue(actualGroups)!);
+                    }
+                    finally {actualGroups.Close();}
                     Check("Copied installation data has at least one fully fitting font profile",passing>0);
                 }
                 finally {Directory.Delete(fontScratch,true);}
@@ -232,6 +246,58 @@ public static class RegressionTests
             repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"}},["ash_wed_begin"]);
             var dateGroups=repository.Table("seasonalgroups"); dateGroups.Rows.Add("Date test","01/02/2027","12/31/2027","10:00"); repository.SaveTable(dateGroups,"SEASONALGROUP");
             check("U.S. month-first input persists as ISO",repository.Settings()["ash_wed_begin"].ToString()=="2027-01-02"&&repository.Table("seasonalgroups").Rows[0]["PLAY_DATE_FROM"].ToString()=="2027-01-02");
+            var groupsPromptWindow=new AdministrationWindow(runtime,"Groups",appearancePreview:true);
+            try
+            {
+                var content=(FrameworkElement)groupsPromptWindow.Content;
+                content.Measure(new Size(1284,801));content.Arrange(new Rect(0,0,1284,801));content.UpdateLayout();
+                content.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                content.InvalidateMeasure();content.Measure(new Size(1284,801));content.Arrange(new Rect(0,0,1284,801));content.UpdateLayout();
+                var promptFlags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                typeof(AdministrationWindow).GetMethod("CommitEditors",promptFlags)!.Invoke(groupsPromptWindow,null);
+                var marked=groupsPromptWindow.Groups.Rows.Cast<System.Data.DataRow>().Count(row=>row.RowState==System.Data.DataRowState.Modified);
+                var changedCells=groupsPromptWindow.Groups.Rows.Cast<System.Data.DataRow>().Where(row=>row.RowState==System.Data.DataRowState.Modified).Sum(row=>groupsPromptWindow.Groups.Columns.Cast<System.Data.DataColumn>().Count(column=>!Equals(row[column,System.Data.DataRowVersion.Current],row[column,System.Data.DataRowVersion.Original])));
+                check($"Opening and committing Groups without edits stays clean (marked rows {marked}, changed values {changedCells})",!(bool)typeof(AdministrationWindow).GetProperty("SettingsDirty",promptFlags)!.GetValue(groupsPromptWindow)!);
+                var dirtyProperty=typeof(AdministrationWindow).GetProperty("SettingsDirty",promptFlags)!;
+                var databaseBeforeClose=File.ReadAllBytes(repository.DatabasePath);
+                check("Untouched Groups closes without a save prompt",(bool)typeof(AdministrationWindow).GetMethod("ConfirmPending",promptFlags)!.Invoke(groupsPromptWindow,null)!);
+                check("Untouched Groups close check leaves database bytes unchanged",databaseBeforeClose.SequenceEqual(File.ReadAllBytes(repository.DatabasePath)));
+                var groupRow=groupsPromptWindow.Groups.Rows[0];
+                foreach(var column in new[]{"SEASONALGROUP","PLAY_DATE_FROM","PLAY_DATE_TO","PLAY_TIME"})
+                {
+                    var original=groupRow[column];
+                    groupRow[column]=original is DateTime originalDate?(object)originalDate.AddDays(1):column=="PLAY_TIME"?"11:11:11":original+" edited";
+                    check($"A real Groups {column} edit needs saving",(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                    groupRow[column]=original;
+                    check($"Reverting Groups {column} removes the save prompt",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                }
+                var added=groupsPromptWindow.Groups.Rows.Add("Unsaved test group",new DateTime(2027,1,1),new DateTime(2027,12,31),"12:00:00");
+                check("Adding a group needs saving",(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                added.Delete();
+                check("Removing an unsaved new group leaves no pending change",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                groupRow.Delete();
+                check("Deleting an existing group needs saving",(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                groupRow.RejectChanges();
+                check("Undoing an existing group deletion removes the save prompt",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                content.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);content.UpdateLayout();
+                var boundPicker=ThemeManager.FontElements(content).OfType<DatePicker>().First(picker=>picker.SelectedDate.HasValue);
+                var pickerDate=boundPicker.SelectedDate;
+                boundPicker.SetCurrentValue(DatePicker.SelectedDateProperty,pickerDate!.Value.AddDays(1));
+                typeof(AdministrationWindow).GetMethod("CommitEditors",promptFlags)!.Invoke(groupsPromptWindow,null);
+                check("An actual bound calendar date change needs saving",(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                boundPicker.SetCurrentValue(DatePicker.SelectedDateProperty,pickerDate);
+                typeof(AdministrationWindow).GetMethod("CommitEditors",promptFlags)!.Invoke(groupsPromptWindow,null);
+                check("Restoring a bound calendar date removes the save prompt",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                groupRow["PLAY_TIME"]="12:34:56";
+                check("A genuine group edit can still be saved",(bool)typeof(AdministrationWindow).GetMethod("Save",promptFlags)!.Invoke(groupsPromptWindow,null)!&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="12:34:56");
+                typeof(AdministrationWindow).GetMethod("CommitEditors",promptFlags)!.Invoke(groupsPromptWindow,null);
+                check("Saving Groups establishes a clean comparison baseline",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!);
+                groupsPromptWindow.Groups.Rows[0]["PLAY_TIME"]="13:45:00";
+                typeof(AdministrationWindow).GetMethod("CancelClick",promptFlags)!.Invoke(groupsPromptWindow,[null,new RoutedEventArgs()]);
+                typeof(AdministrationWindow).GetMethod("CommitEditors",promptFlags)!.Invoke(groupsPromptWindow,null);
+                check("Cancelling Groups restores clean values without saving the edit",!(bool)dirtyProperty.GetValue(groupsPromptWindow)!&&groupsPromptWindow.Groups.Rows[0]["PLAY_TIME"].ToString()=="12:34:56"&&repository.Table("seasonalgroups").Rows[0]["PLAY_TIME"].ToString()=="12:34:56");
+            }
+            finally {groupsPromptWindow.Close();}
             check("Saving Ash Wednesday alone also saves its legacy end",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");
             repository.SaveSettings(new Dictionary<string,object>{{"ash_wed_begin","01/02/2027"},{"ash_wed_end","05/14/2025"}},["ash_wed_begin","ash_wed_end"]);
             check("A conflicting legacy end cannot override Ash Wednesday",repository.Settings()["ash_wed_end"].ToString()=="2027-01-02");

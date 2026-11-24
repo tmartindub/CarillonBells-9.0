@@ -76,7 +76,10 @@ public partial class AdministrationWindow : Window
         settings.DefaultView[0].EndEdit();
     }
     private string Password=>ShowPassword.IsChecked==true?VisiblePassword.Text:EmailPassword.Password;
-    private bool SettingsDirty=>Groups.GetChanges() is not null||RandomDirectories.GetChanges() is not null||Silence.GetChanges() is not null||settings.GetChanges() is not null||Password!=originalPassword;
+    private bool SettingsDirty=>Groups.Rows.Cast<DataRow>().Any(row=>
+        row.RowState is DataRowState.Added or DataRowState.Deleted||
+        row.RowState==DataRowState.Modified&&Groups.Columns.Cast<DataColumn>().Any(column=>!Equals(row[column,DataRowVersion.Current],row[column,DataRowVersion.Original])))
+        ||RandomDirectories.GetChanges() is not null||Silence.GetChanges() is not null||settings.GetChanges() is not null||Password!=originalPassword;
     private bool ClockHandsDirty=>ClockHandPicker.SelectedItem is ClockHandStyle style && style.Id != runtime.ClockHandStyleId;
     private bool Dirty=>SettingsDirty || ClockHandsDirty;
     private void SilencePurposeLoaded(object sender,RoutedEventArgs e)
