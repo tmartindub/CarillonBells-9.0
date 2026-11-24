@@ -120,11 +120,18 @@
      <DataGridTextColumn Header="Purpose" Binding="{Binding [Purpose], UpdateSourceTrigger=LostFocus}" Width="*">
       <DataGridTextColumn.EditingElementStyle><Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
        <Setter Property="AutomationProperties.Name" Value="Silence purpose"/>
+       <Setter Property="Padding" Value="0"/>
        <Setter Property="ToolTip" Value="Keep the purpose short enough to fit. Extra typing or pasted text is refused; existing descriptions are preserved."/>
        <EventSetter Event="Loaded" Handler="SilencePurposeLoaded"/>
        <EventSetter Event="TextChanged" Handler="SilencePurposeChanged"/>
       </Style></DataGridTextColumn.EditingElementStyle>
-     </DataGridTextColumn><DataGridTextColumn Header="Start" Binding="{Binding [start_time]}" Width="130"/><DataGridTextColumn Header="End" Binding="{Binding [end_time]}" Width="130"/>
+     </DataGridTextColumn>
+     <DataGridTextColumn Header="Start" Binding="{Binding [start_time]}" Width="105">
+      <DataGridTextColumn.EditingElementStyle><Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"><Setter Property="Padding" Value="0"/></Style></DataGridTextColumn.EditingElementStyle>
+     </DataGridTextColumn>
+     <DataGridTextColumn Header="End" Binding="{Binding [end_time]}" Width="105">
+      <DataGridTextColumn.EditingElementStyle><Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"><Setter Property="Padding" Value="0"/></Style></DataGridTextColumn.EditingElementStyle>
+     </DataGridTextColumn>
      <DataGridCheckBoxColumn Header="Mon" Binding="{Binding [monday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Tue" Binding="{Binding [tuesday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Wed" Binding="{Binding [wednesday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Thu" Binding="{Binding [thursday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Fri" Binding="{Binding [friday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Sat" Binding="{Binding [saturday], Converter={StaticResource IntBool}}" Width="60"/><DataGridCheckBoxColumn Header="Sun" Binding="{Binding [sunday], Converter={StaticResource IntBool}}" Width="60"/>
     </DataGrid.Columns></DataGrid>
    </DockPanel></TabItem>

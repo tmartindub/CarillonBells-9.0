@@ -204,3 +204,21 @@ Executable SHA-256:
 The pre-change source ZIP is **Before_purpose_entry_limit_20261124.zip** on H:.
 The numbered after-change checkpoint includes source plus runnable review
 packages and validation evidence for rollback.
+
+## 15 — Silence column space correction
+
+November 24, 2026. Start/End columns were reduced from 130 to 105 each,
+returning 50 pixels to Purpose. Extra editor padding was removed for these
+three fields. No descriptions were shortened. Diagnostics verified that the
+font checker measures the actual constrained cell content: at the minimum
+window, Purpose is 229 wide with 200 usable for displayed text. The longest
+unchanged live description requires 175.5 at Tahoma 16, 198.3 at Original 18,
+and 195.1 at Arial 18. A private read-only-source snapshot passed every page
+with Tahoma 16 and Original 18. Arial 18 now passes Silence; only the main
+organization/date line still fails. The temporary snapshot was deleted.
+
+Both native self-contained builds passed 154 checks, zero failures, including
+new minimum-window column allocation and descriptive Purpose coverage. This
+checkpoint precedes the separately authorized organization/date header change;
+it was not installed on D: independently. The after-change ZIP includes both
+validated intermediate executables, source, and evidence for rollback.

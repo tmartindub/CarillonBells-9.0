@@ -93,13 +93,31 @@ public static class RegressionTests
                     var repository=new CarillonRepository(copy);repository.EnsureCompatibleSchema();
                     using var fontRuntime=new CarillonRuntime(repository,fontScratch,Application.Current.Dispatcher,true,migrationReview:true);
                     var passing=0;
-                    foreach(var profile in new[]{("Original",18.0),("Arial",14.0),("Arial",18.0)})
+                    foreach(var profile in new[]{("Original",18.0),("Arial",14.0),("Arial",18.0),("Tahoma",16.0)})
                     {
                         var fontWatch=System.Diagnostics.Stopwatch.StartNew();
                         var failures=ThemeManager.CheckFonts(fontRuntime,profile.Item1,profile.Item2);
                         Console.WriteLine($"Font review: {profile.Item1} {profile.Item2}: {failures.Count} fit issues; {fontWatch.Elapsed.TotalSeconds:F1} seconds.");
                         results.Add($"FONT REVIEW {profile.Item1} {profile.Item2}: {failures.Count} fit issues");
                         results.AddRange(failures);if(failures.Count==0)passing++;
+                        var silenceReview=new AdministrationWindow(fontRuntime,"Silence",appearancePreview:true);
+                        try
+                        {
+                            ThemeManager.SetFontResources(silenceReview.Resources,profile.Item1,profile.Item2);
+                            var content=(FrameworkElement)silenceReview.Content;
+                            content.Measure(new Size(1084,581));content.Arrange(new Rect(0,0,1084,581));content.UpdateLayout();
+                            content.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                            content.InvalidateMeasure();content.Measure(new Size(1084,581));content.Arrange(new Rect(0,0,1084,581));content.UpdateLayout();
+                            var grid=(DataGrid)silenceReview.FindName("SilenceGrid");
+                            results.Add($"SILENCE GRID {profile.Item1} {profile.Item2}: minimum-window grid {grid.ActualWidth:F1}; purpose column {grid.Columns[2].ActualWidth:F1}; time columns {grid.Columns[3].ActualWidth:F1}/{grid.Columns[4].ActualWidth:F1}");
+                            foreach(var item in grid.Items)
+                            {
+                                if(grid.Columns[2].GetCellContent(item) is not TextBlock caption) continue;
+                                var measured=new FormattedText(caption.Text,System.Globalization.CultureInfo.GetCultureInfo("en-US"),caption.FlowDirection,new Typeface(caption.FontFamily,caption.FontStyle,caption.FontWeight,caption.FontStretch),caption.FontSize,Brushes.Black,VisualTreeHelper.GetDpi(caption).PixelsPerDip);
+                                results.Add($"SILENCE PURPOSE WIDTH {profile.Item1} {profile.Item2}: needs {measured.WidthIncludingTrailingWhitespace:F1}; text box width {caption.ActualWidth:F1}");
+                            }
+                        }
+                        finally {silenceReview.Close();}
                     }
                     Check("Copied installation data has at least one fully fitting font profile",passing>0);
                 }
@@ -304,6 +322,15 @@ public static class RegressionTests
                 var purposeWindow=new AdministrationWindow(runtime,"Silence",appearancePreview:true);
                 try
                 {
+                    purposeWindow.Silence.Rows[0]["Purpose"]="Special silence for Mass";
+                    ThemeManager.SetFontResources(purposeWindow.Resources,"Tahoma",16);
+                    var silenceContent=(FrameworkElement)purposeWindow.Content;
+                    silenceContent.Measure(new Size(1084,581));silenceContent.Arrange(new Rect(0,0,1084,581));silenceContent.UpdateLayout();
+                    silenceContent.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                    silenceContent.InvalidateMeasure();silenceContent.Measure(new Size(1084,581));silenceContent.Arrange(new Rect(0,0,1084,581));silenceContent.UpdateLayout();
+                    var silenceGrid=(DataGrid)purposeWindow.FindName("SilenceGrid");
+                    check("Compact time columns give Purpose more room at the minimum window size",silenceGrid.Columns[3].ActualWidth==105&&silenceGrid.Columns[4].ActualWidth==105&&silenceGrid.Columns[2].ActualWidth>=225);
+                    check("A descriptive Purpose fits Tahoma 16 at the minimum window size",!ThemeManager.CheckFontLayout(silenceContent,"Silence windows").Any(failure=>failure.Contains("Silence purpose")));
                     var purposeField=new TextBox {Width=180,Height=34,FontFamily=new FontFamily("Arial"),FontSize=16,Text="Night"};
                     purposeField.Measure(new Size(180,34));purposeField.Arrange(new Rect(0,0,180,34));purposeField.UpdateLayout();
                     var purposeLoaded=typeof(AdministrationWindow).GetMethod("SilencePurposeLoaded",flags)!;
