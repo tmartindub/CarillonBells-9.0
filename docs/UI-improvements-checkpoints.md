@@ -256,3 +256,33 @@ Executable SHA-256:
 Checkpoint 15 is the pre-header source/runnable snapshot. The numbered
 checkpoint 16 after-change ZIP contains the final source, both review packages,
 and validation evidence. The Delphi 8.1 executable/music were not replaced.
+
+## 17 — Visible font application confirmation
+
+November 24, 2026. After Apply checked font successfully validates and saves,
+the application now shows a Font applied information dialog naming the family
+and size and explaining that no Save click is needed. The same confirmation
+remains in the Fonts report, with an applied-and-saved status beside Save.
+Failure paths still report Not applied and do not show a success dialog.
+
+Both native Windows builds passed 155 regression checks, zero failures. The
+actual Check every page / Apply workflow was exercised in a separate
+fictitious-data copy: the dialog appeared and the persistent status remained
+after dismissal. This did not change live font preferences. The disposable
+test copy was closed and removed after validation.
+
+D: was closed cleanly without an unsaved-edit prompt, backed up to
+**H:\CarillonBells v 9_0\D_before_Font_feedback_20261124.zip** (executable,
+database and settings), and restarted with the validated 64-bit executable.
+Startup was visually confirmed: 120 songs loaded and Schedule enabled.
+No manual playback or test email was triggered. Existing data/preferences,
+music and Carillon.exe were preserved.
+
+Executable SHA-256:
+
+- win-x64: `735C2CE276B6040E5C925BBE2F2BD314D561A6C6ABE5DBC8690A05DADD11E545`
+- win-x86: `BBFA776F01B334CC98CE16CC9C4DF311746193F5CDDF585FD6344445038868C0`
+
+The pre-change source ZIP is **Before_font_apply_feedback_20261124.zip** on H:.
+The after-change checkpoint contains the source, both executables and results
+from **export/Font-feedback-20261124**.

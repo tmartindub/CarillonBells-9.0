@@ -209,8 +209,11 @@ public partial class AdministrationWindow : Window
             var failures=ThemeManager.CheckFonts(runtime,checkedFontFamily,checkedFontSize);
             if(failures.Count>0) {ApplyFontButton.IsEnabled=false;FontReviewReport.Text="Not applied: data or layout changed since checking.\n"+string.Join("\n",failures);return;}
             ThemeManager.SaveFonts(runtime.BaseDirectory,checkedFontFamily,checkedFontSize);
-            FontReviewReport.Text="Font applied and saved. All checked pages passed. Restore defaults returns to the original appearance.";
+            var confirmation=$"{checkedFontFamily}, size {checkedFontSize:0}, is now applied and saved.\nYou do not need to click Save.";
+            FontReviewReport.Text=confirmation+"\n\nAll checked pages passed. Restore defaults returns to the original appearance.";
+            ResultLabel.Text=$"Font applied and saved: {checkedFontFamily} {checkedFontSize:0}";
             ApplyFontButton.IsEnabled=false;runtime.Log.Append("Application font changed after page validation");
+            MessageBox.Show(this,confirmation,"Font applied",MessageBoxButton.OK,MessageBoxImage.Information);
         }
         catch(Exception error) {FontReviewReport.Text="Not applied: "+error.Message;}
     }
