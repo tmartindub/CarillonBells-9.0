@@ -60,3 +60,10 @@ adding/deleting songs, Groups, random music, silence windows, email/reports, or
 database maintenance. Changing maintenance tabs identifies the current reason.
 Closing maintenance records restoration to the previous state; a previously
 disabled schedule is not enabled. No change was made to discontinuity policy.
+
+## 08 — Sidebar spacing
+
+The button section begins approximately three centimeters lower at standard
+Windows scaling, with additional space around Today's schedule. All spacing
+is editable in MainWindow.xaml. The existing vertical scrollbar keeps lower
+buttons accessible at smaller window sizes.

@@ -18,9 +18,9 @@
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="76"/></Grid.RowDefinitions>
     <TextBlock Text="Playlist" Foreground="White" FontSize="19" Margin="8,0,0,12"/>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-     <StackPanel>
-      <Button Content="Today's schedule" Click="ScheduleClick" Background="Transparent" Foreground="#C8D8E5" BorderThickness="0" Margin="0,2" Padding="3,3"/>
-      <Separator Background="#36556D" Margin="0,3"/>
+     <StackPanel Margin="0,96,0,0">
+      <Button Content="Today's schedule" Click="ScheduleClick" Background="Transparent" Foreground="#C8D8E5" BorderThickness="0" Margin="0,18,0,18" Padding="3,3"/>
+      <Separator Background="#36556D" Margin="0,6,0,10"/>
       <Button Content="Silence windows" Tag="Silence" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Music groups" Tag="Groups" Click="AdminClick" Margin="0,1" Padding="6,3"/>
       <Button Content="Random music" Tag="Random" Click="AdminClick" Margin="0,1" Padding="6,3"/>
