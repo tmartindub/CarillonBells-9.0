@@ -152,3 +152,20 @@ Checkpoint 12 additionally includes both validated review ZIPs and the test
 evidence, so this checkpoint can supply the runnable review executables as
 well as a source snapshot. Earlier numbered ZIPs contain source/documentation
 snapshots for rebuilding their respective intermediate changes.
+
+## 13 — Authorized D: installation
+
+On November 24, 2026 the user explicitly authorized replacing
+**D:\CarillonBells.exe** with the validated 64-bit review build. The application
+was already closed. Before replacement, its executable, databases folder, and
+data/settings folder were archived to the private backup disk:
+**H:\CarillonBells v 9_0\D_before_UI_review_20261124_121504.zip**.
+The archived executable hash was verified against the prior D: executable.
+
+Only D:\CarillonBells.exe was replaced. Its SHA-256 matches the win-x64 value
+in checkpoint 12. The application was reopened and observed loading 120 songs,
+with Schedule enabled, 51 occurrences today and 28 queued, and the next song
+at 12:30 PM. No manual playback or test email was triggered.
+Music folders and the separate Carillon.exe were not replaced.
+An after-change executable ZIP is saved as
+**H:\CarillonBells v 9_0\D_after_UI_review_20261124.zip**.
