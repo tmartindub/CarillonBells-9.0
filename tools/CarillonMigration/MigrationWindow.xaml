@@ -27,6 +27,9 @@
         <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
          <Setter Property="Text" Value="Upgrade a Carillon 7.2.4 or 8.1 installation on its existing USB drive."/>
         </DataTrigger>
+        <DataTrigger Binding="{Binding IsRestoreMode}" Value="True">
+         <Setter Property="Text" Value="Return a USB installation to Carillon 7.2.4 using its pre-upgrade backup."/>
+        </DataTrigger>
        </Style.Triggers>
       </Style>
      </TextBlock.Style>
@@ -34,6 +37,15 @@
    </StackPanel>
   </Border>
   <Border Grid.Row="1" Background="{StaticResource Surface}" BorderBrush="{StaticResource Line}" BorderThickness="0,0,0,1">
+   <Border.Style>
+    <Style TargetType="Border">
+     <Style.Triggers>
+      <DataTrigger Binding="{Binding IsRestoreMode}" Value="True">
+       <Setter Property="Visibility" Value="Collapsed"/>
+      </DataTrigger>
+     </Style.Triggers>
+    </Style>
+   </Border.Style>
    <UniformGrid Columns="4" Margin="24,8">
     <TextBlock Text="Source">
      <TextBlock.Style>
@@ -129,6 +141,20 @@
        </Grid>
        <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
         Text="Next identifies the version and playlist count from the local database."/>
+       <Border Margin="0,24,0,0" Padding="14,12" Background="{StaticResource ActiveStep}" CornerRadius="6">
+        <Grid>
+         <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+         </Grid.ColumnDefinitions>
+         <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="Return to Carillon 7.2.4" FontWeight="SemiBold"/>
+          <TextBlock Style="{StaticResource FieldHint}" Text="Restore the original database from a pre-upgrade backup."/>
+         </StackPanel>
+         <Button Grid.Column="1" Content="_Restore 7.2.4…" Margin="14,0,0,0" VerticalAlignment="Center"
+          Click="OpenRestoreClick"/>
+        </Grid>
+       </Border>
       </StackPanel>
       <StackPanel>
        <StackPanel.Style>
@@ -288,6 +314,90 @@
        <TextBlock x:Name="ResultWarningTitle" Margin="0,15,0,4" FontWeight="SemiBold"/>
        <ItemsControl x:Name="ResultWarnings" ItemTemplate="{StaticResource MigrationWarning}"/>
       </StackPanel>
+      <StackPanel AutomationProperties.Name="Restore 7.2.4">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="Restore the 7.2.4 database"/>
+       <TextBlock Text="Close Carillon.exe and CarillonBells.exe before restoring. Your music stays in its current folders."/>
+       <Label Margin="0,18,0,0" Content="_USB installation folder" Target="{Binding ElementName=RestoreFolderButton}"/>
+       <Grid>
+        <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="RestoreFolderInput" IsReadOnly="True" AutomationProperties.Name="USB installation folder"/>
+        <Button x:Name="RestoreFolderButton" Grid.Column="1" Margin="10,0,0,0" Content="Choose _folder…"
+         Click="ChooseRestoreFolderClick"/>
+       </Grid>
+       <TextBlock Style="{StaticResource FieldHint}" Margin="0,8,0,0"
+        Text="Choose the folder that contains databases. Select the USB drive itself if databases is at its root."/>
+       <Label Margin="0,15,0,0" Content="Pre-upgrade backup _ZIP" Target="{Binding ElementName=RestoreBackupInput}"/>
+       <Grid IsEnabled="{Binding HasRestoreFolder}">
+        <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="*"/>
+         <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ComboBox x:Name="RestoreBackupInput" MinHeight="42" Padding="10,5" VerticalContentAlignment="Center"
+         MaxDropDownHeight="260" AutomationProperties.Name="Pre-upgrade backup ZIP" SelectionChanged="RestoreBackupChanged">
+         <ComboBox.ItemTemplate>
+          <DataTemplate>
+           <StackPanel>
+            <TextBlock Text="{Binding BackupDate, StringFormat='{}{0:MMM d, yyyy h:mm tt}'}" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding ZipPath}" Style="{StaticResource FieldHint}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+           </StackPanel>
+          </DataTemplate>
+         </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse for Z_IP…" Click="BrowseRestoreBackupClick"/>
+       </Grid>
+       <TextBlock x:Name="RestoreBackupHint" Style="{StaticResource FieldHint}" Margin="0,8,0,0"
+        Visibility="{Binding HasRestoreFolder, Converter={StaticResource VisibleWhenTrue}}"/>
+       <Border x:Name="RestoreReviewPanel" Margin="0,18,0,0" Padding="14,12" Background="{StaticResource AccentLight}"
+        CornerRadius="6" Visibility="{Binding HasRestorePlan, Converter={StaticResource VisibleWhenTrue}}">
+        <StackPanel>
+         <TextBlock Text="Ready to restore Carillon 7.2.4" FontWeight="SemiBold"/>
+         <TextBlock x:Name="RestoreReviewSummary" Margin="0,5,0,0"/>
+         <TextBlock Text="Database to restore" FontWeight="SemiBold" Margin="0,8,0,0"/>
+         <TextBlock x:Name="RestoreReviewDatabase" Style="{StaticResource FieldHint}"/>
+         <TextBlock Text="Selected backup ZIP" FontWeight="SemiBold" Margin="0,8,0,0"/>
+         <TextBlock x:Name="RestoreReviewBackup" Style="{StaticResource FieldHint}"/>
+         <TextBlock Margin="0,8,0,0"
+          Text="Back Up and Restore saves a ZIP of the current v9 database, then replaces it with the verified 7.2.4 database."/>
+        </StackPanel>
+       </Border>
+      </StackPanel>
+      <StackPanel AutomationProperties.Name="Restore result">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel" BasedOn="{StaticResource WizardPage}">
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="5">
+           <Setter Property="Visibility" Value="Visible"/>
+          </DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <TextBlock Style="{StaticResource PageTitle}" Text="7.2.4 database restored"/>
+       <TextBlock Text="The original database is back on the selected USB. Your music remains in its current folders."/>
+       <Label Margin="0,16,0,0" Content="Restored database"/>
+       <TextBlock x:Name="RestoredDatabasePath"/>
+       <Label Margin="0,14,0,0" Content="Backup ZIP of the previous v9 database"/>
+       <TextBlock x:Name="RestoreSafetyBackupPath"/>
+       <Border Margin="0,18,0,0" Padding="14,12" Background="{StaticResource ActiveStep}" CornerRadius="6">
+        <StackPanel>
+         <TextBlock Text="Start Carillon 7.2.4" FontWeight="SemiBold"/>
+         <TextBlock x:Name="RestoreLaunchInstructions" Margin="0,5,0,0"/>
+         <TextBlock Margin="0,8,0,0"
+          Text="Opening CarillonBells.exe will offer to upgrade the restored database again."/>
+        </StackPanel>
+       </Border>
+      </StackPanel>
     </Grid>
    </Border>
   </ScrollViewer>
@@ -354,6 +464,9 @@
          <DataTrigger Binding="{Binding IsUsbUpgrade}" Value="True">
           <Setter Property="Content" Value="_Cancel upgrade"/>
          </DataTrigger>
+         <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+          <Setter Property="Content" Value="_Cancel restore"/>
+         </DataTrigger>
         </Style.Triggers>
        </Style>
       </Button.Style>
@@ -395,13 +508,17 @@
           <DataTrigger Binding="{Binding CurrentStep}" Value="3">
            <Setter Property="Visibility" Value="Collapsed"/>
           </DataTrigger>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="5">
+           <Setter Property="Visibility" Value="Collapsed"/>
+          </DataTrigger>
          </Style.Triggers>
         </Style>
        </Button.Style>
       </Button>
-      <Button IsDefault="True" Click="AdvanceClick">
+      <Button Click="AdvanceClick">
        <Button.Style>
         <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+         <Setter Property="IsDefault" Value="True"/>
          <Setter Property="IsEnabled" Value="{Binding CanNavigate}"/>
          <Setter Property="Content" Value="_Next"/>
          <Style.Triggers>
@@ -423,6 +540,23 @@
            <Setter Property="IsEnabled" Value="False"/>
           </MultiDataTrigger>
           <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+           <Setter Property="Visibility" Value="Collapsed"/>
+          </DataTrigger>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+           <Setter Property="Content" Value="_Review restore"/>
+          </DataTrigger>
+          <MultiDataTrigger>
+           <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding CurrentStep}" Value="4"/>
+            <Condition Binding="{Binding RestoreBackupSelected}" Value="False"/>
+           </MultiDataTrigger.Conditions>
+           <Setter Property="IsEnabled" Value="False"/>
+          </MultiDataTrigger>
+          <DataTrigger Binding="{Binding HasRestorePlan}" Value="True">
+           <Setter Property="Content" Value="Back Up and _Restore"/>
+           <Setter Property="IsDefault" Value="False"/>
+          </DataTrigger>
+          <DataTrigger Binding="{Binding CurrentStep}" Value="5">
            <Setter Property="Visibility" Value="Collapsed"/>
           </DataTrigger>
          </Style.Triggers>

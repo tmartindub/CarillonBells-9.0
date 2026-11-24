@@ -8,6 +8,8 @@ On the PC that will run the app, open **Settings**, then **System**, then **Abou
 
 **Upgrading from 7.2.4 or 8.1?** Close the old program. Use the matching **USB Upgrade** ZIP on the existing USB. Follow the **Database Migration Guide** in **Documentation**, then run the new executable from the USB to use your database and music.
 
+**Returning to 7.2.4?** Close **Carillon.exe** and **CarillonBells.exe**. Open **CarillonMigration.exe** from the USB Upgrade package, select **Restore 7.2.4…**, and follow the Database Migration Guide.
+
 Start the app from the USB to use its database and music, even if Windows assigns a different drive letter. Close the app before unplugging the USB or copying its installation folder to another drive.
 
 # Add music and test playback

@@ -2,7 +2,7 @@
 
 Upgrade Westminster Chimes and Carillon Bells by putting the v9 executable beside the existing database and music on the USB. In Windows **Settings**, open **System**, then **About**, and check **System type** on the PC that will run the app. Choose **win-x86** from the **32-bit** release folder for 32-bit Windows or **win-x64** from **64-bit** for 64-bit Windows on an x64 PC.
 
-Choose **CarillonBells_9_0_USB_Upgrade_win-x86.zip** or **CarillonBells_9_0_USB_Upgrade_win-x64.zip** to match Windows. Both contain **CarillonBells.exe** and **Documentation**. If you have the matching **Upgrade Package Setup**, run it on the PC to save the ZIP in your chosen folder.
+Choose **CarillonBells_9_0_USB_Upgrade_win-x86.zip** or **CarillonBells_9_0_USB_Upgrade_win-x64.zip** to match Windows. Both contain **CarillonBells.exe**, **CarillonMigration.exe**, and **Documentation**. If you have the matching **Upgrade Package Setup**, run it on the PC to save the ZIP in your chosen folder.
 
 1. Close version 7.2.4 or 8.1 and any other program using its database.
 2. In File Explorer, locate the folder on the USB that contains the working **databases** folder. If **databases** is directly on the drive, use the drive root, such as **D:\**.
@@ -34,15 +34,25 @@ A normal start enables scheduling. Set a suitable Windows output and level befor
 
 For a second portable device, close the app and copy the complete working installation, including the executable, database and existing music folders. Run the copied executable and check the local database path and playback. The folders move together even when Windows assigns a different drive letter.
 
-# Recover or roll back
+# Restore version 7.2.4 on the same USB
+
+Use the original backup to return to the playlist, settings, and schedule you had before the upgrade. Version 7.2.4 expects an **ID** column in the random music table. If **Carillon.exe** reports that the column is missing, restore the original 7.2.4 database before starting it again.
+
+1. Close **Carillon.exe** and **CarillonBells.exe**, and close any database tools using the USB. Open the matching 32-bit or 64-bit **CarillonMigration.exe** and select **Restore 7.2.4…** to begin.
+2. Click **Choose folder…** and select the USB installation folder that contains **databases**. Pick the dated **Pre-upgrade backup ZIP** from the list. If you saved the backup elsewhere, click **Browse for ZIP…** to select it. The original upgrade usually puts a file named **carillon_before_upgrade_** followed by the date in **databases**.
+3. Click **Review restore**. Check the database path and the backup date so you know which installation and schedule you are restoring. Click **Back Up and Restore** to proceed.
+4. The tool saves the current v9 database in a separate **carillon_before_restore_** ZIP in **databases**, then restores the verified 7.2.4 database. Keep the ZIP shown on the result screen if you need to recover edits you made in v9. Music and programs stay where they are.
+5. After the restore finishes, open the original **Carillon.exe** on the USB and check the playlist, schedule, and Windows audio output. Opening **CarillonBells.exe** again offers to upgrade the restored database.
+
+# Recover an earlier 8.1 database
 
 If the database is in use, close all instances of the app and any other database tools, then start v9 from the USB again. If startup reports a missing database, check that the executable is beside the **databases** folder of the USB you intended to upgrade. If a recording cannot play, check the original music folder and confirm the playlist path or random directory.
 
-Use these steps to return the upgraded USB to the old version.
+Use these steps if you need to restore the exact 8.1 database saved before v9 added its dispatch history. If v9 made no database backup because the dispatch table was already present, there is no pre-change ZIP for that startup.
 
 1. Close v9 and the old version. Preserve any new v9 changes you may need in a separate ZIP.
-2. Find the dated ZIP starting with **carillon_before_upgrade_** in **databases**. Extract **carillon.db** to a temporary folder and restore it as **databases\carillon.db** on the USB. Skip this step if the 8.1 database already had a v9 dispatch table and startup made no backup. If SQLite journal or WAL files are still present after closing the app, have the database files checked before replacing them.
-3. Start the original executable for version 7.2.4 or 8.1 from the USB. It uses the same music folders.
+2. Find the dated ZIP starting with **carillon_before_upgrade_** in **databases**. Extract **carillon.db** to a temporary folder and restore it as **databases\carillon.db** on the USB. If SQLite journal or WAL files are still present after closing the app, have the database files checked before replacing them.
+3. Start the original executable for version 8.1 from the USB. It uses the same music folders.
 4. Check the legacy playlist, schedule and output before resuming playback.
 
 # Create a separate v9 installation

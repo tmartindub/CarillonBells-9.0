@@ -10,7 +10,7 @@ On the PC that will run the app, open **Settings**, then **System**, then **Abou
 2. Check the PC date and time, the Windows sound output, and the volume. Open **CarillonBells.exe** where you extracted it. The starter database contains 14 time-marking Westminster chime entries. **Today's schedule** shows the included times, such as 6:00 a.m. and 6:30 a.m.
 3. Set the organization name in **System**. Review **Today's schedule** and **Silence windows** before leaving the app unattended. A normal start enables scheduling. For setup or manual playback, clear **Schedule enabled** and use a suitable test output.
 
-For an existing 7.2.4 or 8.1 USB, close the old program and extract the matching **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. The **Database Migration Guide** in **Documentation** covers the one-time 7.2.4 confirmation, backups, and creating a separate installation with **CarillonMigration.exe**.
+For an existing 7.2.4 or 8.1 USB, close the old program and extract the matching **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. The **Database Migration Guide** in **Documentation** covers the one-time 7.2.4 confirmation and both uses of **CarillonMigration.exe**. It can restore a 7.2.4 database on the existing USB or create a separate v9 installation.
 
 Start **CarillonBells.exe** with the **--evaluation** option to suppress automatic mail during a test. Evaluation mode still plays audio and controls Windows system volume.
 
@@ -160,6 +160,10 @@ Help opens the local HTML guide in your default browser. The single-executable r
 ## Restore an earlier local database
 
 Record the backup ZIP path from the import report. Close the app and preserve the current local database under another name or in a separate backup before restoring. Extract carillon.db from the chosen ZIP into the installation's databases folder. Keep the ZIP and any reports secured with other copies of your settings. Restart the app and review the playlist, settings, and next play.
+
+## Return to version 7.2.4
+
+Close **Carillon.exe** and **CarillonBells.exe**. Open **CarillonMigration.exe** from the matching Windows release and select **Restore 7.2.4…** to begin. Choose the USB installation and its dated pre-upgrade ZIP, then review the restore. **Back Up and Restore** saves your current v9 database separately before restoring the original. Open **Carillon.exe** from the USB after the restore and check the schedule. See the **Database Migration Guide** for the full procedure.
 
 # Troubleshoot common problems
 

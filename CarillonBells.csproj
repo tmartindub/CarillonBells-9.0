@@ -30,7 +30,7 @@
     <Resource Include="samples\empty-schema.sql" />
     <Compile Remove="tools\**\*.cs" />
     <Page Remove="tools\CarillonMigration\**\*.xaml" />
-    <Compile Include="tools\CarillonMigration\MigrationEngine.cs;tools\CarillonMigration\UsbUpgrade.cs" />
+    <Compile Include="tools\CarillonMigration\MigrationEngine.cs;tools\CarillonMigration\UsbUpgrade.cs;tools\CarillonMigration\LegacyRestore.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(CarillonSingleExe)' != 'true'">
     <Compile Include="tools\CarillonMigration\MigrationWindow.xaml.cs" />

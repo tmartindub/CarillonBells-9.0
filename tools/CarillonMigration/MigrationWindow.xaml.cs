@@ -2,13 +2,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Win32;
 
 namespace Carillon.Migration;
 
 public partial class MigrationWindow : Window, INotifyPropertyChanged
 {
-    private enum WizardStep { Source, Destination, Review, Result }
+    private enum WizardStep { Source, Destination, Review, Result, Restore, RestoreResult }
 
     private readonly string templateFolder = AppContext.BaseDirectory;
     private readonly string? singleFileExecutable;
@@ -17,11 +18,16 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     private MigrationPlan? plan;
     private UsbUpgradePlan? usbUpgradePlan;
     private MigrationResult? result;
+    private Restore724Plan? restorePlan;
     private bool busy;
     private CancellationTokenSource? migrationCancellation;
 
     public int CurrentStep { get; private set; }
     public bool IsUsbUpgrade => singleFileExecutable is not null;
+    public bool IsRestoreMode => (WizardStep)CurrentStep is WizardStep.Restore or WizardStep.RestoreResult;
+    public bool HasRestoreFolder => !string.IsNullOrEmpty(RestoreFolderInput.Text);
+    public bool RestoreBackupSelected => RestoreBackupInput.SelectedItem is RestoreBackup;
+    public bool HasRestorePlan => restorePlan is not null;
     public bool CanNavigate => !busy;
     public bool IsMigrating => migrationCancellation is not null;
     public bool CanCancelMigration => migrationCancellation is { IsCancellationRequested: false };
@@ -102,6 +108,148 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
         catch (Exception error) { StatusText.Text = error.Message; }
     }
 
+    private void OpenRestoreClick(object sender, RoutedEventArgs e)
+    {
+        RestoreFolderInput.Text = "";
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRestoreFolder)));
+        RestoreBackupInput.ItemsSource = null;
+        RestoreBackupHint.Text = "";
+        SetRestorePlan(null);
+        ShowStep(WizardStep.Restore);
+        RestoreFolderButton.Focus();
+    }
+
+    private async void ChooseRestoreFolderClick(object sender, RoutedEventArgs e)
+    {
+        if (!CanNavigate)
+            return;
+
+        try
+        {
+            var dialog = new OpenFolderDialog { Title = "Choose the USB installation to restore" };
+            var current = HasRestoreFolder ? RestoreFolderInput.Text : SourceInput.Text.Trim().Trim('"');
+            if (Directory.Exists(current))
+                dialog.InitialDirectory = current;
+            if (dialog.ShowDialog(this) != true)
+                return;
+
+            RestoreFolderInput.Text = "";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRestoreFolder)));
+            RestoreBackupInput.ItemsSource = null;
+            SetRestorePlan(null);
+            RestoreBackupHint.Text = "";
+            StatusText.Text = "Finding pre-upgrade backups on the selected USB…";
+            busy = true;
+            NotifyWorkState();
+            var folder = dialog.FolderName;
+            var backups = await Task.Run(() => MigrationEngine.DiscoverRestoreBackups(folder));
+            RestoreFolderInput.Text = folder;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRestoreFolder)));
+            RestoreBackupInput.ItemsSource = backups;
+            RestoreBackupInput.SelectedIndex = backups.Count > 0 ? 0 : -1;
+            RestoreBackupHint.Text = backups.Count > 0
+                ? "Choose the backup to use. For a ZIP saved elsewhere, select Browse for ZIP."
+                : "No pre-upgrade backups were found on this drive. Select Browse for ZIP to find one.";
+            StatusText.Text = "";
+        }
+        catch (Exception error) { StatusText.Text = error.Message; }
+        finally
+        {
+            busy = false;
+            NotifyWorkState();
+        }
+    }
+
+    private void BrowseRestoreBackupClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = "Choose a pre-upgrade ZIP backup",
+                Filter = "ZIP backups (*.zip)|*.zip",
+                InitialDirectory = Path.Combine(RestoreFolderInput.Text, "databases")
+            };
+            if (dialog.ShowDialog(this) != true)
+                return;
+
+            var path = dialog.FileName;
+            var backups = (RestoreBackupInput.ItemsSource as IEnumerable<RestoreBackup> ?? []).ToList();
+            var selected = backups.Find(backup => string.Equals(backup.ZipPath, path, StringComparison.OrdinalIgnoreCase));
+            if (selected is null)
+            {
+                selected = new RestoreBackup(path, File.GetLastWriteTime(path));
+                backups.Add(selected);
+                RestoreBackupInput.ItemsSource = backups;
+            }
+            RestoreBackupInput.SelectedItem = selected;
+            StatusText.Text = "";
+        }
+        catch (Exception error) { StatusText.Text = error.Message; }
+    }
+
+    private void RestoreBackupChanged(object sender, SelectionChangedEventArgs e)
+    {
+        SetRestorePlan(null);
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RestoreBackupSelected)));
+    }
+
+    private async Task ReviewRestoreAsync()
+    {
+        var selected = RestoreBackupInput.SelectedItem as RestoreBackup
+            ?? throw new InvalidOperationException("Choose a pre-upgrade ZIP backup first.");
+        var folder = RestoreFolderInput.Text;
+        StatusText.Text = "Verifying the backup and the selected USB database…";
+        var prepared = await Task.Run(() => MigrationEngine.PlanRestore724(folder, selected.ZipPath));
+        var entryLabel = prepared.PlaylistCount == 1 ? "playlist entry" : "playlist entries";
+        RestoreReviewSummary.Text = $"Backup from {prepared.BackupDate:MMM d, yyyy h:mm tt} · {prepared.PlaylistCount:N0} {entryLabel}";
+        RestoreReviewDatabase.Text = prepared.DatabasePath;
+        RestoreReviewBackup.Text = prepared.BackupPath;
+        SetRestorePlan(prepared);
+        StatusText.Text = "";
+        RestoreReviewPanel.BringIntoView();
+    }
+
+    private async Task RunRestoreAsync(Restore724Plan prepared)
+    {
+        using var cancellation = new CancellationTokenSource();
+        migrationCancellation = cancellation;
+        NotifyWorkState();
+        StatusText.Text = "Starting the restore…";
+        var progress = new Progress<string>(message =>
+        {
+            if (ReferenceEquals(migrationCancellation, cancellation) && !cancellation.IsCancellationRequested)
+                StatusText.Text = message;
+        });
+
+        try
+        {
+            var restored = await Task.Run(() => MigrationEngine.Restore724(prepared, progress, cancellation.Token));
+            RestoredDatabasePath.Text = restored.DatabasePath;
+            RestoreSafetyBackupPath.Text = restored.PreRestoreBackupPath;
+            RestoreLaunchInstructions.Text = restored.LegacyExecutablePath is { } legacyExecutable
+                ? $"Open the original Carillon.exe from the USB.\n{legacyExecutable}"
+                : "Carillon.exe was not found on this drive. Copy the original 7.2.4 program back to the USB before starting it.";
+            ShowStep(WizardStep.RestoreResult);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            StatusText.Text = "Restore canceled. Review the backup before starting again.";
+        }
+        finally
+        {
+            SetRestorePlan(null);
+            migrationCancellation = null;
+            NotifyWorkState();
+        }
+    }
+
+    private void SetRestorePlan(Restore724Plan? value)
+    {
+        restorePlan = value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRestorePlan)));
+    }
+
     private async void AdvanceClick(object sender, RoutedEventArgs e)
     {
         if (!CanNavigate)
@@ -122,6 +270,12 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
                     break;
                 case WizardStep.Review when ReviewConfirmed.IsChecked == true:
                     await RunMigrationAsync();
+                    break;
+                case WizardStep.Restore when restorePlan is { } prepared:
+                    await RunRestoreAsync(prepared);
+                    break;
+                case WizardStep.Restore:
+                    await ReviewRestoreAsync();
                     break;
             }
         }
@@ -273,6 +427,11 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
                 ShowStep(WizardStep.Destination);
                 (IsUsbUpgrade ? BackupFolderInput : DestinationInput).Focus();
                 break;
+            case WizardStep.Restore:
+                SetRestorePlan(null);
+                ShowStep(WizardStep.Source);
+                SourceInput.Focus();
+                break;
         }
     }
 
@@ -280,9 +439,11 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     {
         if (migrationCancellation is not { IsCancellationRequested: false } cancellation)
             return;
-        StatusText.Text = IsUsbUpgrade
-            ? "Canceling upgrade and cleaning up temporary files…"
-            : "Canceling migration and cleaning up temporary files…";
+        StatusText.Text = IsRestoreMode
+            ? "Canceling restore and cleaning up temporary files…"
+            : IsUsbUpgrade
+                ? "Canceling upgrade and cleaning up temporary files…"
+                : "Canceling migration and cleaning up temporary files…";
         cancellation.Cancel();
         NotifyWorkState();
     }
@@ -333,6 +494,7 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     {
         CurrentStep = (int)step;
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentStep)));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRestoreMode)));
         StatusText.Text = "";
         PageScroll.ScrollToTop();
     }
