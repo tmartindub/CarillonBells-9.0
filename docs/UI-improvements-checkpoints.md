@@ -52,3 +52,11 @@ preferences select the replacement at that number; Original remains ID zero.
 An accessible × button appears inside the search field when text is present.
 It clears the filter, preserves the selected song when present, and returns
 keyboard focus to the search field. It does not change scheduling.
+
+## 07 — Schedule log reasons
+
+Schedule state transitions identify startup, manual action, song maintenance,
+adding/deleting songs, Groups, random music, silence windows, email/reports, or
+database maintenance. Changing maintenance tabs identifies the current reason.
+Closing maintenance records restoration to the previous state; a previously
+disabled schedule is not enabled. No change was made to discontinuity policy.

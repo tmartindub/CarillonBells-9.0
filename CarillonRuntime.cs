@@ -87,7 +87,7 @@ public sealed class CarillonRuntime : IDisposable
         SetThreadExecutionState(0x80000001);
         Log.Append("Application initialized — "+App.ProductTitle+" · "+AudioPlayback.Backend);
         timer=new DispatcherTimer(TimeSpan.FromSeconds(1),DispatcherPriority.Background,Tick,dispatcher);
-        SetSchedule(!migrationReview); Tick(null,EventArgs.Empty);
+        SetSchedule(!migrationReview,"application startup"); Tick(null,EventArgs.Empty);
     }
     public void SaveClockHandStyle(int styleId)
     {
@@ -113,12 +113,13 @@ public sealed class CarillonRuntime : IDisposable
     {
         Songs=Repository.Songs(); Rules=Repository.Silence(); Settings=Repository.Settings(); Log.Enabled=Flag("LOGGING_STATUS"); Changed?.Invoke();
     }
-    public void SetSchedule(bool enabled)
+    public void SetSchedule(bool enabled,string reason="manual user request")
     {
+        var changed=ScheduleEnabled!=enabled;
         ScheduleEnabled=enabled;
         if(enabled) { Repository.SyncGroups(); Reload(); Rebuild(Now); }
         else Queue.Clear();
-        Log.Append("Schedule "+(enabled?"enabled":"disabled")); Changed?.Invoke();
+        if(changed) Log.Append("Schedule "+(enabled?"enabled":"disabled")+" - "+reason); Changed?.Invoke();
     }
     public void Rebuild(DateTime now)
     {

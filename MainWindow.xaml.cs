@@ -93,12 +93,12 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void BeginEdit(object sender,KeyboardFocusChangedEventArgs e)
     {
         if(editSession||EditingSong is null) return; editSession=true; resumeSchedule=runtime.ScheduleEnabled;
-        if(resumeSchedule) runtime.SetSchedule(false);
+        if(resumeSchedule) runtime.SetSchedule(false,"song maintenance");
     }
     private void EndEdit()
     {
         var restore=editSession; var enabled=resumeSchedule; editSession=false; resumeSchedule=false;
-        if(restore&&runtime.ScheduleEnabled!=enabled) runtime.SetSchedule(enabled);
+        if(restore&&runtime.ScheduleEnabled!=enabled) runtime.SetSchedule(enabled,"song maintenance ended; previous state restored");
     }
     private bool Save()
     {
@@ -144,18 +144,18 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private async void AddClick(object sender,RoutedEventArgs e)
     {
         if(!ConfirmEdits()) return; var dialog=new OpenFileDialog {Filter="MP3 / WAV audio|*.mp3;*.wav",Multiselect=true,Title="Add music files"}; if(dialog.ShowDialog(this)!=true) return;
-        var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false);
+        var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false,"adding songs");
         try { foreach(var path in dialog.FileNames) { var relative=Path.GetRelativePath(runtime.BaseDirectory,path); if(!DataFormats.PortablePath(runtime.BaseDirectory,relative).Equals(Path.GetFullPath(path),StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("Copy music into this portable application folder before adding it."); var duration=await Task.Run(()=>AudioPlayback.ReadDuration(path)); var song=new Song {Path=".\\"+relative,Duration=DataFormats.DurationText(duration),From=DateTime.Today,To=DateTime.Today.AddYears(1)}; runtime.Repository.SaveSong(song); } }
         catch(Exception error) { ShowError(error); }
-        finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(); } catch(Exception error) { ShowError(error); } }
+        finally { try { if(enabled) runtime.SetSchedule(true,"adding songs ended; previous state restored"); else runtime.Reload(); LoadSongs(); } catch(Exception error) { ShowError(error); } }
     }
     private void DeleteClick(object sender,RoutedEventArgs e)
     {
         if(!ConfirmEdits()||SelectedSong is null) return;
         if(MessageBox.Show(this,"Delete "+SelectedSong.Title+" from the playlist? The audio file is kept.","Delete song",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) return;
-        var index=Songs.IndexOf(SelectedSong); var key=SelectedSong.Key; var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false);
+        var index=Songs.IndexOf(SelectedSong); var key=SelectedSong.Key; var enabled=runtime.ScheduleEnabled; runtime.SetSchedule(false,"deleting a song");
         try { runtime.Repository.DeleteSong(SelectedSong); key=null; } catch(Exception error) { ShowError(error); }
-        finally { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(key??runtime.Songs.ElementAtOrDefault(Math.Min(index,runtime.Songs.Count-1))?.Key); } catch(Exception error) { ShowError(error); } }
+        finally { try { if(enabled) runtime.SetSchedule(true,"deleting a song ended; previous state restored"); else runtime.Reload(); LoadSongs(key??runtime.Songs.ElementAtOrDefault(Math.Min(index,runtime.Songs.Count-1))?.Key); } catch(Exception error) { ShowError(error); } }
     }
     private void PlayClick(object sender,RoutedEventArgs e) { if(SelectedSong is null) return; try { runtime.Play(SelectedSong); } catch(Exception error) { ShowError(error); } }
     private void SongDoubleClick(object sender,MouseButtonEventArgs e)
@@ -178,11 +178,11 @@ public partial class MainWindow : Window,INotifyPropertyChanged
     private void AdminClick(object sender,RoutedEventArgs e)
     {
         if(!ConfirmEdits()) return; var page=((Button)sender).Tag?.ToString()??"System"; var pauses=page is not ("Themes" or "ClockHands"); var enabled=runtime.ScheduleEnabled; var key=selectedSong?.Key;
-        if(pauses) runtime.SetSchedule(false);
+        if(pauses) runtime.SetSchedule(false,page switch {"Groups"=>"Groups maintenance","Random"=>"random music maintenance","Silence"=>"silence-window maintenance","Email"=>"email/report maintenance","Database"=>"database maintenance",_=>"System maintenance"});
         AdministrationWindow? administration=null;
         try { administration=new AdministrationWindow(runtime,page){Owner=this};administration.ShowDialog(); }
         catch(Exception error) { ShowError(error); }
-        finally { if(pauses||administration?.RequiresScheduleResume==true) { try { if(enabled) runtime.SetSchedule(true); else runtime.Reload(); LoadSongs(key); } catch(Exception error) { ShowError(error); } } }
+        finally { if(pauses||administration?.RequiresScheduleResume==true) { try { if(enabled) runtime.SetSchedule(true,"administration closed; previous state restored"); else runtime.Reload(); LoadSongs(key); } catch(Exception error) { ShowError(error); } } }
     }
     private void ClockClick(object sender,RoutedEventArgs e) { if(clock is null) { clock=new ClockWindow(); clock.Closed+=(_,_)=>clock=null; clock.Show(); } else clock.Activate(); }
     private void LogClick(object sender,RoutedEventArgs e)=>new LogWindow(runtime.Log){Owner=this}.Show();

@@ -141,7 +141,15 @@ public partial class AdministrationWindow : Window
     }
     private void AddGroupClick(object sender,RoutedEventArgs e) {Pages.SelectedItem=Pages.Items.OfType<TabItem>().First(t=>t.Tag?.ToString()=="Groups");var row=Groups.NewRow();row["SEASONALGROUP"]="New Group "+DateTime.Now.ToString("HHmmss");Groups.Rows.Add(row);GroupsGrid.SelectedIndex=Groups.Rows.Count-1;GroupsGrid.ScrollIntoView(GroupsGrid.SelectedItem);}
     private void DeleteGroupClick(object sender,RoutedEventArgs e) {if(GroupsGrid.SelectedItem is DataRowView row&&MessageBox.Show(this,"Delete the selected group? Playlist songs are retained.","Delete group",MessageBoxButton.YesNo)==MessageBoxResult.Yes)row.Delete();}
-    private void PageChanged(object sender,SelectionChangedEventArgs e) { if(loading||e.Source!=Pages) return; ResultLabel.Text="";if((Pages.SelectedItem as TabItem)?.Tag?.ToString() is not ("Themes" or "ClockHands")&&!RequiresScheduleResume){runtime.SetSchedule(false);RequiresScheduleResume=true;} }
+    private void PageChanged(object sender,SelectionChangedEventArgs e)
+    {
+        if(loading||e.Source!=Pages) return; ResultLabel.Text="";
+        var page=(Pages.SelectedItem as TabItem)?.Tag?.ToString();
+        if(page is "Themes" or "ClockHands") return;
+        var reason=page switch {"Groups"=>"Groups maintenance","Random"=>"random music maintenance","Silence"=>"silence-window maintenance","Email"=>"email/report maintenance","Database"=>"database maintenance",_=>"System maintenance"};
+        if(!RequiresScheduleResume) {runtime.SetSchedule(false,reason);RequiresScheduleResume=true;}
+        else runtime.Log.Append("Schedule remains disabled - "+reason);
+    }
     private void RecalculateGroupsClick(object sender,RoutedEventArgs e)
     {
         try { CommitEditors(); foreach(DataRow row in Groups.Rows) if(row.RowState!=DataRowState.Deleted&&CalendarRules.GroupDates(CarillonRepository.Text(row,"SEASONALGROUP"),DateTime.Today) is {} dates) {row["PLAY_DATE_FROM"]=dates.From.ToString("MM/dd/yyyy");row["PLAY_DATE_TO"]=dates.To.ToString("MM/dd/yyyy");} ResultLabel.Text="Dates recalculated; click Save"; } catch(Exception error) { MessageBox.Show(this,error.Message); }
