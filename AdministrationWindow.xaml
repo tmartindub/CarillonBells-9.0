@@ -40,7 +40,16 @@
   <TabControl x:Name="Pages" SelectionChanged="PageChanged" Background="{DynamicResource Surface}">
    <TabItem Header="Groups" Tag="Groups"><DockPanel Margin="18">
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12"><Button Content="Recalculate dates for upcoming year" Click="RecalculateGroupsClick"/><TextBlock Text="Custom group names and dates are preserved." VerticalAlignment="Center" Margin="15,0"/></StackPanel>
-    <DataGrid x:Name="GroupsGrid" ItemsSource="{Binding Groups.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"><DataGrid.Columns><DataGridTextColumn Header="Group" Binding="{Binding [SEASONALGROUP]}" Width="*"/><DataGridTextColumn Header="From (MM/dd/yyyy)" Binding="{Binding [PLAY_DATE_FROM]}" Width="220"/><DataGridTextColumn Header="Until (MM/dd/yyyy)" Binding="{Binding [PLAY_DATE_TO]}" Width="220"/><DataGridTextColumn Header="Play time" Binding="{Binding [PLAY_TIME]}" Width="140"/></DataGrid.Columns></DataGrid>
+    <DataGrid x:Name="GroupsGrid" ItemsSource="{Binding Groups.DefaultView}" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"><DataGrid.Columns>
+     <DataGridTextColumn Header="Group" Binding="{Binding [SEASONALGROUP]}" Width="*"/>
+     <DataGridTemplateColumn Header="From (MM/dd/yyyy)" Width="220">
+      <DataGridTemplateColumn.CellTemplate><DataTemplate><DatePicker Text="{Binding [PLAY_DATE_FROM],Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=True}" Padding="0" SelectedDateFormat="Short" AutomationProperties.Name="Group start date"/></DataTemplate></DataGridTemplateColumn.CellTemplate>
+     </DataGridTemplateColumn>
+     <DataGridTemplateColumn Header="Until (MM/dd/yyyy)" Width="220">
+      <DataGridTemplateColumn.CellTemplate><DataTemplate><DatePicker Text="{Binding [PLAY_DATE_TO],Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=True}" Padding="0" SelectedDateFormat="Short" AutomationProperties.Name="Group end date"/></DataTemplate></DataGridTemplateColumn.CellTemplate>
+     </DataGridTemplateColumn>
+     <DataGridTextColumn Header="Play time" Binding="{Binding [PLAY_TIME]}" Width="140"/>
+    </DataGrid.Columns></DataGrid>
    </DockPanel></TabItem>
    <TabItem Header="System" Tag="System"><ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><Grid x:Name="SystemFieldsPanel" Margin="18">
     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>

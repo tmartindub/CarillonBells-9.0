@@ -22,3 +22,9 @@ The player shows `Last song played: [actual recording]` after playback begins,
 including the actual randomly selected recording. Grid selection no longer
 changes this text. Before the first play it reads `No songs played this session`.
 The redundant lower text line was removed. Playback controls are unchanged.
+
+## 03 — Group calendar pickers
+
+Both group date columns now contain native WPF calendar pickers defined in XAML.
+Typed dates, blank dates, pending changes, Save/Cancel, U.S. slash display, and
+ISO database storage are retained. Group range validation still runs on Save.
