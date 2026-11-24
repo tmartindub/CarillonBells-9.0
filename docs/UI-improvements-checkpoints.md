@@ -118,3 +118,37 @@ group calendars, annual month/day dates, black clock hands, email status, log
 reasons, and font workflow. Translation widgets and protected product names are
 preserved. UI-improvements-review.md gives safe installation and acceptance
 steps for a separate test copy. Existing PDF/DOCX guides are not rewritten.
+
+## 12 — Validated review downloads
+
+November 24, 2026. Executables were built from source commit **7bae2b2**.
+Both self-contained native Windows executables completed **131 passing checks,
+zero failures**. This includes scheduler, repository, player, annual dates,
+clock rendering, font bounds/persistence/fallback, and preview isolation checks.
+Both packages ran without a separate system .NET 10 installation. Builds had
+zero warnings and errors. The final 64-bit executable was also opened in an
+isolated fictitious-data copy for visual review; that copy was then closed.
+The live D: process was left running. No email was sent during validation.
+This validation does not substitute for an overnight operational test.
+
+The separate downloads are in **export/UI-improvements-20261124**. Each ZIP
+contains only CarillonBells.exe and review instructions: no database, music,
+credentials, or personal font preferences. ZIP contents, executable hashes,
+and PE architecture were verified. Per-architecture test evidence is in its
+validation subfolder. Existing export/32-bit and export/64-bit downloads were
+not replaced, and no website/release deployment was performed.
+
+SHA-256 of the executable, including the identical copy inside each ZIP:
+
+- win-x64: `6A43BFB44F9101ABF02BD4D3C2AE492AE5BB3EBF860FFDC4D6DE31F827A41B41`
+- win-x86: `375E2870BEB1CA6E8F77A6DB6449E0F9059E2106663F02D7C05B11ADB77F71F1`
+
+The source/document privacy audit passed after classifying two unchanged
+website mailto links as existing public contact information. No other private
+reference values or database/audio/dump artifacts were found in publishable
+source/documents. The strict audit script itself remains unchanged.
+
+Checkpoint 12 additionally includes both validated review ZIPs and the test
+evidence, so this checkpoint can supply the runnable review executables as
+well as a source snapshot. Earlier numbered ZIPs contain source/documentation
+snapshots for rebuilding their respective intermediate changes.
