@@ -178,7 +178,7 @@ public sealed class CarillonRuntime : IDisposable
             {
                 var message=appliedSilence.Length==0?"Silence ended; previous manual mute restored":"Silence started: "+appliedSilence;
                 Log.Append(message); previousSilence=appliedSilence;
-                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - System Alert",System.Net.WebUtility.HtmlEncode(message),Setting("email_recipients"),lifetime.Token));
+                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - System Alert",System.Net.WebUtility.HtmlEncode(message),Setting("email_recipients"),lifetime.Token,recipientLabel:"Alert recipients"));
             }
             if(now.TimeOfDay>=TimeSpan.FromMinutes(5)&&maintenanceDate!=now.Date&&ScheduleEnabled)
             {
@@ -190,7 +190,7 @@ public sealed class CarillonRuntime : IDisposable
             if(now.Hour>=5&&reportDate!=now.Date)
             {
                 reportDate=now.Date;
-                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - Morning Health Report",EmailReports.Build(this),Setting("morning_report_recipients"),lifetime.Token));
+                if(Flag("email_enabled")&&!Evaluation) Track(EmailReports.SendAsync(this,App.ProductTitle+" - Morning Health Report",EmailReports.Build(this),Setting("morning_report_recipients"),lifetime.Token,recipientLabel:"Morning report recipients"));
                 else if(Evaluation) Log.Append("Morning report suppressed in evaluation mode");
             }
             if(now.Second%30==0) { var data=Path.Combine(BaseDirectory,"data"); Directory.CreateDirectory(data); File.WriteAllText(Path.Combine(data,"keepalive.txt"),now.ToString("O")); }
@@ -216,6 +216,11 @@ public sealed class CarillonRuntime : IDisposable
     }
     private async Task Observe(Task task) { try { await task; } catch(OperationCanceledException) { } catch(Exception e) { Fail("Email failed: "+e.Message); } }
     public void Fail(string message) { Error=message; try { Log.Append("ERROR: "+message); } catch(IOException) { } Changed?.Invoke(); }
+    public void EmailSucceeded()
+    {
+        if (!Error.StartsWith("Email failed:",StringComparison.Ordinal)) return;
+        Error=""; Changed?.Invoke();
+    }
     public void RecalculateGroups()
     {
         var table=Repository.Table("seasonalgroups");

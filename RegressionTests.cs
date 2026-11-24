@@ -163,6 +163,20 @@ public static class RegressionTests
             var uptimeStart = new DateTime(2024, 2, 29, 1, 2, 3);
             var clockNow = uptimeStart;
             using var runtime=new CarillonRuntime(repository,scratch,System.Windows.Threading.Dispatcher.CurrentDispatcher,true,()=>clockNow);
+            runtime.Settings["email_enabled"]=1; runtime.Settings["smtp_host"]="example.invalid"; runtime.Settings["smtp_port"]=587;
+            runtime.Settings["email_user"]="smtp-login"; runtime.Settings["from_address"]="bells@example.org"; runtime.Settings["test_recipient"]="";
+            var mail=EmailReports.CreateMessage(runtime,"Validation","<p>Local validation only</p>","one@example.org; two@example.org","Morning report recipients");
+            check("Morning report accepts a blank test recipient and non-address SMTP login",mail.To.Mailboxes.Count()==2&&mail.From.Mailboxes.Single().Address=="bells@example.org");
+            foreach(var recipient in new[]{"","not an address"})
+            {
+                var explained=false;
+                try { EmailReports.CreateMessage(runtime,"Validation","",recipient,"Morning report recipients"); }
+                catch(ArgumentException error) { explained=error.Message.StartsWith("Morning report recipients"); }
+                check("Invalid report recipients explain the affected field: "+(recipient.Length==0?"blank":"malformed"),explained);
+            }
+            runtime.Fail("Email failed: older failure"); runtime.EmailSucceeded(); check("Successful email clears stale email status",runtime.Error.Length==0);
+            runtime.Fail("Unrelated playback error"); runtime.EmailSucceeded(); check("Successful email preserves unrelated errors",runtime.Error=="Unrelated playback error");
+            runtime.Reload();
             check("Uptime starts at zero in all seven units",
                 runtime.UptimeLabel == "0 years   0 months   0 weeks   0 days   0 hours   0 minutes   0 seconds");
             clockNow = DateTime.Now;

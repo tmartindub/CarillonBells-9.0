@@ -199,7 +199,7 @@ public partial class AdministrationWindow : Window
         if(!Save()) return;
         var recipients=runtime.Setting(report?"morning_report_recipients":"test_recipient");
         if(MessageBox.Show(this,"Send a real "+(report?"morning report":"test email")+" to the configured "+(report?"morning-report recipients":"test recipient")+"?","Confirm email",MessageBoxButton.YesNo)!=MessageBoxResult.Yes) return;
-        try { await EmailReports.SendAsync(runtime,App.ProductTitle+(report?" - Morning Health Report":" - Test Message"),report?EmailReports.Build(runtime):"<p>The email test completed successfully.</p>",recipients); ResultLabel.Text="Message sent"; }
+        try { await EmailReports.SendAsync(runtime,App.ProductTitle+(report?" - Morning Health Report":" - Test Message"),report?EmailReports.Build(runtime):"<p>The email test completed successfully.</p>",recipients,recipientLabel:report?"Morning report recipients":"Test recipient"); ResultLabel.Text="Message sent"; }
         catch(Exception error) { runtime.Fail("Email failed: "+error.Message); MessageBox.Show(this,error.Message,"Email failed"); }
     }
     private void PreviewReportClick(object sender,RoutedEventArgs e)

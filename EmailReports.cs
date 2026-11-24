@@ -45,21 +45,34 @@ public static class EmailReports
         Section("Missing / broken song files",missing.Select(s=>s.Path)); Section("Previous-date errors",errors); Section("Remaining schedule",remaining.Select(b=>b.ToString()));
         html.Append("</body></html>"); return html.ToString();
     }
-    public static async Task SendAsync(CarillonRuntime runtime,string subject,string html,string recipients,CancellationToken cancellation=default)
+    internal static MimeMessage CreateMessage(CarillonRuntime runtime,string subject,string html,string recipients,string recipientLabel)
     {
         if(!runtime.Flag("email_enabled")) throw new InvalidOperationException("Email is disabled.");
         if(string.IsNullOrWhiteSpace(runtime.Setting("smtp_host"))) throw new ArgumentException("SMTP host is required.");
         if(!int.TryParse(runtime.Setting("smtp_port"),out var port)||port is <1 or >65535) throw new ArgumentException("A valid SMTP port is required.");
         var message=new MimeMessage();
-        var from=runtime.Setting("from_address");var username=MailboxAddress.Parse(runtime.Setting("email_user"));
-        message.From.Add(from.Contains('@')&&MailboxAddress.TryParse(from,out var configuredFrom)?configuredFrom:new MailboxAddress(from,username.Address));
-        message.To.AddRange(InternetAddressList.Parse(recipients.Replace(';',','))); if(message.To.Count==0) throw new ArgumentException("A recipient is required.");
+        var from=runtime.Setting("from_address").Trim();
+        if (MailboxAddress.TryParse(from,out var configuredFrom) && configuredFrom.Address.Contains('@')) message.From.Add(configuredFrom);
+        else if (!from.Contains('@') && MailboxAddress.TryParse(runtime.Setting("email_user"),out var username) && username.Address.Contains('@')) message.From.Add(new MailboxAddress(from,username.Address));
+        else throw new ArgumentException("From address must contain a valid email address, such as bells@example.org.");
+        if (string.IsNullOrWhiteSpace(runtime.Setting("email_user"))) throw new ArgumentException("SMTP username is required.");
+        if (string.IsNullOrWhiteSpace(recipients)) throw new ArgumentException(recipientLabel+" is empty. Open Email / reports, enter an address, and click Save.");
+        if (!InternetAddressList.TryParse(recipients.Replace(';',','),out var addresses) || !addresses.Mailboxes.Any() || addresses.Mailboxes.Any(address=>!address.Address.Contains('@')))
+            throw new ArgumentException(recipientLabel+" contains an invalid address. Separate multiple addresses with a comma or semicolon.");
+        message.To.AddRange(addresses);
         message.Subject=subject; message.Body=new TextPart("html"){Text=html};
+        return message;
+    }
+    public static async Task SendAsync(CarillonRuntime runtime,string subject,string html,string recipients,CancellationToken cancellation=default,string recipientLabel="Recipients")
+    {
+        var message=CreateMessage(runtime,subject,html,recipients,recipientLabel);
+        int port=int.Parse(runtime.Setting("smtp_port"));
         using var client=new MailKit.Net.Smtp.SmtpClient {Timeout=15000};
         await client.ConnectAsync(runtime.Setting("smtp_host"),port,SecureSocketOptions.StartTls,cancellation);
         await client.AuthenticateAsync(runtime.Setting("email_user"),runtime.Setting("email_password"),cancellation);
         var result=await client.SendAsync(message,cancellation); await client.DisconnectAsync(true,cancellation);
         if(result.RejectedRecipients.Count>0) throw new InvalidOperationException("SMTP rejected one or more recipients; delivery was incomplete.");
         runtime.Log.Append("Email sent: "+subject);
+        runtime.EmailSucceeded();
     }
 }
