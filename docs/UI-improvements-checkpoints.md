@@ -104,3 +104,9 @@ longer silence-purpose text at the minimum window size; Arial 18 also exceeded
 the organization/date line. This confirms the limits respond to actual data.
 Repeated grid layouts were replaced by checks of every distinct editor value
 plus the longest wrapped title, avoiding quadratic work on large song lists.
+
+## 10 — Black clock center refinement
+
+The new black hub covers the brown spindle already present in the background
+artwork. Its radius matches Original, while the new shafts/tips stay slender.
+The background image, clock proportions, and preview layout are unchanged.

@@ -25,7 +25,7 @@
    </DrawingBrush>
   </local:ClockHandStyle.Cap>
  </local:ClockHandStyle>
- <DrawingBrush x:Key="BlackClockHandCap" Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill"><DrawingBrush.Drawing><GeometryDrawing Brush="Black"><GeometryDrawing.Geometry><EllipseGeometry Center="230,230" RadiusX="8" RadiusY="8"/></GeometryDrawing.Geometry></GeometryDrawing></DrawingBrush.Drawing></DrawingBrush>
+ <DrawingBrush x:Key="BlackClockHandCap" Viewbox="0,0,460,460" ViewboxUnits="Absolute" Stretch="Fill"><DrawingBrush.Drawing><GeometryDrawing Brush="Black"><GeometryDrawing.Geometry><EllipseGeometry Center="230,230" RadiusX="15" RadiusY="15"/></GeometryDrawing.Geometry></GeometryDrawing></DrawingBrush.Drawing></DrawingBrush>
  <x:Array x:Key="ClockHandCatalog" Type="{x:Type local:ClockHandStyle}">
   <StaticResource ResourceKey="OriginalClockHands"/>
   <local:ClockHandStyle Id="1" Name="1 Taper" Cap="{StaticResource BlackClockHandCap}">
