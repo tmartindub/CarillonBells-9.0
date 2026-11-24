@@ -286,3 +286,35 @@ Executable SHA-256:
 The pre-change source ZIP is **Before_font_apply_feedback_20261124.zip** on H:.
 The after-change checkpoint contains the source, both executables and results
 from **export/Font-feedback-20261124**.
+
+## 18 — Move the player details away from System Volume
+
+November 24, 2026. The flexible spacer between playback buttons and the
+PLAYER/Last song played display could grow to 208 pixels. It is now a fixed
+24 pixels, moving the details up to 184 pixels left and giving the title more
+room. The existing 20-pixel gap before the System Volume boundary remains.
+Long titles still wrap, and the player content is contained within its own
+grid. These are editable XAML layout parameters; no runtime positioning code
+was added. Song names, data, font preferences and volume behavior are unchanged.
+
+Both self-contained native Windows builds passed **167 checks**, zero failures.
+Twelve new layout checks use the reported Ash Grove filename and a very long
+unbroken title across Arial 14, Tahoma 16 and Arial 18, at narrow and wide
+window sizes. They verify the fixed gap after the buttons and the title's
+right edge remaining clear of System Volume. Builds had zero warnings/errors.
+
+D: was closed cleanly, backed up to
+**H:\CarillonBells v 9_0\D_before_Player_spacing_20261124.zip** (executable,
+database and settings), and restarted with the verified 64-bit executable.
+Only the executable was replaced. The pre-change source ZIP is
+**Before_player_spacing_20261124.zip** on H:. The after-change checkpoint
+contains source, both executables and test results from
+**export/Player-spacing-20261124**.
+The restarted D: layout was visually confirmed: player details start directly
+after the fixed button gap, System Volume is separate, all 120 songs loaded,
+and scheduling remains enabled. No manual playback or test email was triggered.
+
+Executable SHA-256:
+
+- win-x64: `6295A126D1FD4F2E724E5ADB9E91164D5D6D8F85DD9D1D04CCBF4C0B48572EF8`
+- win-x86: `612E19C814763F6029ED068A7C4CCE117A8AF6BC11BA5D7052EC6A82734F10FC`

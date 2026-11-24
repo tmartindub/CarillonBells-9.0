@@ -284,6 +284,32 @@ public static class RegressionTests
                 runtime.Play(new Song {Path=silentWave});runtime.Player.Stop();
                 var lastPlayed=window.PlayerTitle;window.SelectedSong=window.Songs.Last();
                 check("Player wording follows actual playback rather than grid selection",lastPlayed=="Last song played: silent-validation"&&window.PlayerTitle==lastPlayed);
+                var playerLayout=new MainWindow(runtime,appearancePreview:true);
+                try
+                {
+                    foreach(var profile in new[]{("Arial",14.0),("Tahoma",16.0),("Arial",18.0)}) foreach(var width in new[]{1184.0,1584.0})
+                    {
+                        ThemeManager.SetFontResources(playerLayout.Resources,profile.Item1,profile.Item2);
+                        var content=(FrameworkElement)playerLayout.Content;
+                        var title=(TextBlock)playerLayout.FindName("PlayerTitleText");
+                        foreach(var text in new[]{"Last song played: The_Ash_Grove_-_Schulmerich_Carillon","Last song played: "+new string('W',100)})
+                        {
+                            title.SetCurrentValue(TextBlock.TextProperty,text);
+                            content.Measure(new Size(width,701));content.Arrange(new Rect(0,0,width,701));content.UpdateLayout();
+                            content.Dispatcher.Invoke(()=>{},System.Windows.Threading.DispatcherPriority.ContextIdle);
+                            content.InvalidateMeasure();content.Measure(new Size(width,701));content.Arrange(new Rect(0,0,width,701));content.UpdateLayout();
+                            var details=(StackPanel)playerLayout.FindName("PlayerDetails");
+                            var buttons=(StackPanel)playerLayout.FindName("PlaybackButtons");
+                            var volume=(Border)playerLayout.FindName("SystemVolumePanel");
+                            var left=details.TranslatePoint(new Point(),content).X;
+                            var buttonRight=buttons.TranslatePoint(new Point(buttons.ActualWidth,0),content).X;
+                            var titleRight=title.TranslatePoint(new Point(title.ActualWidth,0),content).X;
+                            var volumeLeft=volume.TranslatePoint(new Point(),content).X;
+                            check($"Player title stays left of volume with a fixed button gap: {profile.Item1} {profile.Item2}, width {width}, title length {text.Length}",Math.Abs(left-buttonRight-24)<1&&title.ActualWidth>0&&titleRight<=volumeLeft-19);
+                        }
+                    }
+                }
+                finally {playerLayout.Close();}
                 var search=(TextBox)window.FindName("SearchBox");search.Text="second";
                 var beforeClear=runtime.ScheduleEnabled;typeof(MainWindow).GetMethod("ClearSearchClick",flags)!.Invoke(window,[null,new RoutedEventArgs()]);
                 check("Clear search empties the entry",search.Text.Length==0);

@@ -167,19 +167,19 @@
    <Border Grid.Row="3" Style="{StaticResource Card}" MinHeight="84" Margin="0,8,0,4" Padding="12,8">
     <Grid>
      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="300"/><ColumnDefinition Width="48"/></Grid.ColumnDefinitions>
-     <Grid Margin="0,0,20,0">
-      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*" MinWidth="16" MaxWidth="208"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
+     <Grid Margin="0,0,20,0" ClipToBounds="True">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="24"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
       <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+      <StackPanel x:Name="PlaybackButtons" Orientation="Horizontal" VerticalAlignment="Center">
        <Button Content="Play" Click="PlayClick" Style="{StaticResource Primary}" Padding="18,7"/><Button Content="Pause" Click="PauseClick" Padding="13,7" Margin="7,0"/><Button Content="Stop" Click="StopClick" Padding="13,7"/>
       </StackPanel>
-      <StackPanel Grid.Column="2">
+      <StackPanel x:Name="PlayerDetails" Grid.Column="2">
        <TextBlock Text="PLAYER" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}"/>
-       <TextBlock Text="{Binding PlayerTitle}" Margin="0,3,0,0" FontSize="{DynamicResource UiFontSize19}" TextWrapping="Wrap"/>
+       <TextBlock x:Name="PlayerTitleText" Text="{Binding PlayerTitle}" Margin="0,3,0,0" FontSize="{DynamicResource UiFontSize19}" TextWrapping="Wrap"/>
       </StackPanel>
       <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" x:Name="PlayerProgress" Maximum="3" Width="520" Height="6" HorizontalAlignment="Left" Margin="0,8,0,0" Foreground="#D87732" Background="#E7EDF1" BorderThickness="0"/>
      </Grid>
-     <Border Grid.Column="1" BorderBrush="{DynamicResource Line}" BorderThickness="1,0,0,0" Padding="20,0,0,0">
+     <Border x:Name="SystemVolumePanel" Grid.Column="1" BorderBrush="{DynamicResource Line}" BorderThickness="1,0,0,0" Padding="20,0,0,0">
       <StackPanel VerticalAlignment="Center">
        <TextBlock Text="SYSTEM VOLUME" FontSize="{DynamicResource UiFontSize14}" Foreground="{DynamicResource Muted}" Margin="0,0,0,6"/>
        <Grid>
