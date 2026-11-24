@@ -110,3 +110,11 @@ plus the longest wrapped title, avoiding quadratic work on large song lists.
 The new black hub covers the brown spindle already present in the background
 artwork. Its radius matches Original, while the new shafts/tips stay slender.
 The background image, clock proportions, and preview layout are unchanged.
+
+## 11 — Help and review instructions
+
+The existing local HTML Help now describes the new player wording, search ×,
+group calendars, annual month/day dates, black clock hands, email status, log
+reasons, and font workflow. Translation widgets and protected product names are
+preserved. UI-improvements-review.md gives safe installation and acceptance
+steps for a separate test copy. Existing PDF/DOCX guides are not rewritten.
