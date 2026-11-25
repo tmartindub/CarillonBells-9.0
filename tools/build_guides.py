@@ -19,7 +19,7 @@ PRODUCT_VERSION = "9.0"
 GUIDES = {
     "User": ("User Guide", "Open your installed program, manage songs and schedules, and check daily operation.", datetime(2026, 11, 24)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 25)),
-    "Migration": ("Database Migration Guide", "This illustrated guide takes you through upgrading your existing USB to version 9, from choosing the download and making a backup to checking the result and recovering an older version if needed.", datetime(2026, 11, 25)),
+    "Migration": ("Database Migration Guide", "Choose between upgrading your existing installation and creating a separate version 9 copy. Follow the illustrated steps, protect your database and recordings, and return to version 7.2.4 or 8.1 when needed.", datetime(2026, 11, 25)),
     "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 25)),
 }
 
@@ -84,7 +84,7 @@ def add_manuscript(document, source, *, quick_start=False, migration=False):
         figure = re.fullmatch(r"!\[([^\]]+)\]\((figures/[^)]+\.(?:png|jpg))\)", text)
         if figure:
             caption, path = figure.groups()
-            add_figure(document, source.parent / path, caption, max_height=5.2 if migration else 3.6)
+            add_figure(document, source.parent / path, caption, max_height=(3.8 if path in {"figures/migration-source.png", "figures/migration-destination.png"} else 5.2) if migration else 3.6)
             continue
         item = re.fullmatch(r"(\d+)\.\s+(.*)", text)
         if item:

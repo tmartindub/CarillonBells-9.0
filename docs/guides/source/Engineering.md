@@ -15,7 +15,7 @@ The single-executable release supports a new USB with a starter database and in-
 - EmailReports.cs and CarillonLog.cs supply reports and diagnostic evidence. ClockWindow, ClockHands.xaml, ThemeManager.cs, and Themes.xaml govern appearance and clock rendering.
 - RegressionTests.cs, AudioRegressionTests.cs, and the build and package scripts supply automated verification and deployment.
 
-The current executable checkpoint passed 204 native self-tests on each architecture. The Groups deep dive reproduced the old failure before fixing it: a copied live database marked 16 rows Modified with zero differing values. Genuine edit/revert, calendar, add/delete, Save/Cancel and prompt-free repeated D: close checks were verified; existing live group records were unchanged. See docs\UI-improvements-checkpoints.md for the dated evidence and rollback points.
+The most recent application validation passed 224 native self-tests on each architecture with the disposable drive-root migration cases enabled, and 226 development checks. These counts are recorded in docs\migration-root-validation-20261125.json; this documentation update leaves those application binaries unchanged. The Groups deep dive reproduced the old failure before fixing it: a copied live database marked 16 rows Modified with zero differing values. Genuine edit/revert, calendar, add/delete, Save/Cancel and prompt-free repeated D: close checks were verified; existing live group records were unchanged. See docs\UI-improvements-checkpoints.md for the dated evidence and rollback points.
 
 Use the versioned source to resolve behavioral questions. The FMX handoff and original 8.1 publications are useful historical references. The current acceptance matrix records which verification was actually performed and which checks still depend on the deployment environment.
 
@@ -128,6 +128,8 @@ The empty schema resource at samples\empty-schema.sql supplies a baseline for di
 
 ## In-place upgrade
 
+The user-facing Method A is implemented inside CarillonBells.exe: App.OnStartup calls the linked MigrationEngine.UpgradeLocalDatabase directly. It does not launch CarillonMigration.exe. Installing the Upgrade files preserves the existing database; starting the main executable can change it. Method B explicitly runs CarillonMigration.exe to stage a separate installation. It does not undo a previous Method A upgrade or synchronize later edits between the two databases.
+
 For 7.2.4, startup detects the wide random-directory schema and requests confirmation before converting it. It saves a verified carillon_before_upgrade_*.zip beside the working database. The converted schema retains the original wide table and fills missing compatibility fields and silence slots. It preserves the stored schedule times and the existing audio. A normal start of a compatible 8.1 database adds Carillon9_Dispatched when needed and places the pre-change ZIP beside the database.
 
 The in-place ZIP contains carillon.db. For release verification, use disposable legacy installations and confirm the preserved snapshot, readable working database, and unchanged existing music before resuming on-site playback.
@@ -147,6 +149,8 @@ Choose and import a database copy first resolves pending admin changes. The sour
 A consistent ZIP of the current local database precedes replacement. The app validates the candidate's songs, silence, and settings, releases active playback, replaces the local database, and reloads. If replacement or subsequent initialization fails after the local backup is taken, it can restore the prior snapshot. The final conversion report records the snapshot path and normalized values count. Copy the music separately and verify the corresponding paths under the destination executable.
 
 ## Recovery and backups
+
+The Migration Guide gives separate recovery paths: resume an untouched Method B source; restore a verified original 7.2.4 database with Restore 7.2.4; or recover 8.1 from its complete pre-upgrade ZIP, with a carefully identified database-only alternative. A later complete v9 ZIP must be retained first because restoring an older snapshot does not merge later edits. A database ZIP alone cannot restore old executables or lost recordings.
 
 The 32-bit and 64-bit builds of CarillonMigration.exe provide the same **Restore 7.2.4…** workflow. The assistant lists dated carillon_before_upgrade_*.zip backups beside the selected installation's database and accepts a ZIP from another location. It checks the original 7.2.4 schema and SQLite integrity before installing the saved database. The ZIP contains carillon.db at its root or under databases.
 
@@ -197,7 +201,7 @@ Run tools\build.ps1 with Release or Debug. Publish the main executable with -Pub
 
 Publish CarillonMigration.exe with -MigrationSingleExe, -Publish, and the same runtime selection. The staging folder is export\staging-migration-single-win-x86 or export\staging-migration-single-win-x64. Place it beside the matching CarillonBells.exe so the assistant has the payload for a separate v9 installation. The Restore 7.2.4 workflow runs directly from the migration executable.
 
-Use an approved pre-change ZIP before updating a working installation. Close the app and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the single-executable USB release, extract the Upgrade ZIP to the existing installation folder. To relocate a working installation, close it and copy the complete folder.
+Use an approved pre-change ZIP before updating a working installation. Close the app and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the public single-executable USB release, extract the Installer ZIP on the computer and run its Setup, selecting the existing installation folder. Only the advanced manual portable Upgrade ZIP supplies loose files for copying directly beside databases. To relocate a working installation, close it and copy the complete folder.
 
 ## Validation and packaging
 
@@ -207,7 +211,7 @@ Public downloads are the four Installer ZIPs under export\downloads\32-bit and e
 
 The export\32-bit and export\64-bit folders retain the app and Migration Assistant EXEs and the manual portable ZIPs. Those ZIPs contain loose application files and remain required inputs to the Setup build. Do not delete them as duplicates or publish them as Installer ZIPs. They can serve as an explicitly labelled advanced manual-install option. The default website route uses Installer ZIPs only.
 
-The New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each starter recording resolves inside Music and that the database contains only the intended time-marking rows. The Upgrade ZIP contains CarillonBells.exe, the matching CarillonMigration.exe, and Documentation for extraction beside the existing database.
+The manual portable New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each starter recording resolves inside Music and that the database contains only the intended time-marking rows. The manual portable Upgrade ZIP contains CarillonBells.exe, the matching CarillonMigration.exe, and Documentation for extraction beside the existing database.
 
 Run tools\build_usb_setups.py after preparing the current portable ZIPs. It stages their files under export\setup-payloads, builds Setup and writes the public Installer ZIPs under export\downloads. The auditor checks both ZIP layers, the extracted installer hash, the supplied guide and every embedded application file. All four Setups share one installation identity so Upgrade can update New Install. Install, Repair, Verify and Uninstall use the displayed folder. Verify checks the files supplied by that package; use it before starting Carillon. Non-Windows local drive roots and subfolders are supported; the Windows drive root, Windows directories and network-share roots remain protected.
 

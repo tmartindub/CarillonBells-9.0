@@ -39,22 +39,45 @@ for runtime, folder in [('win-x86', '32-bit'), ('win-x64', '64-bit')]:
         download_folder.mkdir(parents=True, exist_ok=True)
         installer_name = stem+'_Package_Setup.exe'
         guide_name = 'CarillonBells_9_0_'+('Quick_Start' if kind == 'New_Install' else 'Database_Migration')+'_Guide.pdf'
-        before = ('Use an empty USB drive for New Install.' if kind == 'New_Install' else
-                  'Back up the complete existing installation and close the old bell program first. Choose the existing USB folder beside databases.')
+        before = ('Use an EMPTY USB drive for New Install. Do not use its starter database\n'
+                  '   on an existing bell installation. Choose your USB folder, for example\n'
+                  '   E:\\V9 or E:\\, using your own drive letter.' if kind == 'New_Install' else
+                  'Back up the COMPLETE existing installation off the USB and close all\n'
+                  '   bell programs first. Choose the EXISTING folder beside databases,\n'
+                  '   such as E:\\ or E:\\Carillon. Upgrade Setup contains no replacement\n'
+                  '   database or music. Do not choose an empty V9 folder for Method A.')
+        route = ('This is for a NEW installation on an EMPTY USB.' if kind == 'New_Install' else
+                 'READ THE DATABASE MIGRATION GUIDE BEFORE STARTING EITHER PROGRAM.\n\n'
+                 'Method A: CarillonBells.exe upgrades the EXISTING database in place.\n'
+                 'Method B: CarillonMigration.exe creates a SEPARATE v9 copy, leaving\n'
+                 'the source database unchanged by copying. Later edits do not synchronize.\n'
+                 'Choose first: starting CarillonBells.exe in the old folder can upgrade\n'
+                 'that database before you have made a separate trial copy.\n\n'
+                 'Keep your old program and a complete pre-upgrade ZIP off the USB.\n'
+                 'An automatic database ZIP does not back up music or the old executable.')
+        launch = ('Double-click CarillonBells.exe in the USB installation folder.' if kind == 'New_Install' else
+                  'For Method A, double-click CarillonBells.exe in the EXISTING USB folder.\n'
+                  '   For Method B, do NOT start that program there. Double-click\n'
+                  '   CarillonMigration.exe instead and follow the guide to create a new\n'
+                  '   folder such as E:\\V9. Let the assistant create that folder.\n'
+                  '   To go back, follow the guide for your original version. Clicking the\n'
+                  '   old program alone does not restore its earlier database.')
         instructions = f'''Westminster Chimes and Carillon Bells 9.0
 
 {kind.replace('_', ' ')} - {'32' if runtime == 'win-x86' else '64'}-bit Windows
 
+{route}
+
 1. Right-click this downloaded ZIP and choose Extract All. Extract it to a folder
    on your computer, such as Downloads. Do not run Setup from inside the ZIP.
+   Double-click {guide_name} and read the instructions for your chosen method.
 2. In the extracted folder, double-click {installer_name}.
 3. Click Continue. Read the license and accept it if you agree.
 4. {before}
-   Select your USB in Install folder. For example, E:\\V9 uses a V9 folder on E:
-   and E:\\ uses that drive directly. Use your own drive letter and folder.
+   Enter that location in Install folder. Check it before proceeding.
 5. Click Install and wait for Install completed. Then click Verify and wait for
    Verify completed. Close Setup.
-6. On the USB, double-click CarillonBells.exe to start the bell program.
+6. {launch}
 
 Setup already contains the program files. No second ZIP download is needed.
 For illustrated instructions, double-click {guide_name}.

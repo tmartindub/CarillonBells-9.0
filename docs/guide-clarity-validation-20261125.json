@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-25",
+  "scope": "Guides, local proposed-site wording, package START_HERE instructions and refreshed documentation payloads; no application code changes",
+  "preChangeBackup": {
+    "file": "H:\\CarillonBells v 9_0\\Before_Guide_Clarity_20261125.zip",
+    "sha256": "d3d67cea1110f41689023d93b44bc869ad06a731aaeed6280a7daebe7f064bdb",
+    "bytes": 902794210,
+    "crc": "PASS"
+  },
+  "guides": [
+    {
+      "guide": "Database_Migration",
+      "pages": 27,
+      "headingEntries": 21,
+      "docxSha256": "154F2F6E7B67033EE4A6B050772CA8E8170DB8654B8A2B59E5FAD514B65BA2F2",
+      "pdfSha256": "9A11E063FBA045F17735C26CD607055487C77A1BBF5BE37DE7452447E41FE900"
+    },
+    {
+      "guide": "Quick_Start",
+      "pages": 8,
+      "headingEntries": 6,
+      "docxSha256": "E356D7C6BF60F4ABE109C9CD4C1AFE921A55DAA8799AE9DB7C4BD22F39113694",
+      "pdfSha256": "57A75418B89B135BA50CEB0B68022C791C6B5D228CFF8D71C0102AD3E1DD8E24"
+    },
+    {
+      "guide": "Engineering",
+      "pages": 14,
+      "headingEntries": 9,
+      "docxSha256": "FBF3ABFF39F7A87C380CDE6AE7DFB451CCC9D5E0F5F0F7DBB7238C68BAA21B16",
+      "pdfSha256": "42B82ACB7CAD8597D42C99BFEEBF21F3B7A636A67D232EE9F8C9DA1A62149B43"
+    }
+  ],
+  "visualQA": "All 49 pages of regenerated DOCX guides inspected; final changed pages re-rendered/reviewed and critical canonical PDF pages checked",
+  "sourceBehaviorReviewed": [
+    "App.xaml.cs: startup detects 7.2.4 and directly calls UpgradeLocalDatabase; it does not launch the assistant",
+    "UsbUpgrade.cs: snapshot ZIP and validated candidate replacement in the existing installation",
+    "MigrationEngine.cs: source fingerprint, copy staging, copied-database conversion, destination protection, database backup and available-music warnings",
+    "MigrationWindow.xaml.cs: Open v9 for review passes --migration-review to destination executable",
+    "LegacyRestore.cs: validates one original 7.2.4 database ZIP entry and preserves current database before restoration"
+  ],
+  "readerScenarios": [
+    "Method A from 7.2.4: install program files, launch main, accept backup/conversion, check paused review",
+    "Method A from 8.1: existing database, compatibility backup when needed, normal scheduling warning",
+    "Method B: do not launch main against old source first; create new unused folder; review warnings and new database path",
+    "Already ran Method A: a later copy does not undo source conversion",
+    "Return after untouched Method B: close v9, start original old executable without replacing database",
+    "Return after Method A 7.2.4: original-version backup ZIP, supported ZIP layout, verified restore and start old executable",
+    "Return after Method A 8.1: complete restore in separate unused folder or carefully backed-up database replacement",
+    "Wrong schedule: identify actual program/database path instead of overwriting or importing speculatively"
+  ],
+  "localSiteReferences": 45,
+  "DGuideCopies": "All six affected files replaced and checked; User Guide unchanged",
+  "applicationBinaries": "Unchanged from validated migration-root release",
+  "liveDApplicationSha256": "5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B",
+  "publication": "Local only; no push or publication",
+  "packageAudit": "PASS: four portable ZIPs and four public installer ZIPs; all individual embedded files match",
+  "installerRuntimeOperations": 22,
+  "installerRuntimeResult": "PASS",
+  "applicationTests": "Not rerun for documentation-only changes; unchanged application hashes match the previously validated release",
+  "DGuideCopiesVerified": [
+    "CarillonBells_9_0_Database_Migration_Guide.docx",
+    "CarillonBells_9_0_Engineering_Guide.docx",
+    "CarillonBells_9_0_Quick_Start_Guide.docx",
+    "CarillonBells_9_0_User_Guide.docx",
+    "CarillonBells_9_0_Database_Migration_Guide.pdf",
+    "CarillonBells_9_0_Engineering_Guide.pdf",
+    "CarillonBells_9_0_Quick_Start_Guide.pdf",
+    "CarillonBells_9_0_User_Guide.pdf"
+  ]
+}

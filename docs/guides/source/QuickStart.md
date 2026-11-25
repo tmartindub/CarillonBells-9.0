@@ -2,7 +2,7 @@
 
 This guide takes you from the Carillon website to one song playing automatically. It is written for a **new installation on an empty USB drive**. A USB drive is the small removable storage device that plugs into the computer and holds the program, recordings, and schedule together.
 
-If you already use version 7.2.4 or 8.1 on a USB, keep that installation. On the website, use the **Database Migration Guide** for the upgrade instructions instead of following this new-installation guide.
+**Already have 7.2.4 or 8.1? Stop before using New Install on that USB.** Use the **Database Migration Guide** on the website. It explains Method A: CarillonBells.exe upgrades the existing database in its current location; and Method B: CarillonMigration.exe creates a separate v9 copy while leaving the source database unchanged. It also explains the backups and how to return to the earlier version. New Install supplies a starter database; it is not the package for preserving an existing installation.
 
 In these instructions, **click** means press the left mouse button once. **Double-click** means press it twice quickly on the same item. **Right-click** means press the right mouse button once to display a menu.
 

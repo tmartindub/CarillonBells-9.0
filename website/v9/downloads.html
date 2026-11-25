@@ -67,8 +67,8 @@
           </article>
           <article class="card flow">
             <h3>Upgrade from 7.2.4 or 8.1</h3>
-            <p>Keep your schedule, settings, and music on the same drive. If youâ€™re using 7.2.4, the app guides you through a backup and conversion of your saved schedule. If youâ€™re using 8.1, the app opens your saved schedule directly.</p>
-            <ul class="package-architectures">
+              <p>Read the <a href="guides/migration-guide.pdf">Database Migration Guide</a> and save a complete backup first. This package supports two methods: start <code class="notranslate" translate="no">CarillonBells.exe</code> to upgrade the existing database in place, or start <code class="notranslate" translate="no">CarillonMigration.exe</code> to create a separate v9 copy. Choose before starting either program. A later copy does not undo an earlier in-place upgrade. The guide explains checks and recovery for each method.</p>
+              <ul class="package-architectures">
               <li>32-bit Windows <span class="notranslate" translate="no">(win-x86)</span></li>
               <li>64-bit Windows <span class="notranslate" translate="no">(win-x64)</span></li>
             </ul>
@@ -202,7 +202,7 @@
         <ol class="installation-steps">
           <li><strong>Choose a package.</strong> Use New Install for an empty flash drive or Upgrade for a drive that already runs 7.2.4 or 8.1. Download the Installer ZIP for your Windows type. It contains Setup, a PDF guide and <code class="notranslate" translate="no">START_HERE.txt</code>; no second download is needed.</li>
           <li><strong>Put the files on the flash drive.</strong> Close the older program first if youâ€™re upgrading. Right-click the Installer ZIP and choose <strong>Extract All</strong> to unpack it into a folder on your computer. In that extracted folder, double-click the Setup EXE. Select your USB folder, click <strong>Install</strong>, then <strong>Verify</strong>. For New Install, use an empty USB. For Upgrade, select the existing folder beside databases. Do not run Setup from inside the ZIP.</li>
-          <li><strong>Start the bell program.</strong> Double-click <code class="notranslate" translate="no">CarillonBells.exe</code> on the USB drive. If youâ€™re coming from 7.2.4, follow the on-screen steps and check your schedule before turning scheduled playback back on. If youâ€™re coming from 8.1, the program uses the schedule already on the drive.</li>
+          <li><strong>Start the program for your chosen method.</strong> For New Install or Method A, double-click <code class="notranslate" translate="no">CarillonBells.exe</code> in the intended USB installation. For Method B, start <code class="notranslate" translate="no">CarillonMigration.exe</code> instead and follow the guide to create a separate folder. Do not start CarillonBells.exe against the original database first if you intend to keep that database in its old format.</li>
         </ol>
         <p>Windows may still warn about a newly downloaded program after extraction. ZIP packaging does not replace a publisher signature or download reputation. If a file is blocked, check its source and ask the supplier or administrator for help. See <a href="https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation">Microsoft’s explanation of SmartScreen warnings</a>.</p>
         <p>Seasonal random music repeats each year. Enter month/day dates such as <strong>10/1</strong> through <strong>10/31</strong>, without a year. Groups and song schedules retain full dates; point at a date field to reveal its calendar button. Groups asks to save only when values actually change.</p>

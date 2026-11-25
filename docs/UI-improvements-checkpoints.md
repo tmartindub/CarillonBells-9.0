@@ -705,3 +705,43 @@ including root/subfolder installation, preservation, Verify failure and Repair.
 Detailed evidence is in docs/migration-root-validation-20261125.json and
 export/release-validation-migration-20261125. A pre-change ZIP and numbered Git
 checkpoint are retained on H:. Local commits only; no push or publication.
+
+
+## 31. Clear upgrade and recovery guides — November 25
+
+Tommy confirmed the copy migration works and the direct CarillonBells.exe upgrade
+from 7.2.4 works. The documentation now distinguishes the two deliberately
+before any executable is started. CarillonBells is the daily bell program with
+its own in-place database upgrade (Method A). CarillonMigration is the explicit
+separate-copy and 7.2.4 recovery assistant (Method B for copying). Package_Setup
+installs supplied files; it does not itself convert the working database.
+
+The rewritten 27-page Migration Guide explains program roles, method selection,
+complete versus database-only backups, paths, expected results, warning review,
+independent unsynchronized copies, and why copying after an in-place upgrade
+cannot undo it. Recovery branches cover resuming an untouched original, verified
+7.2.4 database restoration, and complete or database-only 8.1 recovery. Later v9
+state is preserved before returning to an earlier snapshot. An old executable
+alone does not restore old data. Wrong-folder symptoms and database-import
+replacement are clearly distinguished from upgrade and recovery.
+
+Quick Start remains 8 pages and prominently directs existing installations away
+from New Install. Engineering remains 14 pages and documents the linked startup
+engine and precise Installer/portable ZIP roles. The daily-use User Guide already
+refers upgrades to Migration; it and embedded HTML Help remain unchanged. The
+three regenerated DOCX guides had all 49 page images reviewed, with final edits
+re-rendered, editable contents fields checked, and critical paired PDF pages
+inspected. All eight D: guide copies match canonical files; proposed-site PDFs,
+website wording, README and package START_HERE instructions are aligned.
+
+Four portable packages and four Installer ZIPs passed CRC and embedded-file/guide
+audits. All 22 actual installer-runtime operations passed again, including user
+DB/music preservation, Verify damage detection and Repair. The 62 checked local
+references comprise 45 proposed-site links and 17 manuscript figures. Application
+and assistant binary hashes remain unchanged; no application compilation or
+runtime regression rerun was needed. The live D: app remains unchanged/running.
+
+The pre-change ZIP is H:\CarillonBells v 9_0\Before_Guide_Clarity_20261125.zip.
+Final validation is docs/guide-clarity-validation-20261125.json; raw evidence is
+export/release-validation-guide-clarity-20261125. A local Git checkpoint and ZIP
+on H: retain this revision and rebuilt downloads. No push or publication.

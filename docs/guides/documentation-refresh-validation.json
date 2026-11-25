@@ -1,5 +1,5 @@
 {
-  "local_references_checked": 120,
+  "local_references_checked": 62,
   "guides": [
     {
       "guide": "User",
@@ -9,19 +9,27 @@
     {
       "guide": "Engineering",
       "pages": 14,
-      "pdf_sha256": "0c5e9742751aba582d397183f8f72464ce0a578b69de07fbc265158ab00b2bab"
+      "pdf_sha256": "42b82acb7cad8597d42c99bfeebf21f3b7a636a67d232ee9f8c9da1a62149b43"
     },
     {
       "guide": "Database_Migration",
-      "pages": 21,
-      "pdf_sha256": "90279e0f8deba42cfa7c1f8f97a9485b3cf2ecc2e1a8ae259e58150f32e2df3c"
+      "pages": 27,
+      "pdf_sha256": "9a11e063fba045f17735c26cd607055487c77a1bbf5be37de7452447e41fe900"
     },
     {
       "guide": "Quick_Start",
       "pages": 8,
-      "pdf_sha256": "79d1b263168c1f9b805bd317509b7726c2cbc4b666017ce51b36bfa94357d68f"
+      "pdf_sha256": "57a75418b89b135ba50ceb0b68022c791c6b5d228cff8d71c0102ad3e1dd8e24"
     }
   ],
-  "migration_root_fix": "2026-11-25: source and destination screenshots, new-folder instructions, 21-page Migration and 14-page Engineering guides; changed pages visually reviewed.",
-  "site_local_references_checked": 44
+  "site_local_references_checked": 45,
+  "guide_clarity_revision": {
+    "date": "2026-11-25",
+    "migration": "27 pages: two methods, three executable roles, original and trial database paths, complete versus database backups, recovery by method and original version",
+    "quick_start": "8 pages: existing installations referred to Migration Guide before New Install",
+    "engineering": "14 pages: linked startup engine, separate-copy semantics, snapshot recovery and precise package terminology",
+    "visual_review": "All pages of the three regenerated DOCX guides rendered and reviewed; changed pages reviewed again after final edits; paired PDF screenshots checked",
+    "D_copies": "All six affected DOCX/PDF files replaced; User Guide unchanged"
+  },
+  "manuscript_figure_references_checked": 17
 }
