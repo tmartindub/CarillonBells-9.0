@@ -34,19 +34,17 @@ Check the computer that will actually run the bells. If you download the files o
 
 Here are examples of what you may see and which download to choose:
 
-- **64-bit operating system, x64-based processor:** choose the **64-bit** download. Its filename ends in **win-x64.zip**.
+- **64-bit operating system, x64-based processor:** choose the **64-bit** download.
 - **32-bit operating system, x64-based processor:** choose the **32-bit** download. Even though the processor says x64, the operating system in this example is 32-bit.
-- **32-bit operating system, x86-based processor:** also choose the **32-bit** download. Its filename ends in **win-x86.zip**. In these filenames, **x86 means 32-bit**.
+- **32-bit operating system, x86-based processor:** also choose the **32-bit** download. In filenames, **x86 means 32-bit**.
 
 If the line says **ARM-based processor**, or you cannot identify the operating system type, ask for help before downloading. This guide covers the supplied x86 and x64 packages.
 
 ## Choose the upgrade package
 
-For an existing USB, choose **USB Upgrade**, followed by the correct 32-bit or 64-bit version. For example, the 64-bit ZIP is named **CarillonBells_9_0_USB_Upgrade_win-x64.zip**. The 32-bit ZIP has the same name except that it ends in **win-x86.zip**.
+Choose **USB Upgrade Installer ZIP** for the Windows type above. The 64-bit file is **CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip**; the 32-bit name contains **win-x86** instead.
 
-A **ZIP** is a compressed package holding several files. It is an alternative to the **Upgrade Package Setup** installer. Choose one download: the installer puts the new program and guides directly into the USB folder you select; the ZIP requires copying the files yourself. You do not need both. Complete the backup below before using either download. Use **Upgrade**, never New Install, for a USB that already holds your schedule and music.
-
-The **USB New Install** download is for starting with a supplied database and chimes. For this procedure, use **USB Upgrade** so you continue with your existing database and music.
+An **Installer ZIP** keeps Setup, this guide, and **START_HERE.txt** together for downloading. Unpack it on the computer, then let Setup update the USB. You do not need the separate **manual portable ZIP**, which contains loose files for copying yourself. Complete the backup below before using either route.
 
 # Find your Carillon folder
 
@@ -84,19 +82,19 @@ Creating the ZIP needs additional free space where Windows builds it. If the USB
 
 # Copy the new program to the USB
 
-## If you downloaded Upgrade Package Setup
+## If you downloaded the Upgrade Installer ZIP
 
-1. Confirm that the old program is closed and your complete backup is saved. In Downloads or on the desktop, double-click the **USB Upgrade Package Setup** installer. Its name contains **Upgrade**, ends **Package_Setup.exe**, and includes the 32-bit or 64-bit choice you made earlier.
+1. Confirm that the old program is closed and your complete backup is saved. In Downloads or on the desktop, right-click the **USB Upgrade Installer ZIP** ending **Package_Setup.zip**. Click **Extract All**, leave the suggested folder on the computer, then click **Extract**. In the extracted folder, double-click the installer ending **Package_Setup.exe**. Do not run it from inside the ZIP.
 2. Click **Continue**, read the license, and click **I accept the license agreement** if you agree.
 3. Click the **Install folder** box, press **Ctrl+A**, then type the existing USB installation folder you identified earlier. For example, use **D:\** if databases is directly on D, or **D:\Carillon** if databases is inside Carillon. You can use **Browse** instead. Select the folder beside databases, not databases itself.
 4. Check the destination, then click **Install**. Wait for **Install completed**, click **Verify**, and wait for **Verify completed**. Then click **Close**. Verify checks the installation in your selected folder; it does not install anything by itself.
-5. In File Explorer, double-click the USB installation folder and confirm that **CarillonBells.exe**, **CarillonMigration.exe**, and **Documentation** are beside your existing **databases** and music folders. No ZIP extraction is needed. Continue with **Start version 9 with your existing data**.
+5. In File Explorer, double-click the USB installation folder and confirm that **CarillonBells.exe**, **CarillonMigration.exe**, and **Documentation** are beside your existing **databases** and music folders. Setup has installed the files directly; no second download is needed. Continue with **Start version 9 with your existing data**.
 
 The Upgrade installer contains no replacement database or recordings. It updates the program and guides, preserving your existing database and music. Always keep the complete backup you made before upgrading.
 
 <!-- page break -->
 
-## If you downloaded the alternative ZIP
+## If you downloaded the manual portable ZIP
 
 First unpack the upgrade ZIP on the computer. This lets you see exactly what you are about to copy.
 

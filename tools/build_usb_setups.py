@@ -1,12 +1,11 @@
 """Build direct-file USB Setup programs from the matching, reviewed USB ZIPs.
 
-Run after building guides and USB ZIPs. The ZIP remains an alternative download;
-Setup embeds its individual files and installs them directly into the chosen folder.
+Run after building guides and portable USB ZIPs. Public downloads are ZIP files
+containing Setup, a guide and START_HERE.txt. Setup installs directly onto the USB.
 """
 from pathlib import Path
 import argparse
 import json
-import shutil
 import subprocess
 import zipfile
 
@@ -36,5 +35,42 @@ for runtime, folder in [('win-x86', '32-bit'), ('win-x64', '64-bit')]:
         subprocess.run([str(args.builder), str(project_path), str(output)], cwd=root, check=True)
         installers = list(output.glob('*Setup.exe'))
         assert len(installers) == 1, output
-        shutil.copy2(installers[0], release/(stem+'_Package_Setup.exe'))
-        print('Built direct USB Setup:', stem, flush=True)
+        download_folder = root/'export/downloads'/folder
+        download_folder.mkdir(parents=True, exist_ok=True)
+        installer_name = stem+'_Package_Setup.exe'
+        guide_name = 'CarillonBells_9_0_'+('Quick_Start' if kind == 'New_Install' else 'Database_Migration')+'_Guide.pdf'
+        before = ('Use an empty USB drive for New Install.' if kind == 'New_Install' else
+                  'Back up the complete existing installation and close the old bell program first. Choose the existing USB folder beside databases.')
+        instructions = f'''Westminster Chimes and Carillon Bells 9.0
+
+{kind.replace('_', ' ')} - {'32' if runtime == 'win-x86' else '64'}-bit Windows
+
+1. Right-click this downloaded ZIP and choose Extract All. Extract it to a folder
+   on your computer, such as Downloads. Do not run Setup from inside the ZIP.
+2. In the extracted folder, double-click {installer_name}.
+3. Click Continue. Read the license and accept it if you agree.
+4. {before}
+   Select your USB in Install folder. For example, E:\\V9 uses a V9 folder on E:
+   and E:\\ uses that drive directly. Use your own drive letter and folder.
+5. Click Install and wait for Install completed. Then click Verify and wait for
+   Verify completed. Close Setup.
+6. On the USB, double-click CarillonBells.exe to start the bell program.
+
+Setup already contains the program files. No second ZIP download is needed.
+For illustrated instructions, double-click {guide_name}.
+
+ZIP packaging does not remove Windows security warnings. If Windows blocks a
+file, check its source and contact the supplier or administrator for help.
+Do not disable Windows protection to install this application.
+'''
+        download = download_folder/(stem+'_Package_Setup.zip')
+        pending = download.with_suffix('.pending.zip')
+        with zipfile.ZipFile(pending, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+            archive.write(installers[0], installer_name)
+            archive.write(root/'docs/pdf'/guide_name, guide_name)
+            archive.writestr('START_HERE.txt', instructions)
+        with zipfile.ZipFile(pending) as archive:
+            assert archive.testzip() is None
+            assert archive.read(installer_name) == installers[0].read_bytes()
+        pending.replace(download)
+        print('Built public installer ZIP:', download.relative_to(root), flush=True)

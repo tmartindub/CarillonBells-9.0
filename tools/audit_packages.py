@@ -58,8 +58,17 @@ for runtime, folder, expected in [('win-x86', '32-bit', 0x14c), ('win-x64', '64-
                     if source.is_file():
                         name = 'Help/'+source.relative_to(root/'help').as_posix()
                         assert archive.read(name) == source.read_bytes(), name
-        setup = release/(stem+'_Package_Setup.exe')
-        data = setup.read_bytes()
+        setup = root/'export/downloads'/folder/(stem+'_Package_Setup.zip')
+        installer_name = stem+'_Package_Setup.exe'
+        guide_name = 'CarillonBells_9_0_'+('Quick_Start' if kind == 'New_Install' else 'Database_Migration')+'_Guide.pdf'
+        with zipfile.ZipFile(setup) as download:
+            assert download.testzip() is None
+            assert set(download.namelist()) == {installer_name, guide_name, 'START_HERE.txt'}
+            assert len(download.namelist()) == 3
+            assert download.read(guide_name) == guides['Documentation/'+guide_name]
+            instructions = download.read('START_HERE.txt').decode('utf-8')
+            assert 'Extract All' in instructions and 'Install completed' in instructions and 'Verify completed' in instructions
+            data = download.read(installer_name)
         marker = b'PSPSETUPBUNDLE1'
         assert data.endswith(marker), setup.name
         size = struct.unpack_from('<q', data, len(data)-len(marker)-8)[0]
@@ -78,13 +87,14 @@ for runtime, folder, expected in [('win-x86', '32-bit', 0x14c), ('win-x64', '64-
             assert project['productName'] == 'Westminster Chimes and Carillon Bells 9.0'
             assert 'USB New Install Package' not in project['installFolder']
         results.append({'runtime': runtime, 'kind': kind, 'file': str(path.relative_to(root)), 'bytes': path.stat().st_size,
-                        'sha256': sha(path.read_bytes()), 'setup': str(setup.relative_to(root)), 'setupSha256': sha(data),
+                        'sha256': sha(path.read_bytes()), 'setup': str(setup.relative_to(root)), 'setupSha256': sha(setup.read_bytes()),
+                        'setupBytes': setup.stat().st_size, 'installerFile': installer_name, 'installerSha256': sha(data),
                         'applicationSha256': sha((release/'CarillonBells.exe').read_bytes()),
                         'migrationSha256': sha((release/'CarillonMigration.exe').read_bytes()),
-                        'verification': 'PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching individual direct-install Setup files'})
+                        'verification': 'PASS PE architecture, portable and installer ZIP CRCs, current guides, instructions and matching individual direct-install Setup files'})
 manifest = {'version': '9.0.0', 'sourceCommit': args.source_commit, 'packages': results,
             'productionPromotionApproved': False, 'publicationStatus': 'Local only; do not push or publish without Tommy approval'}
 if args.installer_source_commit:
     manifest['installerSourceCommit'] = args.installer_source_commit
 (root/'source distributions/release-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
-print('PASS four USB ZIPs and four matching Setup programs; release manifest refreshed.')
+print('PASS four portable ZIPs and four installer ZIP downloads with matching direct-install payloads; release manifest refreshed.')

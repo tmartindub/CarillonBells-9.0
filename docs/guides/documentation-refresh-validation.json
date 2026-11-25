@@ -9,17 +9,17 @@
     {
       "guide": "Engineering",
       "pages": 13,
-      "pdf_sha256": "7478106b4a03ced6a3f67be913dc54c8b57ab9757f0fe07df519c0829d47cbcc"
+      "pdf_sha256": "74a8a9ba2556f0091fa50a6365f1057105367df982fd1ba1f1ca2c01b4e93203"
     },
     {
       "guide": "Database_Migration",
       "pages": 20,
-      "pdf_sha256": "31ceb6052171b18be5578bfe26de1a5e5de7933545e22c21bd2e3ba32cd5189d"
+      "pdf_sha256": "7757492f5c0512ccb260fc2ee9df76ed6250c11f56688ac6ab6cd0dd4cf870c7"
     },
     {
       "guide": "Quick_Start",
       "pages": 8,
-      "pdf_sha256": "11c9435243cd826c0af9822f0dbf734ed1ed9fc09f717c216f3cf58a76cf4cf5"
+      "pdf_sha256": "79d1b263168c1f9b805bd317509b7726c2cbc4b666017ce51b36bfa94357d68f"
     }
   ]
 }

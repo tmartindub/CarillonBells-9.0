@@ -623,3 +623,47 @@ passed. Raw results are retained in `export/release-validation-20261125`.
 Application self-tests were not repeated for unchanged application binaries.
 Both projects are committed locally and source ZIP checkpoints saved on H:.
 No push, publication, live D: restart or version 8.1 modification was performed.
+
+## 28. Installer ZIP downloads and explicit package roles November 25
+
+Pre-change source and all twelve release files were saved in the verified ZIP
+`H:/CarillonBells v 9_0/Before_Installer_ZIP_Downloads_20261125.zip` before
+replacement or removal. Public downloads now live under export/downloads in
+32-bit and 64-bit subfolders. Each of the four names ends Package_Setup.zip and
+contains one self-contained Setup EXE, the relevant PDF guide and START_HERE.txt.
+Users extract that package on the computer, then run Setup to select the USB.
+
+The original portable ZIPs remain in export/32-bit and export/64-bit because the
+Setup builder needs them and they provide an advanced manual-install option.
+They are not required alongside Setup on a user's USB. Operator labels distinguish
+those inputs from public downloads. The four redundant loose Setup EXEs were
+removed only after validation and confirmation that they matched their ZIP backup.
+The app and Migration Assistant EXEs remain required build inputs.
+
+The updated auditor validates the outer download CRC, exact three-file layout,
+guide and instruction bytes, installer hash and all individual embedded payload
+files against the portable input ZIP. The wrapped installers passed 22 actual
+embedded-runtime operations, including drive-root/subfolder installs, Upgrade
+preservation, Verify, damage rejection and Repair. No native installer or Carillon
+application logic was changed. Existing actual-form regression evidence remains
+applicable; it was not rerun for this packaging-only change.
+
+Quick Start, Migration and Engineering now distinguish the Installer ZIP from the
+manual portable ZIP, explain extraction onto the computer and direct installation
+onto the USB, and accurately describe unsigned-download warnings. The 41 guide
+pages retain their counts. Comparison with the pre-change PDFs identified eight
+changed pages, all visually checked at full size; remaining page text is unchanged
+from the prior reviewed edition. All 44 local proposed-site references pass.
+
+ZIP wrapping does not digitally sign software or eliminate Windows warnings.
+Microsoft's SmartScreen reputation and Attachment Manager guidance were checked;
+no security settings, file-origin marks or certificate configuration were changed.
+The x86/x64 app and live D: executable remain unchanged. Physical USB/Windows 10
+acceptance and Internet-download reputation are not claimed by these local tests.
+
+The reader-open D: Quick Start PDF could not be replaced during the build. The
+other five affected D: guide files and all proposed-site PDFs were updated.
+`docs/installer-zip-validation-20261125.json` records any D: copy still pending.
+Raw evidence is under export/release-validation-installer-zip-20261125. Changes
+and the manifest are committed locally with a source ZIP checkpoint on H:.
+No push or publication is authorized or performed.

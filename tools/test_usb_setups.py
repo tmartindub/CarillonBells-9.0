@@ -49,7 +49,9 @@ def run(stage, target, mode, success=True):
 
 def unpack(runtime, folder, kind):
     stem = f'CarillonBells_9_0_USB_{kind}_{runtime}'
-    data = (root/'export'/folder/(stem+'_Package_Setup.exe')).read_bytes()
+    with zipfile.ZipFile(root/'export/downloads'/folder/(stem+'_Package_Setup.zip')) as download:
+        assert download.testzip() is None
+        data = download.read(stem+'_Package_Setup.exe')
     marker = b'PSPSETUPBUNDLE1'
     assert data.endswith(marker)
     size = struct.unpack_from('<q', data, len(data)-len(marker)-8)[0]

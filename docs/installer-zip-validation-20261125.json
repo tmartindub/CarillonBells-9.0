@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-25",
+  "installerDownloads": 4,
+  "filesPerDownload": [
+    "Self-contained Setup EXE",
+    "Relevant PDF guide",
+    "START_HERE.txt"
+  ],
+  "archiveAndPayloadAudit": "PASS",
+  "wrappedRuntimeOperations": 22,
+  "wrappedRuntimeResult": "PASS",
+  "retiredLooseInstallers": [
+    {
+      "file": "export/32-bit/CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.exe",
+      "bytes": 310266441
+    },
+    {
+      "file": "export/32-bit/CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.exe",
+      "bytes": 136865214
+    },
+    {
+      "file": "export/64-bit/CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.exe",
+      "bytes": 314315041
+    },
+    {
+      "file": "export/64-bit/CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.exe",
+      "bytes": 144963761
+    }
+  ],
+  "keptPortableZIPs": "Required build inputs and advanced manual-install packages; not required by users choosing Installer ZIP",
+  "changedGuidePages": {
+    "Quick_Start": [
+      4,
+      5,
+      6
+    ],
+    "Database_Migration": [
+      4,
+      7,
+      8
+    ],
+    "Engineering": [
+      12,
+      13
+    ]
+  },
+  "DGuideCopiesPending": [
+    "D:/Documentation/CarillonBells_9_0_Quick_Start_Guide.pdf"
+  ],
+  "websiteLocalReferences": 44,
+  "security": "Unsigned; ZIP packaging does not remove SmartScreen or Windows attachment warnings",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation",
+    "https://support.microsoft.com/en-us/windows/security/information-about-the-attachment-manager-in-microsoft-windows"
+  ],
+  "applicationAndInstallerCore": "Unchanged",
+  "publication": "Local only; no push or publication"
+}
