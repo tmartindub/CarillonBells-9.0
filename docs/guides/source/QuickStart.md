@@ -22,20 +22,20 @@ The website offers **32-bit** and **64-bit** downloads. These describe Windows o
 1. Click the Windows **Start** button, the Windows-logo button on the taskbar. Click **Settings**, usually shown with a gear symbol. If you cannot find it, click Start, type **Settings**, then click the Settings result.
 2. In Settings, click **System**, then **About**. You may need to scroll down to find About.
 3. Find the line labelled **System type**. If it says **64-bit operating system, x64-based processor**, you need the **64-bit** download. If it begins **32-bit operating system**, you need the **32-bit** download, even if the rest of the line mentions x64. If it says **ARM-based processor**, ask for help choosing a suitable version before continuing.
-4. Return to the website's Downloads page. Under **New Install**, click the **ZIP download** for the 32-bit or 64-bit version you just identified. Wait for the browser to finish downloading the file. A ZIP is a compressed package of files; you will unpack it onto the USB in the following section.
+4. Return to the website's Downloads page. Under **New Install**, click the **Package Setup** download for the 32-bit or 64-bit version you just identified. Wait for the browser to finish downloading the file. This installer contains the program, starting schedule, recordings, and guides; it puts them directly onto your USB.
 
-The file's name begins **CarillonBells_9_0_USB_New_Install**. Its ending is **win-x64.zip** for 64-bit or **win-x86.zip** for 32-bit. Windows may hide the .zip ending. These steps use the ZIP download, so you do not need the optional Package Setup download.
+The file's name begins **CarillonBells_9_0_USB_New_Install** and ends **win-x64_Package_Setup.exe** for 64-bit or **win-x86_Package_Setup.exe** for 32-bit. Windows may hide the .exe ending. Download only this installer for these steps. The separate ZIP download is an alternative for people who prefer to copy files themselves; you do not need both.
 
 <!-- page break -->
 
-# Find the download and copy it to the USB
+# Install directly onto the USB
 
 1. Plug an **empty USB drive** into the computer. Hold down the **Windows-logo key**, press **E**, then release both keys. A **File Explorer** window appears; this is the Windows window used to find files and drives.
 2. Click **This PC** in its left panel. Find your USB under **Devices and drives**. It may be labelled **USB Drive (E:)**, **Carillon (D:)**, or another name and letter. Note its name and letter so you can select that same drive below. Do not select the computer's **Local Disk (C:)**.
-3. Click **Downloads** in File Explorer's left panel. Find the **CarillonBells_9_0_USB_New_Install** ZIP you downloaded. If the browser asked where to save it and you chose a different folder, double-click that folder instead. Do not double-click the ZIP to run the program from inside it.
-4. **Right-click** the ZIP file. In the menu that appears, click **Extract All**. A window asks where to put the extracted files. Extract means unpack the files so Windows can use them normally.
-5. Click **Browse**. In the folder-selection window, click **This PC**, then double-click the USB drive you identified in step 2. Click **Select Folder**. Back in the extraction window, check that the destination is your USB, then click **Extract**. Wait until copying finishes.
-6. In File Explorer, click **This PC**, then double-click that USB drive. You should see **CarillonBells.exe** beside folders named **databases**, **Music**, and **Documentation**. If you see one enclosing folder instead, double-click it and look for those items inside. Keep the program and these folders together.
+3. Click **Downloads** in File Explorer's left panel. Find the **CarillonBells_9_0_USB_New_Install** installer you downloaded. If you saved it on the desktop, return to the desktop instead. **Double-click that installer**. Its welcome screen appears; click **Continue**.
+4. Read the license and click **I accept the license agreement** if you agree. Click the **Install folder** box, press **Ctrl+A**, and type the USB location you identified in step 2. For example, type **E:\V9** to use a folder named V9 on drive E, or **E:\** to use that drive directly. Use your USB's actual letter. Setup creates the V9 folder if needed. You can also use **Browse** to select a folder.
+5. Check the Install folder carefully, then click **Install**. Wait for **Install completed**. Click **Verify** to check the installed files in that same folder. Wait for **Verify completed**, then click **Close**. Verify checks an installation after Install; it does not install files itself.
+6. In File Explorer, click **This PC**, then double-click that USB drive. If you chose V9, double-click **V9**. You should see **CarillonBells.exe** beside folders named **databases**, **Music**, and **Documentation**. Keep the program and these folders together. No ZIP extraction or second download is needed.
 
 **CarillonBells.exe is the program you will start.** Windows may hide the .exe ending and show only **CarillonBells**. The **databases** folder holds the saved song list and schedule; **Music** holds the actual recordings. **Documentation** contains the guides. The download includes what the program needs to run, so no separate .NET installation is required.
 

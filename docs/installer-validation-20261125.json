@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-25",
+  "installerSourceCommit": "7219e4c34cde4af81e7b0eb52b16ce90c999e796",
+  "actualFormAssertions": 33,
+  "originalVerifyFailureReproduced": true,
+  "repeatableFormRunner": "PASS",
+  "embeddedRuntimeOperations": 22,
+  "embeddedRuntimeResult": "PASS",
+  "guidePagesReviewed": 41,
+  "proposedWebsiteLocalReferences": 44,
+  "DGuideCopies": "SHA256/byte matches",
+  "applicationBinaries": "Unchanged x86/x64 and live D:",
+  "limitations": [
+    "Physical USB and Windows 10 retest required",
+    "General installer harness machine-folder sample requires elevation; not counted as passed"
+  ],
+  "publication": "Local only; no push or publish"
+}

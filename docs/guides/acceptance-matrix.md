@@ -264,3 +264,9 @@ No real email was sent during these UI checks. Physical device removal, addition
 ## Quick Start walkthrough review November 24 2026
 
 The rewritten Quick Start starts at the named website and explains choices and mouse actions before asking the reader to use them. Reviewed all eight rendered pages, the updated contents, both application illustrations, U.S. date examples and AM/PM conversion instructions. Verified matching DOCX/PDF copies on D: and matching PDF in the proposed website. Local USB ZIP and Setup payload audits cover the revised guide pair; application executables remain unchanged. Publication-time download links remain a deployment step; nothing was pushed or published.
+
+## Direct USB installer acceptance November 25 2026
+
+The actual Setup form handlers pass 33 destination and verification assertions, including a test that fails against the original Verify handler. The final x86/x64 embedded runtimes pass 22 install/verify/repair/removal operations on a disposable SUBST drive, with direct installed-file hashes and preserved modified database, music and legacy-file hashes. Upgrade verification checks its supplied files. The new repeatable form runner also passes and cleans its fixture. The existing general installer script's elevated machine-folder sample was not counted as passed. Physical USB and Windows 10 retesting remain Tommy's external acceptance checks.
+
+All four Setup downloads install files directly; all four ZIP alternatives and the three affected guide pairs were refreshed. D: documentation and proposed website PDFs match; 44 local website references pass. Application binaries, live D: and version 8.1 remain unchanged. Both repositories are saved locally only; no push or publication.

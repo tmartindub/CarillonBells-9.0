@@ -574,3 +574,52 @@ Pre-change ZIP: `Before_QuickStart_walkthrough_20261124_195940.zip` on H:.
 The previously verified Checkpoint25 packages ZIP protects the unchanged release
 inputs. Source changes and the refreshed manifest are committed locally only.
 No push or publication is authorized for this work.
+
+## 27. Direct USB Setup and selected destination verification November 25
+
+Pre-change source and release ZIPs on H: are named
+`CarillonBells v 9_0/Before_20261125_direct_USB_install.zip` and
+`Package Studio Pro/Before_20261125_direct_USB_install.zip`. Both passed CRC
+verification. D: guides were backed up as
+`D_Docs_before_direct_USB_20261125_verified.zip` before replacement.
+
+Package Studio local commit `7219e4c` makes every Setup action use the currently
+selected folder, permits non-Windows local drive roots, and preserves protection
+for Windows folders, the Windows drive root and network-share roots. Verify
+checks files supplied by the selected package, avoiding false failures for user
+data retained from an earlier New Install when applying Upgrade. Original Verify
+logic reproduced the changed-destination failure; the corrected actual FMX form
+handlers passed 33 assertions. The repeatable runner passed and removed its
+private SUBST mapping and fixture. Its source remains in the Package Studio repo.
+
+All four Carillon Setup downloads now embed individual application files instead
+of a ZIP to unpack. New Install supplies the starter database and music. Upgrade
+supplies only the main program, Migration Assistant and guides. One shared
+installation identity permits Upgrade over an earlier New Install. The matching
+ZIPs remain alternative downloads. `tools/build_usb_setups.py` rebuilds the Setup
+files from those reviewed ZIPs; `tools/audit_packages.py` compares every embedded
+payload file with its ZIP counterpart and records both source commit identities.
+
+Actual embedded x86/x64 runtimes passed 22 operations: root and space-containing
+subfolder installs, Verify, Upgrade over New Install and legacy fixtures,
+deliberate damage rejection, Repair and disposable removal. All installed New
+Install files matched their embedded sources. A modified valid SQLite database,
+user recording, supplied music and legacy executable survived Upgrade unchanged.
+No physical USB or Windows 10 run is claimed; Tommy should retest there using the
+rebuilt installer, replacing his earlier desktop copy. No Carillon app was
+started by these package tests and no real email was sent.
+
+Quick Start, Migration and Engineering guide DOCX/PDF pairs were updated with
+direct Setup instructions, explicit Install-then-Verify steps, destination examples
+and separate ZIP alternatives. Their 41 pages were reviewed, including full-size
+inspection of the changed installation pages. D: and proposed-site guide copies
+match the reviewed files. All 44 local proposed-site references pass. The main
+x86/x64 app binaries and live D: executable retain their prior SHA256 values.
+
+The older general Package Studio acceptance script was not counted as passed:
+its machine-folder sample requests elevation and could not start its runtime in
+this session. The focused actual-form and final embedded-runtime tests above
+passed. Raw results are retained in `export/release-validation-20261125`.
+Application self-tests were not repeated for unchanged application binaries.
+Both projects are committed locally and source ZIP checkpoints saved on H:.
+No push, publication, live D: restart or version 8.1 modification was performed.

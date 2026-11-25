@@ -16,7 +16,7 @@ The upgrade ZIP contains `CarillonBells.exe`, the matching `CarillonMigration.ex
 
 Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).
 
-The `export\32-bit` and `export\64-bit` release folders each contain `CarillonBells.exe`, `CarillonMigration.exe`, the New Install and Upgrade USB ZIPs, and their Package Studio Pro setup executables. A Package Studio setup stages its matching ZIP in a PC folder. Extract that ZIP into the intended installation folder on the USB. For the separate-folder Migration Assistant, keep the matching `CarillonBells.exe` beside `CarillonMigration.exe`.
+The `export\32-bit` and `export\64-bit` release folders each contain `CarillonBells.exe`, `CarillonMigration.exe`, the New Install and Upgrade USB ZIPs, and their Package Studio Pro setup executables. A Package Studio setup installs the matching application files directly into the USB folder selected in Setup. Choose either Setup or the ZIP download; Setup needs no separate ZIP or extraction. Click Install first, then Verify before starting Carillon. Upgrade Setup preserves the existing database and music. For the separate-folder Migration Assistant, keep the matching `CarillonBells.exe` beside `CarillonMigration.exe`.
 
 To move a working installation to another writable USB, close Carillon and copy the complete working installation. Choose the executable that matches the Windows system where you will run it.
 

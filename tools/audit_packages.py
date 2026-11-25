@@ -10,6 +10,7 @@ import zipfile
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--source-commit', required=True)
+parser.add_argument('--installer-source-commit', help='Local Package Studio source commit used to build Setup')
 parser.add_argument('--guides', type=Path, help='Optional folder containing candidate DOCX and PDF guides')
 args = parser.parse_args()
 results = []
@@ -66,15 +67,24 @@ for runtime, folder, expected in [('win-x86', '32-bit', 0x14c), ('win-x64', '64-
         bundle = data[-len(marker)-8-size:-len(marker)-8]
         with zipfile.ZipFile(BytesIO(bundle)) as embedded:
             assert embedded.testzip() is None
-            assert embedded.read('payload/'+path.name) == path.read_bytes(), setup.name
             project = json.loads(embedded.read('install.wiproj').decode('utf-8-sig'))
             assert not project.get('shortcuts') and not project.get('registry')
+            with zipfile.ZipFile(path) as usb:
+                payload = {'payload/'+entry.filename: usb.read(entry) for entry in usb.infolist() if not entry.is_dir()}
+            assert {name for name in embedded.namelist() if name.startswith('payload/')} == set(payload), setup.name
+            assert {name.replace('\\', '/') for name in project['files']} == set(payload), setup.name
+            for name, expected_data in payload.items():
+                assert embedded.read(name) == expected_data, (setup.name, name)
+            assert project['productName'] == 'Westminster Chimes and Carillon Bells 9.0'
+            assert 'USB New Install Package' not in project['installFolder']
         results.append({'runtime': runtime, 'kind': kind, 'file': str(path.relative_to(root)), 'bytes': path.stat().st_size,
                         'sha256': sha(path.read_bytes()), 'setup': str(setup.relative_to(root)), 'setupSha256': sha(data),
                         'applicationSha256': sha((release/'CarillonBells.exe').read_bytes()),
                         'migrationSha256': sha((release/'CarillonMigration.exe').read_bytes()),
-                        'verification': 'PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching embedded Setup ZIP'})
+                        'verification': 'PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching individual direct-install Setup files'})
 manifest = {'version': '9.0.0', 'sourceCommit': args.source_commit, 'packages': results,
             'productionPromotionApproved': False, 'publicationStatus': 'Local only; do not push or publish without Tommy approval'}
+if args.installer_source_commit:
+    manifest['installerSourceCommit'] = args.installer_source_commit
 (root/'source distributions/release-manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
 print('PASS four USB ZIPs and four matching Setup programs; release manifest refreshed.')
