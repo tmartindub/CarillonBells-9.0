@@ -9,7 +9,7 @@
     {
       "guide": "Engineering",
       "pages": 14,
-      "pdf_sha256": "42b82acb7cad8597d42c99bfeebf21f3b7a636a67d232ee9f8c9da1a62149b43"
+      "pdf_sha256": "12da19de78990d36b0cadddaf804aace098874d58da22a1a913dbfa75ab985ce"
     },
     {
       "guide": "Database_Migration",
@@ -31,5 +31,6 @@
     "visual_review": "All pages of the three regenerated DOCX guides rendered and reviewed; changed pages reviewed again after final edits; paired PDF screenshots checked",
     "D_copies": "All six affected DOCX/PDF files replaced; User Guide unchanged"
   },
-  "manuscript_figure_references_checked": 17
+  "manuscript_figure_references_checked": 17,
+  "clock_reach_revision": "2026-11-25: Engineering updated for original-length alternate minute/hour hands; affected pages visually checked; corresponding D and proposed-site copies replaced."
 }

@@ -50,7 +50,8 @@ public static class RegressionTests
                 handStyles.Select(style => style.Id).SequenceEqual(Enumerable.Range(0, 19)) &&
                 handStyles.All(style => style.Hour.Drawing is not null && style.Minute.Drawing is not null && style.Cap.Drawing is not null));
             var originalHands = handStyles[0];
-            Check("New minute hands end inside the minute track",handStyles.Skip(1).All(style=>style.Minute.Drawing.Bounds.Top>=49&&style.Minute.Drawing.Bounds.Left>=205&&style.Minute.Drawing.Bounds.Right<=255));
+            Check("Alternate minute tips reach the original minute track without widening",handStyles.Skip(1).All(style=>Math.Abs(style.Minute.Drawing.Bounds.Top-originalHands.Minute.Drawing.Bounds.Top)<0.01&&style.Minute.Drawing.Bounds.Left>=205&&style.Minute.Drawing.Bounds.Right<=255));
+            Check("Alternate hour tips reach the original Roman numeral depth",handStyles.Skip(1).All(style=>Math.Abs(style.Hour.Drawing.Bounds.Top-originalHands.Hour.Drawing.Bounds.Top)<0.01));
             Check("Original clock hand proportions and pivot match the previous clock",
                 originalHands.Minute.Drawing.Bounds == new Rect(220, 13, 20, 217) &&
                 originalHands.Hour.Drawing.Bounds == new Rect(220, 60, 20, 170) &&

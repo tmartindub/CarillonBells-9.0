@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-25",
+  "backup": {
+    "file": "H:\\CarillonBells v 9_0\\Before_Clock_Reach_20261125.zip",
+    "sha256": "50fed54f770626e1b00f21d3a76df22ce3e76870d41ae305deb3b8e382908572",
+    "crc": "PASS"
+  },
+  "change": "All eighteen alternate styles reach original minute radius 217 and hour radius 170; X scale, original resources, cap, clock face and positions unchanged",
+  "strokeHandling": "Outlined styles 8 and 10 include pen extent when matching tip bounds",
+  "tests": {
+    "development": {
+      "passed": 206,
+      "exitCode": 0
+    },
+    "win-x64": {
+      "passed": 206,
+      "exitCode": 0
+    },
+    "win-x86": {
+      "passed": 206,
+      "exitCode": 0
+    }
+  },
+  "visualVerification": "All nineteen WPF-rendered styles reviewed over actual face at 10:10 and 3:00; same brushes used for gallery and live clock",
+  "initialFailure": "First reach assertion identified the extra pen extent on outlined styles 8 and 10; their XAML transforms were corrected before final passing tests",
+  "DDeployment": "Pending: open administration window; user asked to save/cancel and close or authorize discard after automatic review blocked closure",
+  "pushed": false,
+  "published": false,
+  "win-x64": {
+    "CarillonBells.exe": "29A51C2004EC165FD47D06248D9FACF0E023DF47245E05F0133B99341EA91EEB",
+    "CarillonMigration.exe": "49F3DB998FFBC43A17CC38BC012B7DC99D5F79620EE0812A77588D64E951F821"
+  },
+  "win-x86": {
+    "CarillonBells.exe": "E78B28BD6CEAEFC9403E55A3391B4238AED47ED5B3C71E66BDB7CDBEED69CC87",
+    "CarillonMigration.exe": "7723D9B5314E02DC0A7D0417A61E01D94C87B55AB700884AA50AB4B68585DF97"
+  },
+  "packageAudit": "PASS four portable ZIPs and four installer ZIPs; PE architectures, CRCs, guide bytes and individual embedded payload files match",
+  "installerRuntime": "Unchanged installer code; previous 22-operation runtime validation retained; not rerun for clock geometry",
+  "DExecutableUnchangedSha256": "5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B",
+  "DClockHandPreferenceBeforeDeployment": "3",
+  "actualClosePrompt": "Save administration changes before closing?",
+  "safeAction": "Cancelled close request; no save or discard selected; old D app still running"
+}

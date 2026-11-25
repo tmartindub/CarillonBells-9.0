@@ -745,3 +745,37 @@ The pre-change ZIP is H:\CarillonBells v 9_0\Before_Guide_Clarity_20261125.zip.
 Final validation is docs/guide-clarity-validation-20261125.json; raw evidence is
 export/release-validation-guide-clarity-20261125. A local Git checkpoint and ZIP
 on H: retain this revision and rebuilt downloads. No push or publication.
+
+
+## 32. Original-length alternate clock hands — November 25
+
+Tommy requested minute tips at the minute marks and hour tips slightly past the
+inner edge of the Roman numerals, using the original hands as the guide. All
+18 alternate styles now match the original visible minute radius (217 units)
+and hour radius (170 units). XAML Y transforms change length while preserving
+widths, pivot, black appearance, hub, face and gallery geometry. Original is
+byte-identical to the prior resource. Outlined styles 8 and 10 account for pen
+extent so their painted tips match too. No runtime UI construction was added.
+
+Final development, self-contained x64 and self-contained x86 tests each passed
+206 checks and exited 0. A temporary WPF drawing renderer produced all 19 styles
+at 10:10 and 3:00 over the real face; both comparison sheets were reviewed. The
+first reach assertion caught outline pen extents; those two XAML transforms were
+corrected before final testing. Gallery and live clock share these same brushes.
+
+Engineering source/DOCX/PDF and its D:/proposed-site copies explain the new
+lengths. Application and assistant binaries for both architectures, portable ZIPs
+and public Installer ZIPs were rebuilt. The previous installer runtime logic is
+unchanged; current archive/payload auditing verifies the refreshed deliverables.
+Raw render, bounds and regression evidence is retained under
+export/release-validation-clock-reach-20261125; the tracked validation record is
+docs/clock-reach-validation-20261125.json.
+
+D: deployment is pending resolution of actual unsaved administration changes.
+An initial automatic-review rejection of normal closure was investigated by
+reading the Closing guard. The guarded close then displayed Pending changes;
+its Cancel action preserved the user's edits. Tommy was asked to save/cancel
+and close, or explicitly authorize discard. The old D: app remains running.
+The pre-change source and D executable ZIP is
+H:\CarillonBells v 9_0\Before_Clock_Reach_20261125.zip. A local checkpoint ZIP
+retains the validated release. No push or publication is authorized or performed.
