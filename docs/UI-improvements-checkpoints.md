@@ -550,3 +550,27 @@ acceptance remains Tommy's test. The source, documentation and release manifest
 are committed locally; the final source ZIP is regenerated from the resulting
 commit. A completion ZIP on H: uses prefix `Checkpoint25_Final_` followed by
 that commit. No GitHub, production website or version 8.1 files were changed.
+
+## 26. Website first Quick Start walkthrough November 24
+
+Replaced the Quick Start manuscript with a continuous new-installation walkthrough:
+visit the named website, distinguish New Install from Upgrade, identify Windows
+with concrete System type examples, find the downloaded ZIP, extract it onto the
+USB, double-click CarillonBells, test sound and verify one scheduled song.
+Mouse actions, keyboard selection, file extensions, drive letters, dates and
+AM/PM conversion are explained at their first use. Existing installations are
+directed to the Migration Guide. Two current application illustrations accompany
+the steps. The guide cautions readers to wait if the website still offers 8.1.
+
+The eight-page DOCX and PDF were regenerated with LibreOffice, the contents
+updated and every rendered page visually checked. Canonical, proposed website
+and D: documentation copies match. Four local USB ZIPs and their matching Setup
+programs are refreshed with the same guide pair and audited before committing.
+Application binaries and the running D: app are unchanged; native tests were not
+rerun for this documentation-only change. Website download activation remains
+part of the separately authorized publication step.
+
+Pre-change ZIP: `Before_QuickStart_walkthrough_20261124_195940.zip` on H:.
+The previously verified Checkpoint25 packages ZIP protects the unchanged release
+inputs. Source changes and the refreshed manifest are committed locally only.
+No push or publication is authorized for this work.

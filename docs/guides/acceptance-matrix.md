@@ -260,3 +260,7 @@ Verified behavior includes actual-value pending checks for Groups; retained prom
 The Groups fault was reproduced before changing logic, using close-time binding commits. A private copy of actual installation data produced 16 Modified rows with no differing values. The corrected UI closed untouched Groups twice on D: without a prompt, and the group-table digest was unchanged. A genuine GUI edit still prompted and saved in fictitious test data. Original 18, Arial 14, Arial 18 and Tahoma 16 passed the copied-data page checks.
 
 No real email was sent during these UI checks. Physical device removal, additional monitor/DPI combinations, real SMTP delivery and extended unattended operation remain separately evidenced deployment checks. Earlier dated entries below/above remain historical records; current UI details supersede old fourteen-style and year-bearing annual-date descriptions.
+
+## Quick Start walkthrough review November 24 2026
+
+The rewritten Quick Start starts at the named website and explains choices and mouse actions before asking the reader to use them. Reviewed all eight rendered pages, the updated contents, both application illustrations, U.S. date examples and AM/PM conversion instructions. Verified matching DOCX/PDF copies on D: and matching PDF in the proposed website. Local USB ZIP and Setup payload audits cover the revised guide pair; application executables remain unchanged. Publication-time download links remain a deployment step; nothing was pushed or published.
