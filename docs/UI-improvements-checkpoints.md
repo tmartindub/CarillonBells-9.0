@@ -661,9 +661,10 @@ no security settings, file-origin marks or certificate configuration were change
 The x86/x64 app and live D: executable remain unchanged. Physical USB/Windows 10
 acceptance and Internet-download reputation are not claimed by these local tests.
 
-The reader-open D: Quick Start PDF could not be replaced during the build. The
-other five affected D: guide files and all proposed-site PDFs were updated.
-`docs/installer-zip-validation-20261125.json` records any D: copy still pending.
+The reader-open D: Quick Start PDF was initially deferred. After Tommy closed
+it on November 25, the D: PDF was replaced and its SHA256 verified. All six
+affected D: guide files and all proposed-site PDFs now match their canonical
+copies; `docs/installer-zip-validation-20261125.json` records no pending copies.
 Raw evidence is under export/release-validation-installer-zip-20261125. Changes
 and the manifest are committed locally with a source ZIP checkpoint on H:.
 No push or publication is authorized or performed.

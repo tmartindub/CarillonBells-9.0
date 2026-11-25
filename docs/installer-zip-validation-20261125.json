@@ -44,9 +44,7 @@
       13
     ]
   },
-  "DGuideCopiesPending": [
-    "D:/Documentation/CarillonBells_9_0_Quick_Start_Guide.pdf"
-  ],
+  "DGuideCopiesPending": [],
   "websiteLocalReferences": 44,
   "security": "Unsigned; ZIP packaging does not remove SmartScreen or Windows attachment warnings",
   "references": [
@@ -54,5 +52,6 @@
     "https://support.microsoft.com/en-us/windows/security/information-about-the-attachment-manager-in-microsoft-windows"
   ],
   "applicationAndInstallerCore": "Unchanged",
-  "publication": "Local only; no push or publication"
+  "publication": "Local only; no push or publication",
+  "DGuideCopiesVerified": "All six affected DOCX/PDF files match canonical guides; Quick Start PDF replaced after Tommy closed the reader on November 25, 2026"
 }
