@@ -1,24 +1,56 @@
 {
-  "version": "9.0.0-evaluation",
+  "version": "9.0.0",
+  "sourceCommit": "dccc07628100775e4b75f32d4084f766995cf771",
   "packages": [
     {
-      "file": "CarillonBells_9_0_Evaluation_win-x64.zip",
-      "bytes": 70620311,
-      "sha256": "BBE7E7533ED1F7E1DE98E4B19657FB7E9C0C64D8D6BA47571B28C1B198654BA4",
-      "sourceCommit": "71cddcf2a33a7aad5ed635bdf4b2683a818dd346",
-      "runtime": "win-x64",
-      "fileCount": 435,
-      "verification": "PASS all manifest hashes and no private database/music/log files"
+      "runtime": "win-x86",
+      "kind": "New_Install",
+      "file": "export\\32-bit\\CarillonBells_9_0_USB_New_Install_win-x86.zip",
+      "bytes": 298706273,
+      "sha256": "13F049B1A762009B32BEE46E597122D214D6F939C7C61A54943193B8E4E0E3B8",
+      "setup": "export\\32-bit\\CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.exe",
+      "setupSha256": "2C9390ED1618B3F135B4F86C896EEC792A08C5594FBBA4F27A111FE6915E847C",
+      "applicationSha256": "D3B4DB5DC1E91FF0878B5D64031AFD5423616082527FB0FF80C9A287351B4219",
+      "migrationSha256": "44E9ADCFF46824F2334852DB45EC54A445F5B8A134A1D5C4D206F26D649EBA59",
+      "verification": "PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching embedded Setup ZIP"
     },
     {
-      "file": "CarillonBells_9_0_Evaluation_win-x86.zip",
-      "bytes": 65910154,
-      "sha256": "EBC0D613A79915FD5B210EC2F44C43201A47475A68D01A5FC2E5E52D4A6B1546",
-      "sourceCommit": "71cddcf2a33a7aad5ed635bdf4b2683a818dd346",
       "runtime": "win-x86",
-      "fileCount": 434,
-      "verification": "PASS all manifest hashes and no private database/music/log files"
+      "kind": "Upgrade",
+      "file": "export\\32-bit\\CarillonBells_9_0_USB_Upgrade_win-x86.zip",
+      "bytes": 125406395,
+      "sha256": "9D1BC2747E41E1285B908B9B52EDE0E18CB26B01FA840CD90C3EE8F1EE09CD98",
+      "setup": "export\\32-bit\\CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.exe",
+      "setupSha256": "4C9E20EDBDA9AF00E831E6851ACF5CA2FCD5EAB975A547FCF1B2192C706C9E3C",
+      "applicationSha256": "D3B4DB5DC1E91FF0878B5D64031AFD5423616082527FB0FF80C9A287351B4219",
+      "migrationSha256": "44E9ADCFF46824F2334852DB45EC54A445F5B8A134A1D5C4D206F26D649EBA59",
+      "verification": "PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching embedded Setup ZIP"
+    },
+    {
+      "runtime": "win-x64",
+      "kind": "New_Install",
+      "file": "export\\64-bit\\CarillonBells_9_0_USB_New_Install_win-x64.zip",
+      "bytes": 302816676,
+      "sha256": "2FB0E111FAF4A1DB6C426AA0D617151C7F2B7BE5CD83118EF048C08137998953",
+      "setup": "export\\64-bit\\CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.exe",
+      "setupSha256": "10991372E159B3256C89D81700E059017A4AEEB35D44D52E1D5421A3A592132B",
+      "applicationSha256": "E5863DFFDB4B3F04874F808AB06F8A9FE9A86E35668F75AB0B0244DE5EC1831A",
+      "migrationSha256": "D1B33630EB2A15343BA1C9ABE186985531E5DCF041B26AAFFFF35582894D7FD5",
+      "verification": "PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching embedded Setup ZIP"
+    },
+    {
+      "runtime": "win-x64",
+      "kind": "Upgrade",
+      "file": "export\\64-bit\\CarillonBells_9_0_USB_Upgrade_win-x64.zip",
+      "bytes": 133627787,
+      "sha256": "C678ED8F1B8597EC1A71D4FE82B24F7ECC4F79ADB8CADF9C9DC5F27A0BD04948",
+      "setup": "export\\64-bit\\CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.exe",
+      "setupSha256": "F517B0FF83CC07459BC23A3264DA72E1C52A895B0192870557D6709AAE75719A",
+      "applicationSha256": "E5863DFFDB4B3F04874F808AB06F8A9FE9A86E35668F75AB0B0244DE5EC1831A",
+      "migrationSha256": "D1B33630EB2A15343BA1C9ABE186985531E5DCF041B26AAFFFF35582894D7FD5",
+      "verification": "PASS PE architecture, ZIP CRC, current executables, eight current guides, Help and matching embedded Setup ZIP"
     }
   ],
-  "productionPromotionApproved": false
+  "productionPromotionApproved": false,
+  "publicationStatus": "Local only; do not push or publish without Tommy approval"
 }
