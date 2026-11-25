@@ -668,3 +668,40 @@ copies; `docs/installer-zip-validation-20261125.json` records no pending copies.
 Raw evidence is under export/release-validation-installer-zip-20261125. Changes
 and the manifest are committed locally with a source ZIP checkpoint on H:.
 No push or publication is authorized or performed.
+
+
+## 30. Shared USB-root migration and clear folder selection — November 25
+
+Tommy reported that both v9 executables were beside the old installation in E:\.
+The destination guard rejected E:\V9 because it was inside the assistant folder.
+The narrow correction permits a new direct child when source and v9 template
+share a drive root. The drive root itself, existing folders, reserved data folders,
+nested source destinations and children of a non-root application folder remain
+protected. Migration stages its copy and leaves the old installation unchanged.
+
+Source is detected beside the assistant or chosen with Browse database. Destination
+now has an existing parent, an unused new folder name and a read-only full path.
+A real native file/folder-picker walkthrough completed a 7.2.4 root-to-V9 migration
+on disposable T:. Original database, executable and music hashes were unchanged.
+The template copy selects v9 files and declared dependencies, includes versioned
+Documentation, and excludes unrelated old executables/DLLs and loose legacy Help.
+
+Final development tests: 226 PASS; final self-contained x64 and x86 tests: 224 PASS
+each, all exit 0. Cases cover 7.2.4 conversion, 8.1 preservation, backup, copy hashes,
+existing/reserved/nested destination rejection, changed-source rejection and
+cancellation. Temporary screenshot capture in an earlier test run caused a shutdown
+crash after assertions passed; that capture instrumentation was removed before
+final testing. Physical Windows 10 / E: acceptance remains Tommy's test.
+
+Migration and Engineering guides were regenerated with updated contents, paired
+PDFs and new source/destination screenshots. Changed migration pages 17–19 and
+engineering material were visually checked; full-page overviews were inspected.
+The affected guide pairs on D: and proposed-site PDFs match canonical copies.
+All 44 local site references pass. The live D: executable and 8.1 remain untouched.
+
+The four portable packages and four public Installer ZIPs are rebuilt and audited
+against the current binaries and guides. Installer runtime checks cover 22 operations
+including root/subfolder installation, preservation, Verify failure and Repair.
+Detailed evidence is in docs/migration-root-validation-20261125.json and
+export/release-validation-migration-20261125. A pre-change ZIP and numbered Git
+checkpoint are retained on H:. Local commits only; no push or publication.

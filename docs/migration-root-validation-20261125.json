@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-25",
+  "preChangeBackup": "H:\\CarillonBells v 9_0\\Before_Migration_Root_Fix_20261125.zip",
+  "regression": {
+    "development": {
+      "passed": 226,
+      "exitCode": 0
+    },
+    "win-x64": {
+      "passed": 224,
+      "exitCode": 0
+    },
+    "win-x86": {
+      "passed": 224,
+      "exitCode": 0
+    }
+  },
+  "nativeGuiMigration": {
+    "result": "PASS",
+    "sourceHashesUnchanged": {
+      "databases\\carillon.db": "eaaf035095e93f1047f43ad727daa7eb44745bb6a9cf7bf3f14c5318acbffbc2",
+      "Carillon.exe": "e5dfb5ff8a54d79f5dcd322f064c2e47eef5da56d31bf8a5830efdca5aed77ed",
+      "Music\\Demo.wav": "c726d333dd159a31423f3480dbb1c5c4a9dfcd30efe1f7e12ade390dc92e8908"
+    },
+    "destination": "T:\\V9",
+    "oldExecutableExcluded": true,
+    "versionedDocumentationIncluded": true,
+    "actualNativeSourceAndParentPickers": true
+  },
+  "limitations": [
+    "Physical Windows 10 / E: USB acceptance remains for Tommy. Local drive-root verification used a disposable SUBST T: drive.",
+    "One temporary WPF screenshot-capture test run passed assertions but crashed at process shutdown. That capture-only instrumentation was removed; final development and both published application self-tests exited normally."
+  ],
+  "liveDApplicationSha256": "5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B",
+  "liveDApplicationChanged": false,
+  "documentationCopiesOnD": "Both affected DOCX/PDF guide pairs verified and replaced; other guides unchanged",
+  "localSiteReferences": 44,
+  "pushed": false,
+  "published": false,
+  "win-x64": {
+    "CarillonBells.exe": "CA67B0BF35C9DFAAA6509B0AA85DB5863B0CBCF5B8566BFE8EA027812478A9C5",
+    "CarillonMigration.exe": "D0D6CF726A4BF7478B1AE9F98A008E72B139B1B57B1BE34D78D62DA2A90359AE"
+  },
+  "win-x86": {
+    "CarillonBells.exe": "AF98A7CA377F0CC35446A412CCB91AC8124ABEF0AF7EE159DAA86C2774B7E725",
+    "CarillonMigration.exe": "729922473EC3971929D13486108325010002BDDAAAC863F6451DD90B063BFAD2"
+  },
+  "installerRuntimeOperations": 22,
+  "installerRuntimeResult": "PASS",
+  "archiveAndEmbeddedPayloadAudit": "PASS: four portable ZIPs and four installer ZIPs",
+  "guides": {
+    "migrationPages": 21,
+    "engineeringPages": 14,
+    "changedMigrationPagesVisuallyReviewed": [
+      17,
+      18,
+      19
+    ],
+    "docxRendered": true,
+    "pairedPdfExport": "LibreOffice Writer, refreshed table of contents"
+  }
+}

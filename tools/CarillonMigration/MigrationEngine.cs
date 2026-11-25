@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text.Json;
 using Microsoft.Data.Sqlite;
 
 namespace Carillon.Migration;
@@ -31,7 +32,7 @@ public static partial class MigrationEngine
     }
 
     private static readonly string[] MusicDirectories = ["Music", "Songs", "Random_songs", "Random_songs-2"];
-    private static readonly string[] SupportDirectories = ["help", "docs", "third-party-notices"];
+    private static readonly string[] SupportDirectories = ["help", "docs", "Documentation", "third-party-notices"];
     private static readonly HashSet<string> AudioExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
         ".mp3", ".wav", ".wma", ".aac", ".m4a", ".m4b", ".mp4", ".flac", ".ogg", ".opus", ".aif", ".aiff", ".mid", ".midi"
@@ -370,6 +371,8 @@ public static partial class MigrationEngine
     private static string ValidateDestination(string source, string destination, string template)
     {
         var target = FullPath(destination);
+        if (SamePath(target, Path.GetPathRoot(target)!))
+            throw new IOException("Choose a new v9 folder such as E:\\V9. The drive root cannot be the migration destination.");
         var parent = Path.GetDirectoryName(target);
         if (parent is null)
             throw new IOException("Enter a new folder name inside an existing destination folder.");
@@ -378,7 +381,8 @@ public static partial class MigrationEngine
             throw new DirectoryNotFoundException("The parent of the new portable folder does not exist.");
         if (Attributes(target) is not null)
             throw new IOException("The new portable folder must not already exist.");
-        if (SamePath(target, source) || IsInside(target, template) || SamePath(target, template))
+        var sharedDriveRoot = SamePath(source, template) && SamePath(source, Path.GetPathRoot(source)!) && SamePath(parent, source);
+        if (SamePath(target, source) || (IsInside(target, template) && !sharedDriveRoot) || SamePath(target, template))
             throw new IOException("Choose a destination outside the source installation and v9 application folders.");
         if (IsInside(target, source) && (!SamePath(source, Path.GetPathRoot(source)!) || !SamePath(parent, source) ||
             MusicDirectories.Concat(ReservedDirectories).Any(name => SamePath(name, Path.GetFileName(target)))))
@@ -395,13 +399,33 @@ public static partial class MigrationEngine
             throw new FileNotFoundException("The migration wizard must run from the packaged v9 application folder.");
 
         var transfer = new Transfer();
+        var files = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "CarillonBells.exe", "CarillonMigration.exe", "CarillonBells.dll", "CarillonMigration.dll",
+            "CarillonBells.deps.json", "CarillonMigration.deps.json", "CarillonBells.runtimeconfig.json", "CarillonMigration.runtimeconfig.json"
+        };
+        var singleFile = !File.Exists(Path.Combine(template, "CarillonBells.dll"));
+        if (!singleFile)
+        {
+            files.UnionWith(["README.md", "LICENSE", "NOTICE", "Launch-Carillon-Evaluation.cmd"]);
+            foreach (var name in new[] { "CarillonBells.deps.json", "CarillonMigration.deps.json" })
+            {
+                var descriptor = Path.Combine(template, name);
+                if (!File.Exists(descriptor)) continue;
+                using var document = JsonDocument.Parse(File.ReadAllText(descriptor));
+                foreach (var target in document.RootElement.GetProperty("targets").EnumerateObject())
+                    foreach (var library in target.Value.EnumerateObject())
+                        foreach (var group in new[] { "runtime", "native", "runtimeTargets", "resources" })
+                            if (library.Value.TryGetProperty(group, out var assets))
+                                foreach (var asset in assets.EnumerateObject())
+                                    files.Add(Path.GetFileName(asset.Name));
+            }
+        }
         foreach (var file in Directory.EnumerateFiles(template).Order(StringComparer.OrdinalIgnoreCase))
         {
             cancellationToken.ThrowIfCancellationRequested();
             var name = Path.GetFileName(file);
-            if (name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
-                name.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase) || name.EndsWith(".runtimeconfig.json", StringComparison.OrdinalIgnoreCase) ||
-                new[] { "README.md", "LICENSE", "NOTICE", "Launch-Carillon-Evaluation.cmd" }.Contains(name, StringComparer.OrdinalIgnoreCase))
+            if (files.Contains(name))
             {
                 CheckPath(file);
                 AddFile(transfer, file, name);
@@ -413,12 +437,14 @@ public static partial class MigrationEngine
         foreach (var directory in Directory.EnumerateDirectories(template).Order(StringComparer.OrdinalIgnoreCase))
         {
             var name = Path.GetFileName(directory);
-            if (SupportDirectories.Contains(name, StringComparer.OrdinalIgnoreCase))
-                AddTree(transfer, directory, name, file => new[] { ".htm", ".html", ".css", ".js", ".png", ".jpg", ".jpeg",
+            if (SupportDirectories.Contains(name, StringComparer.OrdinalIgnoreCase) &&
+                (!singleFile || name.Equals("Documentation", StringComparison.OrdinalIgnoreCase) || name.Equals("third-party-notices", StringComparison.OrdinalIgnoreCase)))
+                AddTree(transfer, directory, name, file => (!name.Equals("Documentation", StringComparison.OrdinalIgnoreCase) ||
+                    Path.GetFileName(file).StartsWith("CarillonBells_9_0_", StringComparison.OrdinalIgnoreCase)) && new[] { ".htm", ".html", ".css", ".js", ".png", ".jpg", ".jpeg",
                     ".svg", ".gif", ".webp", ".ico", ".pdf", ".docx", ".md", ".txt" }.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase),
                     true, null, cancellationToken);
-            else if (cultures.Contains(name))
-                AddTree(transfer, directory, name, file => file.EndsWith(".resources.dll", StringComparison.OrdinalIgnoreCase),
+            else if (!singleFile && (cultures.Contains(name) || name.Equals("runtimes", StringComparison.OrdinalIgnoreCase)))
+                AddTree(transfer, directory, name, file => files.Contains(Path.GetFileName(file)),
                     false, null, cancellationToken);
         }
         return transfer;

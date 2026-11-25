@@ -13,7 +13,6 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
 
     private readonly string templateFolder = AppContext.BaseDirectory;
     private readonly string? singleFileExecutable;
-    private readonly string defaultDestinationName;
     private MigrationSource? source;
     private MigrationPlan? plan;
     private UsbUpgradePlan? usbUpgradePlan;
@@ -40,7 +39,8 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     {
         this.singleFileExecutable = singleFileExecutable;
         InitializeComponent();
-        defaultDestinationName = DestinationInput.Text;
+        if (File.Exists(Path.Combine(templateFolder, "databases", "carillon.db")) || File.Exists(Path.Combine(templateFolder, "carillon.db")))
+            SourceInput.Text = Path.TrimEndingDirectorySeparator(templateFolder);
         if (IsUsbUpgrade)
         {
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData,
@@ -55,13 +55,16 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     {
         try
         {
-            var dialog = new OpenFolderDialog { Title = "Choose the legacy Carillon installation folder" };
+            var dialog = new OpenFileDialog { Title = "Select the old installation's carillon.db", Filter = "Carillon database (carillon.db)|carillon.db", FileName = "carillon.db", CheckFileExists = true };
             var current = SourceInput.Text.Trim().Trim('"');
-            if (Directory.Exists(current))
-                dialog.InitialDirectory = current;
+            if (Path.IsPathFullyQualified(current) && Directory.Exists(Path.Combine(current, "databases")))
+                dialog.InitialDirectory = Path.Combine(current, "databases");
+            else if (Directory.Exists(current)) dialog.InitialDirectory = current;
             if (dialog.ShowDialog(this) == true)
             {
-                SourceInput.Text = dialog.FolderName;
+                var folder = Path.GetDirectoryName(dialog.FileName)!;
+                SourceInput.Text = Path.GetFileName(folder).Equals("databases", StringComparison.OrdinalIgnoreCase)
+                    ? Path.GetDirectoryName(folder)! : folder;
                 StatusText.Text = "";
             }
         }
@@ -72,21 +75,25 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
     {
         try
         {
-            var entered = DestinationInput.Text.Trim().Trim('"');
-            var folderName = Path.GetFileName(Path.TrimEndingDirectorySeparator(entered));
-            if (string.IsNullOrWhiteSpace(folderName))
-                folderName = defaultDestinationName;
-
+            var entered = DestinationParentInput.Text.Trim().Trim('"');
             var dialog = new OpenFolderDialog { Title = "Choose the parent for the new v9 folder" };
-            if (Path.IsPathFullyQualified(entered) && Path.GetDirectoryName(entered) is { } parent && Directory.Exists(parent))
-                dialog.InitialDirectory = parent;
+            if (Directory.Exists(entered)) { dialog.InitialDirectory = entered; dialog.FolderName = entered; }
             if (dialog.ShowDialog(this) == true)
             {
-                DestinationInput.Text = Path.Combine(dialog.FolderName, folderName);
+                DestinationParentInput.Text = dialog.FolderName;
                 StatusText.Text = "";
             }
         }
         catch (Exception error) { StatusText.Text = error.Message; }
+    }
+
+    private void DestinationLocationChanged(object sender, TextChangedEventArgs e)
+    {
+        if (DestinationParentInput is null || DestinationNameInput is null || DestinationInput is null) return;
+        var parent = DestinationParentInput.Text.Trim().Trim('"');
+        var name = DestinationNameInput.Text.Trim();
+        DestinationInput.Text = Path.IsPathFullyQualified(parent) && name.Length > 0 && name is not "." and not ".." &&
+            name.IndexOfAny(Path.GetInvalidFileNameChars()) < 0 ? Path.Combine(parent, name) : "";
     }
 
     private void BrowseBackupClick(object sender, RoutedEventArgs e)
@@ -302,6 +309,9 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
         StatusText.Text = "Inspecting the legacy installation…";
         var inspected = await Task.Run(() => MigrationEngine.InspectSource(folder));
         source = inspected;
+        if (!IsUsbUpgrade)
+            DestinationParentInput.Text = Path.TrimEndingDirectorySeparator(folder).Equals(Path.GetPathRoot(folder), StringComparison.OrdinalIgnoreCase)
+                ? Path.GetPathRoot(folder)! : Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(folder))!;
         var version = inspected.Version == LegacyVersion.Version724 ? "7.2.4" : "8.1";
         InspectedSource.Text = $"Detected Carillon {version} · {inspected.PlaylistCount:N0} playlist entries";
         ShowStep(WizardStep.Destination);
@@ -334,7 +344,7 @@ public partial class MigrationWindow : Window, INotifyPropertyChanged
         {
             var destination = DestinationInput.Text.Trim().Trim('"');
             if (!Path.IsPathFullyQualified(destination))
-                throw new ArgumentException("Enter a full path for the new folder or choose Browse parent.");
+                throw new ArgumentException("Choose the destination drive or parent folder and enter a new folder name, such as V9.");
 
             StatusText.Text = "Checking the destination and counting music files…";
             var prepared = await Task.Run(() => MigrationEngine.Plan(inspected, destination, templateFolder));

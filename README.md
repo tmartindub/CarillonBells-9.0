@@ -12,6 +12,8 @@ The application uses the approved WPF composition, portable SQLite storage, inde
 
 The upgrade ZIP contains `CarillonBells.exe`, the matching `CarillonMigration.exe`, and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open `CarillonBells.exe` directly from the USB.
 
+**Try v9 in a separate folder.** The Migration Assistant can run beside the old installation at the USB root. Source is detected automatically, or selected with **Browse database…**. Choose the existing drive as the destination parent and an unused new folder name, for example `E:\` plus `V9` creates `E:\V9`. Do not create that folder yourself. This copy operation rejects the drive root and existing destinations; the in-place Upgrade Installer is a separate route. See the illustrated Database Migration Guide.
+
 **Restore 7.2.4.** Close `Carillon.exe` and `CarillonBells.exe`. From `CarillonMigration.exe`, choose **Restore 7.2.4…**, select the USB and its pre-upgrade ZIP, then review the restore. The assistant backs up the current database and restores the verified original. Start the original `Carillon.exe` from the USB when ready to check the schedule.
 
 Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).

@@ -135,8 +135,8 @@
          <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="SourceInput" AutomationProperties.Name="Legacy installation folder"
-         AutomationProperties.HelpText="Enter the full folder path or choose Browse."/>
-        <Button Grid.Column="1" Margin="10,0,0,0" Content="_Browse…" AutomationProperties.Name="Browse for legacy installation"
+          AutomationProperties.HelpText="The installation beside the assistant is filled in automatically. Otherwise browse for its carillon.db file or enter its folder."/>
+        <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse _database…" AutomationProperties.Name="Browse for the legacy carillon.db file"
          Click="BrowseSourceClick"/>
        </Grid>
        <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
@@ -189,19 +189,23 @@
           </Style.Triggers>
          </Style>
         </StackPanel.Style>
-        <Label Margin="0,20,0,0" Content="_New installation path" Target="{Binding ElementName=DestinationInput}"/>
+        <Label Margin="0,20,0,0" Content="Destination drive or parent _folder" Target="{Binding ElementName=DestinationParentInput}"/>
         <Grid>
          <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="Auto"/>
          </Grid.ColumnDefinitions>
-         <TextBox x:Name="DestinationInput" Text="CarillonBells_9_0" AutomationProperties.Name="New installation path"
-          AutomationProperties.HelpText="Enter the full path for a new folder, or browse for its parent."/>
+         <TextBox x:Name="DestinationParentInput" AutomationProperties.Name="Destination drive or parent folder"
+          TextChanged="DestinationLocationChanged" AutomationProperties.HelpText="Choose an existing drive or folder, such as E:\. The assistant creates a new v9 folder inside it."/>
          <Button Grid.Column="1" Margin="10,0,0,0" Content="Browse _parent…" AutomationProperties.Name="Browse for parent of new installation"
           Click="BrowseDestinationClick"/>
         </Grid>
+        <Label Margin="0,12,0,0" Content="New folder _name" Target="{Binding ElementName=DestinationNameInput}"/>
+        <TextBox x:Name="DestinationNameInput" Text="V9" TextChanged="DestinationLocationChanged" AutomationProperties.Name="New folder name"/>
+        <Label Margin="0,12,0,0" Content="New installation path" Target="{Binding ElementName=DestinationInput}"/>
+        <TextBox x:Name="DestinationInput" IsReadOnly="True" AutomationProperties.Name="New installation path"/>
         <TextBlock Style="{StaticResource FieldHint}" Margin="0,10,0,0"
-         Text="Choose an existing parent folder and use the suggested name, or enter a full path such as E:\CarillonBells_9_0. The final folder must be new."/>
+          Text="Example: parent E:\ and name V9 creates E:\V9. Do not create V9 yourself. Migration requires a new folder and will not merge into the drive root or an existing folder."/>
        </StackPanel>
        <StackPanel AutomationProperties.Name="Backup step" Visibility="{Binding IsUsbUpgrade, Converter={StaticResource VisibleWhenTrue}}">
         <Label Margin="0,20,0,0" Content="_Backup folder" Target="{Binding ElementName=BackupFolderInput}"/>

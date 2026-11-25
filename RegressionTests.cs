@@ -140,6 +140,93 @@ public static class RegressionTests
             File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 0;
         } catch(Exception error) { results.Add("FAIL "+error); File.WriteAllLines(Path.Combine(baseDirectory,"regression-results.txt"),results); return 1; }
     }
+    private static void TestMigrationCopy(string baseDirectory, byte[] oldDatabase, Action<string,bool> check)
+    {
+        var requested = Environment.GetEnvironmentVariable("CARILLON_MIGRATION_TEST_ROOT");
+        var root = string.IsNullOrEmpty(requested) ? Path.Combine(baseDirectory,"migration-copy-"+Guid.NewGuid().ToString("N")) : Path.GetFullPath(requested);
+        if (!string.IsNullOrEmpty(requested) && (!root.Equals(Path.GetPathRoot(root),StringComparison.OrdinalIgnoreCase) || Directory.EnumerateFileSystemEntries(root).Any()))
+            throw new IOException("The migration test drive must be an empty disposable drive root.");
+        Directory.CreateDirectory(root);
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(root,"databases"));
+            File.WriteAllBytes(Path.Combine(root,"databases","carillon.db"),oldDatabase);
+            foreach(var name in new[]{"CarillonBells.exe","CarillonMigration.exe","Carillon.exe","Unrelated.exe","Legacy.dll","test.mp3"})
+                File.WriteAllText(Path.Combine(root,name),"Disposable migration test: "+name);
+            Directory.CreateDirectory(Path.Combine(root,"Documentation"));
+            File.WriteAllText(Path.Combine(root,"Documentation","CarillonBells_9_0_Quick_Start_Guide.pdf"),"Guide sentinel");
+            Directory.CreateDirectory(Path.Combine(root,"Help"));
+            File.WriteAllText(Path.Combine(root,"Help","legacy.html"),"Old help sentinel");
+            var inspected=MigrationEngine.InspectSource(root);
+            var target=Path.Combine(root,"V9");
+            bool blocked=false;
+            try {MigrationEngine.Plan(inspected,root,root);} catch(IOException){blocked=true;}
+            check("Migration rejects merging into its source or drive root",blocked);
+            if (!string.IsNullOrEmpty(requested))
+            {
+                var plan=MigrationEngine.Plan(inspected,target,root);
+                var result=MigrationEngine.Run(plan,root);
+                check("Migration from a shared source/application drive root creates V9",Directory.Exists(target)&&result.Destination==target);
+                check("Copy migration leaves the old database byte-identical",File.ReadAllBytes(Path.Combine(root,"databases","carillon.db")).SequenceEqual(oldDatabase));
+                check("Copy migration keeps both old program and unrelated files at source",File.ReadAllText(Path.Combine(root,"Carillon.exe"))=="Disposable migration test: Carillon.exe"&&File.Exists(Path.Combine(root,"Unrelated.exe")));
+                check("Copy migration includes only v9 executables",File.Exists(Path.Combine(target,"CarillonBells.exe"))&&File.Exists(Path.Combine(target,"CarillonMigration.exe"))&&!File.Exists(Path.Combine(target,"Carillon.exe"))&&!File.Exists(Path.Combine(target,"Unrelated.exe"))&&!File.Exists(Path.Combine(target,"Legacy.dll")));
+                check("Copy migration includes Documentation",File.ReadAllText(Path.Combine(target,"Documentation","CarillonBells_9_0_Quick_Start_Guide.pdf"))=="Guide sentinel");
+                check("Single-file copy excludes legacy loose Help",!Directory.Exists(Path.Combine(target,"Help")));
+                check("Copy migration copies the recording exactly",File.ReadAllBytes(Path.Combine(root,"test.mp3")).SequenceEqual(File.ReadAllBytes(Path.Combine(target,"test.mp3"))));
+                check("Copy migration converts only the copied database",!MigrationEngine.LocalDatabaseRequiresUpgrade(Path.Combine(target,"databases","carillon.db"))&&MigrationEngine.LocalDatabaseRequiresUpgrade(Path.Combine(root,"databases","carillon.db")));
+                using(var zip=ZipFile.OpenRead(result.BackupPath)) check("Copy migration provides a database ZIP backup",zip.GetEntry("carillon.db") is not null);
+                blocked=false;try{MigrationEngine.Plan(inspected,target,root);}catch(IOException){blocked=true;}
+                check("Migration refuses an existing V9 folder",blocked);
+                blocked=false;try{MigrationEngine.Plan(inspected,Path.Combine(root,"databases","Nested"),root);}catch(IOException){blocked=true;}
+                check("Migration refuses nested source data destinations",blocked);
+                Directory.CreateDirectory(Path.Combine(root,"tools"));
+                blocked=false;try{MigrationEngine.Plan(inspected,Path.Combine(root,"tools","Nested"),Path.Combine(root,"tools"));}catch(IOException){blocked=true;}
+                check("Migration still protects a non-root application folder",blocked);
+                var convertedBytes=File.ReadAllBytes(Path.Combine(target,"databases","carillon.db"));
+                File.WriteAllBytes(Path.Combine(root,"databases","carillon.db"),convertedBytes);
+                var source81=MigrationEngine.InspectSource(root);
+                var target81=Path.Combine(root,"V9-81");
+                MigrationEngine.Run(MigrationEngine.Plan(source81,target81,root),root);
+                check("8.1 root copy preserves source database bytes",File.ReadAllBytes(Path.Combine(root,"databases","carillon.db")).SequenceEqual(convertedBytes));
+                check("8.1 root copy remains an 8.1-compatible database",!MigrationEngine.LocalDatabaseRequiresUpgrade(Path.Combine(target81,"databases","carillon.db")));
+                File.WriteAllBytes(Path.Combine(root,"databases","carillon.db"),oldDatabase);
+                File.WriteAllText(Path.Combine(root,"CarillonBells.dll"),"v9 assembly sentinel");
+                File.WriteAllText(Path.Combine(root,"Needed.dll"),"v9 dependency sentinel");
+                File.WriteAllText(Path.Combine(root,"CarillonBells.deps.json"),"{\"targets\":{\"test\":{\"dependency/1\":{\"runtime\":{\"lib/net10/Needed.dll\":{}}}}}}");
+                var multi=Path.Combine(root,"V9-multifile");
+                MigrationEngine.Run(MigrationEngine.Plan(inspected,multi,root),root);
+                check("Multifile migration keeps declared v9 dependencies",File.ReadAllText(Path.Combine(multi,"Needed.dll"))=="v9 dependency sentinel");
+                check("Multifile migration excludes unrelated legacy DLLs",!File.Exists(Path.Combine(multi,"Legacy.dll")));
+                var changed=MigrationEngine.Plan(inspected,Path.Combine(root,"V9-changed"),root);
+                using(var db=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder{DataSource=Path.Combine(root,"databases","carillon.db"),Pooling=false}.ToString()))
+                { db.Open();using var command=db.CreateCommand();command.CommandText="PRAGMA user_version=91";command.ExecuteNonQuery(); }
+                blocked=false;try{MigrationEngine.Run(changed,root);}catch(IOException){blocked=true;}
+                check("Migration refuses a source changed after review",blocked&&!Directory.Exists(changed.Destination));
+                check("Failed migration removes only its temporary stage",!Directory.EnumerateDirectories(root,".carillon-migration-*").Any());
+                File.WriteAllBytes(Path.Combine(root,"databases","carillon.db"),oldDatabase);
+                blocked=false;try{MigrationEngine.Run(MigrationEngine.Plan(inspected,Path.Combine(root,"V9-cancelled"),root),root,cancellationToken:new CancellationToken(true));}catch(OperationCanceledException){blocked=true;}
+                check("Canceled migration leaves no destination",blocked&&!Directory.Exists(Path.Combine(root,"V9-cancelled")));
+                #if !CARILLON_SINGLE_EXE
+                var window=new MigrationWindow();
+                try {
+                    ((TextBox)window.FindName("DestinationParentInput")).Text=root;
+                    ((TextBox)window.FindName("DestinationNameInput")).Text="V9 with spaces";
+                    var preview=(TextBox)window.FindName("DestinationInput");
+                    check("Destination controls compose a new folder with spaces",preview.IsReadOnly&&preview.Text==Path.Combine(root,"V9 with spaces"));
+                    ((TextBox)window.FindName("DestinationNameInput")).Text="..";
+                    check("Destination controls reject parent traversal",preview.Text=="");
+
+                } finally {window.Close();}
+                #endif
+            }
+        }
+        finally
+        {
+            if (string.IsNullOrEmpty(requested)) Directory.Delete(root,true);
+            else foreach(var entry in Directory.EnumerateFileSystemEntries(root))
+                if(Directory.Exists(entry)) Directory.Delete(entry,true); else File.Delete(entry);
+        }
+    }
     private static void TestDatabase(string baseDirectory,Action<string,bool> check)
     {
         var scratch=Path.Combine(baseDirectory,"test-"+Guid.NewGuid().ToString("N")); Directory.CreateDirectory(scratch);
@@ -173,6 +260,7 @@ public static class RegressionTests
             using(var connection=repository.Open()) {using var command=connection.CreateCommand();command.CommandText="DROP TABLE PL_RAND_DIR_ROTATION; CREATE TABLE PL_RAND_DIR_ROTATION(id INTEGER PRIMARY KEY,"+string.Join(',',Enumerable.Range(1,7).Select(i=>$"rand_music_dir{i} TEXT,frm_date{i} DATE,to_date{i} DATE"))+"); INSERT INTO PL_RAND_DIR_ROTATION(id,rand_music_dir1) VALUES(1,'wide-default'); DROP TABLE silence_schedule;";command.ExecuteNonQuery();}
             check("Wide 7.2.4 database is detected",MigrationEngine.LocalDatabaseRequiresUpgrade(path));
             var beforeUpgrade = File.ReadAllBytes(path);
+            TestMigrationCopy(baseDirectory, File.ReadAllBytes(path), check);
             var directoriesBeforeUpgrade = Directory.GetDirectories(scratch);
             var upgradeBackup = MigrationEngine.UpgradeLocalDatabase(path);
             using (var zip = ZipFile.OpenRead(upgradeBackup))

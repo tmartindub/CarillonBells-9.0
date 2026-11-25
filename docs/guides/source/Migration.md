@@ -230,14 +230,18 @@ After recovery, open the original 8.1 program and check its playlist, schedule, 
 
 # Try version 9 in a separate folder
 
-This optional route creates another installation while leaving the older folder in place. The **Migration Assistant** copies the database and available music into a new folder. **Source** means the existing installation you are copying; **Destination** means the new folder you want the assistant to create.
+This route creates a separate v9 installation while leaving the old installation in place. The **Migration Assistant** copies the database and available music into a new folder. It never merges the copy into the drive root or an existing folder. For example, an old installation in **E:\** can stay there while the assistant creates **E:\V9**. Allow enough free space for the copied music.
 
-1. Keep CarillonMigration.exe and CarillonBells.exe from the same 32-bit or 64-bit download together. Close the older Carillon application, then open **CarillonMigration.exe**.
-2. On **Source**, click **Browse…** and choose the folder containing the old databases folder. For example, choose **D:\Carillon** if the working database is **D:\Carillon\databases\carillon.db**. Click **Next**.
+1. Keep **CarillonMigration.exe** and **CarillonBells.exe** from the same 32-bit or 64-bit download together. They may be directly in **E:\** beside the old installation. Close the old Carillon program, then double-click **CarillonMigration.exe**.
+2. On **Source**, the old installation folder is filled in automatically when its database is beside the assistant. Check that it is the installation you want to copy. Otherwise click **Browse database…**, double-click the old installation's **databases** folder, click **carillon.db**, then click **Open**. For example, selecting **E:\databases\carillon.db** sets Source to **E:\**. If the old database is directly beside the old program, select that carillon.db instead. Click **Next**.
 
-![Figure 3. The Migration Assistant opening page. Browse selects the existing installation. The Restore 7.2.4 button is a separate recovery option, not the next step for creating a new installation.](figures/migration-start.jpg)
+![Figure 3. Source identifies the old installation. Browse database selects its carillon.db file. Restore 7.2.4 is a separate recovery operation. The example uses a demonstration drive.](figures/migration-source.png)
 
-3. On **Destination**, choose a new folder name. For example, **D:\Carillon9Trial** creates a separate folder on the USB. **Browse parent…** chooses the folder in which the new folder will be created. The final destination must not already exist, and the drive needs enough free space for the copied music.
+3. On **Destination**, set **Destination drive or parent folder** to **E:\**, using your own drive letter. **Browse parent…** lets you choose that drive or an existing containing folder. Leave **New folder name** as **V9**, or enter another unused name. The **New installation path** should now show **E:\V9**. Do not create V9 yourself: the assistant will create it. If it already exists, choose another name, such as **V9 Trial**, to protect its contents.
+
+![The destination page separates the existing drive or parent folder from the new folder name and shows the complete path before copying.](figures/migration-destination.png)
+
+<!-- page break -->
 
 ## Review before copying
 4. On **Review**, check the old database location, new folder, detected version, music summary, and any warnings. A warning that a recording is missing means the assistant cannot copy that recording from the path it found. Correct missing files or understand the warning before proceeding.

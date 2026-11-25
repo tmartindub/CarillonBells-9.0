@@ -8,18 +8,20 @@
     },
     {
       "guide": "Engineering",
-      "pages": 13,
-      "pdf_sha256": "74a8a9ba2556f0091fa50a6365f1057105367df982fd1ba1f1ca2c01b4e93203"
+      "pages": 14,
+      "pdf_sha256": "0c5e9742751aba582d397183f8f72464ce0a578b69de07fbc265158ab00b2bab"
     },
     {
       "guide": "Database_Migration",
-      "pages": 20,
-      "pdf_sha256": "7757492f5c0512ccb260fc2ee9df76ed6250c11f56688ac6ab6cd0dd4cf870c7"
+      "pages": 21,
+      "pdf_sha256": "90279e0f8deba42cfa7c1f8f97a9485b3cf2ecc2e1a8ae259e58150f32e2df3c"
     },
     {
       "guide": "Quick_Start",
       "pages": 8,
       "pdf_sha256": "79d1b263168c1f9b805bd317509b7726c2cbc4b666017ce51b36bfa94357d68f"
     }
-  ]
+  ],
+  "migration_root_fix": "2026-11-25: source and destination screenshots, new-folder instructions, 21-page Migration and 14-page Engineering guides; changed pages visually reviewed.",
+  "site_local_references_checked": 44
 }

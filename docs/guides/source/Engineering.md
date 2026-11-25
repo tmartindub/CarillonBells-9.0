@@ -134,6 +134,10 @@ The in-place ZIP contains carillon.db. For release verification, use disposable 
 
 ## Analysis and import
 
+Separate-folder migration permits the old installation and the v9 template to share a drive root, while requiring a new direct child such as E:\V9. The drive root itself, existing destinations, reserved data folders and children of a non-root source/template remain rejected. The assistant auto-fills Source when its database is beside the executable; Browse database identifies the installation through carillon.db. Destination separates an existing parent from a single new folder name and displays a read-only composed path. Migration creates that folder only after validation and staging succeeds.
+
+Template copying includes the v9 executables and versioned Documentation guides. Single-file templates exclude older loose Help and unrelated programs/DLLs. Multifile dependencies are selected from the v9 deps.json declarations rather than copying every executable or DLL from the shared root. Root-drive regression cases cover 7.2.4 conversion, 8.1 preservation, source hashes, Documentation, dependency filtering, existing/nested destinations, changed-source rejection and cancellation. The optional CARILLON_MIGRATION_TEST_ROOT environment variable must name an empty disposable drive root for those tests; never point it at a working USB.
+
 Analyze source database opens the selected file read-only, runs SQLite quick_check, and reports whether the rotation table is row-based. The scrollable report includes definitions from sqlite_schema for tables, indexes, views, and triggers. SQLite-generated objects without separate SQL receive an explanatory line. Save report exports text. Schema names and definitions can still be private, so review a report before sharing it.
 
 ![The report shows the rotation table definition, including its slot number constraint and directory and date columns.](figures/analysis.png)
