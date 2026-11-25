@@ -7,8 +7,8 @@ The application uses the approved WPF composition, portable SQLite storage, inde
 ## Running from USB
 
 - **New installation.** Extract the USB New Install ZIP to an empty USB root. Open `CarillonBells.exe`. The ZIP supplies a starter time-marking schedule in `databases\carillon.db` and the `data`, `Documentation`, `Help`, `logs`, and `Music` folders.
-- **Upgrade from 7.2.4.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. Confirm the one-step conversion. V9 verifies a backup ZIP in `databases`, converts the database in place, and opens with scheduling paused for review.
-- **Upgrade from 8.1.** Close the old app, extract the USB Upgrade ZIP into the existing USB root, and open `CarillonBells.exe`. V9 uses the existing database. On the first run that needs the v9 dispatch table, it saves a backup ZIP in `databases` before adding the table.
+- **Upgrade from 7.2.4.** Close the old app, extract the USB Upgrade ZIP into the existing installation folder beside databases, and open `CarillonBells.exe`. Confirm the one-step conversion. V9 verifies a backup ZIP in `databases`, converts the database in place, and opens with scheduling paused for review.
+- **Upgrade from 8.1.** Close the old app, extract the USB Upgrade ZIP into the existing installation folder beside databases, and open `CarillonBells.exe`. V9 uses the existing database. On the first run that needs the v9 dispatch table, it saves a backup ZIP in `databases` before adding the table.
 
 The upgrade ZIP contains `CarillonBells.exe`, the matching `CarillonMigration.exe`, and updated files for `Documentation`. Both upgrades use the existing USB folders and music. Open `CarillonBells.exe` directly from the USB.
 
@@ -16,7 +16,7 @@ The upgrade ZIP contains `CarillonBells.exe`, the matching `CarillonMigration.ex
 
 Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).
 
-The `export\32-bit` and `export\64-bit` release folders each contain `CarillonBells.exe`, `CarillonMigration.exe`, the New Install and Upgrade USB ZIPs, and their Package Studio Pro setup executables. A Package Studio setup stages its matching ZIP in a PC folder. Extract that ZIP to the USB root. For the separate-folder Migration Assistant, keep the matching `CarillonBells.exe` beside `CarillonMigration.exe`.
+The `export\32-bit` and `export\64-bit` release folders each contain `CarillonBells.exe`, `CarillonMigration.exe`, the New Install and Upgrade USB ZIPs, and their Package Studio Pro setup executables. A Package Studio setup stages its matching ZIP in a PC folder. Extract that ZIP into the intended installation folder on the USB. For the separate-folder Migration Assistant, keep the matching `CarillonBells.exe` beside `CarillonMigration.exe`.
 
 To move a working installation to another writable USB, close Carillon and copy the complete working installation. Choose the executable that matches the Windows system where you will run it.
 
@@ -29,6 +29,8 @@ The original interface uses an 18-unit base font, with larger headings and 14–
 Playback logs record `Played Song:` entries. Existing `Songs`, `Random_songs`, and other personal music folders can still be used on upgraded USB drives when the database references them.
 
 `--evaluation` suppresses automatic email. It retains real scheduling, playback, power hold, and Windows volume control. Manual email test commands ask for confirmation.
+
+Saved play times use 24-hour HH:mm:ss. Users can enter AM/PM times: 6:15 PM saves and displays as 18:15:00. The runtime requests that Windows stay awake and writes data\keepalive.txt periodically to keep the installation drive active; the computer must remain powered and the drive connected.
 
 ## Building and testing
 

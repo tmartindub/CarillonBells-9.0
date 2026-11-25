@@ -512,3 +512,41 @@ and the resulting Git commit. PDF validation hashes are recorded in
 `guides/documentation-refresh-validation.json`. The refreshed Help is available
 as local HTML source; embedding it into an executable requires the next approved
 application build. Existing release packages must be rebuilt before publication.
+
+## 25. Clear guides and refreshed local distribution November 24
+
+Pre-change ZIPs on H: were verified before replacement:
+`Before_docs_packages_cleanup_20261124_source.zip` (164 entries) and
+`Before_docs_packages_cleanup_20261124_packages.zip` (14 entries).
+
+Rewrote Quick Start as a five-page first-installation guide with a separate cover
+and contents, readable body text, corrected page boundaries and one schedule
+illustration. Removed upgrade/rollback executable references from Quick Start.
+Replaced the User Guide's competing setup sequence with opening an installed
+copy and keeping its folders together. Migration now distinguishes the current
+program, optional Migration Assistant and older recovery program explicitly.
+All four guides, Help, README and the proposed setup page explain AM/PM entry
+and conversion to 24-hour display, including noon and midnight. Keep-alive text
+describes both Windows sleep prevention and periodic drive writes accurately.
+
+Rebuilt the x86/x64 app and Migration Assistant with current Help. Each app passed
+204 self-tests. Rebuilt four USB ZIPs and four Package Studio Setup programs;
+the auditor verifies ZIP CRCs, PE architectures, executable and guide hashes,
+current Help and exact embedded ZIP payloads. Reusable Setup projects are under
+`tools/package-projects`. The migration package lock acquired the SDK's existing
+10.0.15 ILLink build-task entry during single-file publishing; product dependency
+versions and application C# source were not changed.
+
+All 50 guide pages were visually reviewed; all 120 local HTML references passed.
+The starter database passes quick_check, contains 14 schedule records and no
+email credentials/recipients; its existing 129 supplied recordings were retained.
+Raw native test results are preserved in `export/release-validation-20261124`.
+The initially open Quick Start PDF was closed by Tommy and its canonical file
+replaced. The local PDF now matches the reviewed website and distribution copies.
+
+Tommy requested no push/publication and no changes to the two scheduling items
+raised in review. D: remains running with its previous executable. Overnight
+acceptance remains Tommy's test. The source, documentation and release manifest
+are committed locally; the final source ZIP is regenerated from the resulting
+commit. A completion ZIP on H: uses prefix `Checkpoint25_Final_` followed by
+that commit. No GitHub, production website or version 8.1 files were changed.

@@ -16,6 +16,8 @@ If you prefer to leave the existing installation completely separate while you t
 
 For example, a playlist can show “Morning Chimes” even when its recording has not been copied. Seeing the song name confirms that the database opened; playing it successfully confirms that the audio file is available too.
 
+**Which program should I open?** For normal version 9 use, open **CarillonBells.exe** (Windows may display only **CarillonBells**). **CarillonMigration.exe** is the separate Migration Assistant, used only in the optional copy/recovery procedures later in this guide. **Carillon.exe** refers to the older program when returning to a previous version. Do not open all three.
+
 The pictures in this guide use demonstration data. Your organization name, song titles, drive letter, and folder names will be different. Follow the button names and the folder relationships rather than trying to make your screen match every example.
 
 # Choose the right download
@@ -58,7 +60,7 @@ Windows gives each connected drive a letter. A USB may appear as **USB Drive (D:
 
 ## Two common arrangements
 
-**Example A:** opening the USB shows **Carillon.exe**, **databases**, and **Music** together. The correct location for the new program is beside those items, such as **D:\CarillonBells.exe**.
+**Example A:** opening the older USB shows its old program (often named **Carillon.exe**), **databases**, and **Music** together. The correct location for the new program is beside those items, such as **D:\CarillonBells.exe**.
 
 **Example B:** opening the USB shows a folder called **Carillon**. Inside that folder are the old program, **databases**, and **Songs**. The correct location is **D:\Carillon\CarillonBells.exe**.
 
@@ -72,7 +74,7 @@ A backup is a saved copy you can return to if the upgrade does not work as expec
 
 1. Confirm that the old program is closed. In File Explorer, open the installation folder you identified in the previous section.
 2. Press **Ctrl+A** (hold Ctrl and press A) to select the items in that folder. Right-click one of the selected items. In Windows 11, choose **Compress to ZIP file** if shown. On systems using the older menu, choose **Send to**, then **Compressed (zipped) folder**; Windows 11 may put this under **Show more options**.
-3. Let Windows finish creating the ZIP. Rename the new ZIP to something you will recognize, such as **Carillon-before-v9-11-23-2026.zip**. Keep the date of your own backup in the name.
+3. Let Windows finish creating the ZIP. Rename the new ZIP to something you will recognize, such as **Carillon-before-v9-11-24-2026.zip**. Keep the date of your own backup in the name.
 4. Copy that ZIP to a folder on the computer or a different backup drive. For example, create **Carillon Backups** in Documents and paste the ZIP there. A backup stored only on the same USB cannot protect you if that USB fails.
 5. Open the saved ZIP to check that it contains the expected folders and files. In particular, find **databases\carillon.db** and the music folders. Close the ZIP when you have checked it.
 
@@ -122,6 +124,8 @@ Keep the complete backup you made earlier regardless of whether an automatic ZIP
 
 # Check the songs and schedule
 
+**Time display:** saved play times use 24-hour format. You may type **6:15 PM** or **18:15**; both save and display as **18:15:00**. **12:00 AM** is midnight (**00:00:00**) and **12:00 PM** is noon (**12:00:00**).
+
 Work through these checks while **Schedule enabled** is cleared. Seeing a familiar playlist is a good start, but check both the settings and the actual sound before reconnecting a live output.
 
 1. In the main window, look under **Songs** for several familiar titles and groups. Select a title and compare its weekdays, From and Until dates, and play times with the schedule you expect.
@@ -154,7 +158,7 @@ Choose a suitable time to reconnect the intended speakers or amplifier. Keep the
 3. Look at **Today's schedule** and the **Next song** card. Confirm that an upcoming song and time are reasonable. Allow one scheduled event to run through the intended output and look in **Log** for its recorded play.
 4. Keep the complete backup and any automatic database ZIPs. If you want a different font after the functional checks, open System, then Font settings. Check every page before applying the choice; the confirmation says when it is already applied and saved. Close the application before removing the USB or making a copy of its working files.
 
-If you want an overnight check, leave the computer awake, the USB connected, and scheduling and logging enabled. Normal operation rebuilds the schedule at midnight and performs daily schedule maintenance at or after **12:05 a.m.**. An enabled morning email is attempted at or after **5:00 a.m.**; start the application before that time to test it.
+For an overnight check, leave the app open, the computer powered on, the USB connected, and scheduling and logging enabled. The app requests that Windows stay awake and writes to the USB periodically to keep it active. Normal background housekeeping does not play songs by itself. Playback follows your saved schedule and silence settings. An enabled morning email is attempted at or after **05:00 (5:00 AM)**; start the app before that time to test it. A physical disconnection or power loss can still interrupt operation.
 
 The **Evaluation** footer means automatic email is suppressed. For a normal report test, open CarillonBells.exe directly without an evaluation launcher. A **Migration review** session also suppresses automatic email until you close that review session and start normally. Automatic reports are generated as email HTML; use Preview report if you also want a separate saved file.
 

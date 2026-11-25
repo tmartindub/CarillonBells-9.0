@@ -1,45 +1,48 @@
-# Start the app
+# Before you start
 
-On the PC that will run the app, open **Settings → System → About** and find **System type**. For **64-bit operating system, x64-based processor**, choose **64-bit (win-x64)**. For **32-bit operating system**, choose **32-bit (win-x86)**. The Migration Guide includes more examples.
+This guide is for a new installation of Westminster Chimes and Carillon Bells 9.0. It takes you from the download to one song playing on schedule. If your USB already contains a working version 7.2.4 or 8.1, use the **Database Migration Guide** instead; it explains how to keep your existing songs and settings.
 
-1. Choose the matching **USB New Install** ZIP. If you have **Package Setup**, run it on the PC to save that ZIP first. In File Explorer, right-click the ZIP and choose **Extract All**. Extract it to a new USB drive or writable PC folder, keeping `CarillonBells.exe` beside `databases` and `Music`.
-2. Check the PC date and time and select the intended Windows speakers or amplifier. Set a low volume if you are testing.
-3. Open `CarillonBells.exe` where you extracted it. The included database opens with basic time-marking chimes already scheduled. Clear **Schedule enabled** while you set up and test.
+Choose **New Install** for the computer that will run the bells. In Windows, open **Start → Settings → System → About** and find **System type**. If the line begins **64-bit operating system** and says **x64-based processor**, choose the **64-bit** download. If it begins **32-bit operating system**, choose **32-bit**. The filename uses **win-x64** for 64-bit or **win-x86** for 32-bit. The Migration Guide explains these choices in more detail.
 
-**Upgrading from 7.2.4 or 8.1?** Close the old program. Use the matching **USB Upgrade** ZIP on the existing USB. Follow the **Database Migration Guide** in **Documentation**, then run the new executable from the USB to use your database and music.
+You may receive a ZIP file or a **Package Setup** program. A ZIP is a compressed collection of files. Package Setup saves that ZIP to a folder on your computer; you still need to unpack it onto the USB as described below.
 
-**Returning to 7.2.4?** Close **Carillon.exe** and **CarillonBells.exe**. Open **CarillonMigration.exe** from the USB Upgrade package, select **Restore 7.2.4…**, and follow the Database Migration Guide.
+# Put the new installation on the USB
 
-Start the app from the USB to use its database and music, even if Windows assigns a different drive letter. Close the app before unplugging the USB or copying its installation folder to another drive.
+1. Plug an empty USB drive into the computer. Open **File Explorer**, choose **This PC**, and identify that drive. Its letter may be D:, E:, or something else. Use the letter shown on your computer.
+2. If you downloaded **Package Setup**, open it and follow its screens to save the New Install ZIP. Note the folder it uses. If you downloaded the ZIP directly, it will normally be in **Downloads**.
+3. Right-click the New Install ZIP and choose **Extract All**. Select the empty USB drive as the destination, then click **Extract**. Wait until Windows finishes copying the files.
+4. Open the USB in File Explorer. You should see **CarillonBells.exe** alongside the **databases**, **Music**, and **Documentation** folders. If Windows hides file extensions, the program appears as **CarillonBells**. Open this program from the USB, rather than from inside the ZIP or the download folder.
 
-# Add music and test playback
+The download includes the software needed to run the app. You do not need to install .NET separately. Keep the supplied folders together: the database holds the schedule, while Music holds the recordings.
 
-1. Select a supplied chime in **Songs**, or copy your own MP3 or WAV into the **Music** folder beside the executable.
-2. To add your own recording, click **Add files** below **Play schedule**, open the **Music** folder, and select the recording. It appears in **Songs**.
-3. Set Windows volume low for the test. If the player shows **Unmute**, click it. Use **System volume** to adjust the level, then select the recording and click **Play**. Listen for sound, then click **Stop**. PLAYER records **Last song played**; selecting another row does not change that record.
+<!-- page break -->
 
-![The demo shows Songs in the center, Add files on the right, and the player below. Keep Schedule enabled cleared during setup.](figures/main.png)
+# Open the app and test a song
 
-**Set the displayed name.** In the sidebar, open **System**, enter an **Organization name**, then click **Save** and **Close**. Leave **Playback logging** checked so you can confirm the test in **Log**.
+1. Check that Windows shows the correct date and time. Select the speakers or amplifier you intend to use and set a low test volume.
+2. Open **CarillonBells** from the USB. When the main screen appears, clear **Schedule enabled** at the upper right while you set up. The starter installation already has chimes scheduled.
+3. Open **System** in the left panel. Enter your **Organization name**, click **Save**, then **Close**. Leave **Playback logging** checked so you can review your test in Log.
+4. In **Songs**, select a supplied chime. Click **Play** at the bottom, or double-click the song. If the button says **Unmute**, click it first. Listen, then click **Stop**. The player displays **Last song played**; selecting another song does not change that record.
 
-# Set and verify a play time
+To add your own recording later, copy its MP3 or WAV file into Music on this USB, then use **Add files** in the app. Copying a file alone does not add it to the Songs list.
 
-1. Select your recording. Under **Play on these days**, check each day on which it may play automatically. Clear the checkboxes for the days it should skip.
-2. Set **From** and **Until** so the range includes today. Both dates are included. Hover over a date field to reveal its calendar button, click the button, then select the day. The button also appears with keyboard focus. Set **Group** to **Daily List** to use the song’s own times, and set **Times to play** to `1`.
-3. Under **Play times**, enter a time a few minutes ahead of the current PC time and leave the other boxes blank. For example, `18:00:00` means 6:00 p.m. Click **Save**.
+# Set one play time
 
-![The demo shows one play at 18:00:00 with all seven days checked. Use Daily List for your own test.](figures/schedule.png)
+1. Select the song you want to test. In **Play schedule** on the right, check the days on which it may play.
+2. Set **From** and **Until** so today falls between them. Dates use U.S. month/day/year order. Point at a date box to reveal its calendar button, click the button, then choose the day. The button also appears when you reach the field with the keyboard.
+3. Set **Group** to **Daily List** so the song uses its own play times. Set **Times to play** to **1**.
+4. Enter a time a few minutes ahead of the current time in the first **Play times** box. Leave the other boxes blank. Click **Save**.
 
-## Confirm the first scheduled play
+**Time entry:** the app displays saved play times in **24-hour format**. You can type **6:15 PM** or **18:15**; after saving, both display as **18:15:00**. Likewise, **8:15 AM** becomes **08:15:00**. **12:00 AM** means midnight (**00:00:00**), and **12:00 PM** means noon (**12:00:00**). A blank box means no play at that position.
 
-Check **Schedule enabled**. Open **Today's schedule** from the sidebar and look for the recording under **Remaining queue**. The **Next Song** card shows the first item due. Keep the app open and listen at the scheduled time, then check **Log** for the **Played Song** entry.
+![This example has one play time, 18:00:00, which means 6:00 PM. Use a time a few minutes ahead for your own test.](figures/schedule.png)
 
-If the recording is missing from the queue, check today’s weekday box, the dates, the saved time, and **Silence windows**. If the player runs without sound, check the Windows output, mute, and volume. Use **Help** in the sidebar or the **User Guide** for daily operation.
+# Confirm the scheduled play
 
-# Adjust readability
+1. Check **Schedule enabled**. Open **Today's schedule** in the left panel and find your song under **Remaining queue**. Use **Back to playlist** to return.
+2. Check the **Next Song** card. Leave the app open and listen when the scheduled time arrives.
+3. Open **Log** and look for a **Played Song** entry. If nothing played, check the saved time, today's weekday, the date range, and **Silence windows**. If the player moved but you heard nothing, check Windows audio output, mute, and volume.
 
-For a different font, open **System**, then **Font settings**. Choose a font and size, click **Check every page**, and use **Apply checked font** only when the check passes. The confirmation says the font is applied and saved; no extra Save click is needed. Use **Restore defaults** to return to the original appearance.
+For everyday work, use the **User Guide** or the app's **Help** button. To change text size, open **System → Font settings**, choose a font and size, and click **Check every page**. Use **Apply checked font** only after the check passes; the confirmation says the choice is already applied and saved.
 
-The **User Guide** covers seasonal group calendars, annual random-music dates such as **10/1**, the eighteen black clock-hand alternatives, silence rules, and email recipients. The Songs list updates automatically after edits. Use the **×** in its search box to show all songs again.
-
-![A passing font check enables Apply checked font. The current appearance stays active until you apply it.](figures/fonts.png)
+For your overnight test, leave the app open, scheduling enabled, the USB connected, and the computer powered on. The app requests that Windows stay awake and writes to the USB periodically to keep it active. Check the next morning's playback and report. Close the app before unplugging the drive.

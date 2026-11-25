@@ -1,24 +1,22 @@
-# Start and move the app
+# Open your installed program
 
-Westminster Chimes and Carillon Bells schedules chimes and music on Windows. This guide covers setting up the portable installation, programming bells, controlling playback and silence, and looking after the local database.
+This guide explains everyday use of Westminster Chimes and Carillon Bells 9.0: songs, schedules, silence, reports, and appearance. For a new installation, follow the **Quick Start Guide** first. To bring an existing version 7.2.4 or 8.1 installation into version 9, follow the **Database Migration Guide**. Those guides contain the download, unpacking, and upgrade steps.
 
-## First start
+## Open the correct copy
 
-On the PC that will run the app, open **Settings**, then **System**, then **About** and find **System type**. If it reads **64-bit operating system, x64-based processor**, choose the **64-bit** download. If it reads **32-bit operating system**, choose **32-bit**. The filenames use **win-x64** for 64-bit and **win-x86** for 32-bit. The Database Migration Guide gives more examples, including what to do if the processor is described differently. The download includes its .NET runtime, so you do not need to install that separately.
+1. Plug in the USB that holds your installation. Open **File Explorer**, choose **This PC**, and open that USB. If your installation is inside a folder on the USB, open that folder.
+2. Find **CarillonBells.exe** beside the **databases** folder and your music folders. Windows may hide the .exe ending and show **CarillonBells**. Double-click this program. Do not open an older program or a copy still inside a downloaded ZIP.
+3. Check the organization name, today's date, and **Next Song**. A normal start enables scheduling. Clear **Schedule enabled** when you want to review settings or test manually without scheduled playback.
 
-1. Choose **CarillonBells_9_0_USB_New_Install_win-x86.zip** or **CarillonBells_9_0_USB_New_Install_win-x64.zip** to match Windows. If you have **Package Setup** for that package, run it on the PC to save the ZIP to a folder. In File Explorer, use **Extract All** to put the entire ZIP on a new USB drive or in a writable Windows folder. It supplies **CarillonBells.exe**, **data**, **databases**, **Documentation**, **Help**, **logs**, and **Music**.
-2. Check the PC date and time, the Windows sound output, and the volume. Open **CarillonBells.exe** where you extracted it. The starter database contains 14 time-marking Westminster chime entries. **Today's schedule** shows the included times, such as 6:00 a.m. and 6:30 a.m.
-3. Set the organization name in **System**. Review **Today's schedule** and **Silence windows** before leaving the app unattended. A normal start enables scheduling. For setup or manual playback, clear **Schedule enabled** and use a suitable test output.
+You do not need **Database import** for normal startup. The program opens the database beside its own copy of the program automatically. A program started from a different folder uses that folder's database and music.
 
-For an existing 7.2.4 or 8.1 USB, close the old program and extract the matching **USB Upgrade** ZIP into the existing installation folder beside **databases**. Open **CarillonBells.exe** from the USB. The **Database Migration Guide** in **Documentation** covers the one-time 7.2.4 confirmation and both uses of **CarillonMigration.exe**. It can restore a 7.2.4 database on the existing USB or create a separate v9 installation.
+## Keep the installation together
 
-Start **CarillonBells.exe** with the **--evaluation** option to suppress automatic mail during a test. Evaluation mode still plays audio and controls Windows system volume.
+The program, **databases**, music folders, **data**, **Documentation**, and **Help** belong together. The database holds the song list and schedule; the music folders hold the recordings. Moving only the program or only the database does not move the complete installation.
 
-## Copy the entire installation
+To move an installation, close the app and copy the complete installation folder to another writable drive. Open CarillonBells from that copied folder. Windows may give the new drive a different letter. If you are moving to a different computer, use the Migration Guide to check its 32-bit or 64-bit requirement before starting there.
 
-Close the app before copying or unplugging its USB drive. Copy the complete installation, including the executable, database, music, display settings, logs, and documentation. Start the executable inside the copied installation to use that copy's files. Windows can assign a different drive letter. If you move to a PC with different Windows bitness, apply the matching **USB Upgrade** ZIP to the copied installation. Use one running instance per installation.
-
-Place new audio inside the installation before adding it. For example, a playlist path of .\Songs\Evening Bells.mp3 refers to Songs\Evening Bells.mp3 beside the executable. An imported path of C:\Songs\Evening Bells.mp3 resolves to the same Songs subfolder in the current installation. Use a local folder within the installation for each track and random music directory.
+Before adding a recording, put it in a music folder inside this installation. For example, **Music\Evening Bells.mp3** means the Evening Bells recording inside Music beside the program. Upgraded installations may already use **Songs** or **Random_songs**; keep those existing folder names and contents.
 
 # Read the main window
 
@@ -53,7 +51,7 @@ The main window starts maximized. The Songs list, editor, and sidebar can scroll
 1. In Play schedule, select the weekdays when the song may play.
 2. Set From and Until. To choose a date from a calendar, hover over its date field, move onto the calendar button that appears, and click it. Select the day you want. The button also appears when you reach the field with the keyboard and stays visible while the calendar is open. Its space is reserved, so the date text does not move. Both dates are included. Dates use U.S. month, day, and year order. For example, 12/22/2026 means December 22, 2026.
 3. Set Group and Times to play. Enter a repeat count of 1 to 5 for each occurrence.
-4. Enter up to twelve daily play times. Use 24-hour time such as 08:15:00 or 12-hour time with AM or PM, such as 8:15 AM. Leave an unused time field blank. Enter 00:00:00 to schedule a real midnight play. Identical times entered for the same song produce one occurrence.
+4. Enter up to twelve daily play times. **Saved play times display in 24-hour format.** You may enter a 24-hour time such as **18:15** or an AM/PM time such as **6:15 PM**; after saving, both display as **18:15:00**. **8:15 AM** becomes **08:15:00**. **12:00 AM** means midnight (**00:00:00**); **12:00 PM** means noon (**12:00:00**). Leave an unused box blank. Identical times entered for the same song produce one occurrence.
 5. Click Save and open Today's schedule to confirm the result.
 
 ![With all seven days checked and 18:00:00 as the only play time, Evening Bells is scheduled once a day from November 1, 2026 through January 21, 2027.](figures/schedule.png)
@@ -88,7 +86,7 @@ Save applies pending settings. Cancel changes reloads the last saved values acro
 
 ## Set seasonal group dates and times
 
-Open Music groups to manage seasonal names, From and Until dates, and the group's Play time. The From and Until fields have the same hover and keyboard calendar buttons as the song editor. The grid displays play time in hours, minutes, and seconds. Add group creates a pending row for you to name and complete. Delete group prompts for confirmation and retains the songs. Use First, Previous, Next, and Last to move through the rows. Click Save to apply your changes.
+Open Music groups to manage seasonal names, From and Until dates, and the group's Play time. Enter 24-hour time or an AM/PM value; saved group times display in 24-hour format. The From and Until fields have the same hover and keyboard calendar buttons as the song editor. The grid displays play time in hours, minutes, and seconds. Add group creates a pending row for you to name and complete. Delete group prompts for confirmation and retains the songs. Use First, Previous, Next, and Last to move through the rows. Click Save to apply your changes.
 
 ![Group dates stay readable with calendar buttons hidden at rest. Hover over a date field or use keyboard focus to reveal its calendar.](figures/groups.png)
 
@@ -109,7 +107,7 @@ The System field labeled Fallback random directory (legacy) is retained for comp
 
 ## Set a weekly silence window
 
-Silence windows has twelve reusable rows. In an unused row, enter a short Purpose such as Thursday rehearsal. Keep the description brief enough to fit its field. The app leaves a little spare room and refuses extra typing or a pasted passage that would overflow; it keeps the text already accepted. Existing descriptions are not automatically shortened. Set a Start and End time, choose the weekdays, turn On, and click Save. Leave the row off to keep its values for later. An interval such as Thursday 22:00:00 to 01:00:00 starts Thursday night and continues into Friday. A row with equal start and end times is inactive.
+Silence windows has twelve reusable rows. In an unused row, enter a short Purpose such as Thursday rehearsal. Keep the description brief enough to fit its field. The app leaves a little spare room and refuses extra typing or a pasted passage that would overflow; it keeps the text already accepted. Existing descriptions are not automatically shortened. Set a Start and End time, choose the weekdays, turn On, and click Save. You may enter 10:00 AM and 11:30 AM; saved times display as 10:00:00 and 11:30:00. Leave the row off to keep its values for later. An interval such as Thursday 22:00:00 to 01:00:00 starts Thursday night and continues into Friday. A row with equal start and end times is inactive.
 
 ![Check On and Sun to silence scheduled playback for Sunday service from 10:00 a.m. to 11:30 a.m.](figures/silence.png)
 
@@ -135,7 +133,7 @@ If the app is already running when 05:00 arrives, the automatic morning report b
 
 Open Log for the newest 1,000 entries from logs\CarillonPlayLog.txt. Use Refresh in the Log window to load new events. This is separate from the Songs list, which updates automatically. Schedule pause messages identify the reason, such as song maintenance or Groups maintenance. Long log entries wrap so you can read the full message. Recorded plays appear as Played Song entries. If Playback logging is off, the day's count represents the plays that were recorded while logging was enabled. The app reconstructs the count from the log after a restart.
 
-A running installation writes data\keepalive.txt roughly every 30 seconds. Daily schedule maintenance becomes due at 00:05 while scheduling is enabled. Log trimming becomes due at 00:10 and also runs at startup. The log retains 30 days of readable entries and preserves older lines with unreadable timestamps. These background tasks continue while the Clock and Log windows are open.
+While the app runs, it requests that Windows stay awake and writes to **data\keepalive.txt** roughly every 30 seconds to keep the installation drive active. Leave the computer powered on and the USB connected for unattended playback. These measures cannot prevent someone unplugging the drive or a power loss. Background schedule and log housekeeping continues while the Clock and Log windows are open. The log normally retains 30 days of readable entries.
 
 # Set the clock and appearance
 
@@ -187,9 +185,9 @@ Database import is for bringing a separate carillon.db into an existing v9 insta
 
 Record the backup ZIP path from the import report. Close the app and preserve the current local database under another name or in a separate backup before restoring. Extract carillon.db from the chosen ZIP into the installation's databases folder. Keep the ZIP and any reports secured with other copies of your settings. Restart the app and review the playlist, settings, and next play.
 
-## Return to version 7.2.4
+## Return to an older version
 
-Close **Carillon.exe** and **CarillonBells.exe**. Open **CarillonMigration.exe** from the matching Windows release and select **Restore 7.2.4…** to begin. Choose the USB installation and its dated pre-upgrade ZIP, then review the restore. **Back Up and Restore** saves your current v9 database separately before restoring the original. Open **Carillon.exe** from the USB after the restore and check the schedule. See the **Database Migration Guide** for the full procedure.
+Use the **Database Migration Guide** for recovery instructions specific to version 7.2.4 or 8.1. Recovery uses an earlier backup and can replace changes made since that backup. The older program names and the Migration Assistant described there are recovery tools, not programs you need to open for everyday version 9 use.
 
 # Troubleshoot common problems
 

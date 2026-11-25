@@ -17,7 +17,7 @@ SOURCES = PROJECT / "docs" / "guides" / "source"
 PRODUCT_NAME = "Westminster Chimes and Carillon Bells"
 PRODUCT_VERSION = "9.0"
 GUIDES = {
-    "User": ("User Guide", "Set up a portable installation, manage the music and schedules, and check daily operation.", datetime(2026, 11, 24)),
+    "User": ("User Guide", "Open your installed program, manage songs and schedules, and check daily operation.", datetime(2026, 11, 24)),
     "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 24)),
     "Migration": ("Database Migration Guide", "This illustrated guide takes you through upgrading your existing USB to version 9, from choosing the download and making a backup to checking the result and recovering an older version if needed.", datetime(2026, 11, 24)),
     "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 24)),
@@ -76,7 +76,7 @@ def add_manuscript(document, source, *, quick_start=False, migration=False):
         if text.startswith(("## ", "# ")):
             level = 2 if text.startswith("## ") else 1
             paragraph = document.add_heading(text.removeprefix("#" * level + " "), level)
-            starts_page = level == 1 if migration else ((level == 1 and not first_heading) if quick_start else first_heading)
+            starts_page = level == 1 if migration else first_heading
             if starts_page:
                 paragraph.paragraph_format.page_break_before = True
             first_heading = False
@@ -122,7 +122,7 @@ def make_guide(kind, destination):
         style.font.name = "Calibri"
         style.font.color.rgb = RGBColor(0, 0, 0)
     normal = styles["Normal"]
-    normal.font.size = Pt(12 if migration else 11)
+    normal.font.size = Pt(12 if migration or quick_start else 11)
     normal.paragraph_format.line_spacing = 1.16
     normal.paragraph_format.space_after = Pt(7)
     normal.paragraph_format.widow_control = True
@@ -183,13 +183,12 @@ def make_guide(kind, destination):
     caption.paragraph_format.keep_with_next = False
 
     cover = document.add_paragraph(PRODUCT_NAME, "Title")
-    cover.paragraph_format.space_before = Pt(0 if quick_start else 80)
+    cover.paragraph_format.space_before = Pt(80)
     document.add_paragraph(f"Version {PRODUCT_VERSION}")
     document.add_paragraph(title, "Subtitle")
     document.add_paragraph(purpose)
     document.add_paragraph(f"Last changed {last_changed:%B %d, %Y}")
-    if not quick_start:
-        document.add_page_break()
+    document.add_page_break()
     document.add_paragraph("Table of contents", "Guide contents title")
     add_field(document.add_paragraph(), 'TOC \\o "1-1" \\h \\z \\u' if migration or quick_start else 'TOC \\o "1-2" \\h \\z \\u', "Update this table of contents in Writer.")
 

@@ -2,6 +2,31 @@
 
 Last changed November 24, 2026.
 
+## Local documentation and distribution refresh November 24
+
+Tommy requested a clearer Quick Start and User Guide, a review of all current
+guides for stale instructions, and rebuilt distribution packages. Quick Start
+now covers only new installation and a first scheduled play; upgrade and older
+executable references are confined to the Migration Guide. The User Guide opens
+with normal use of an installed copy. All guides explain that AM/PM input is
+accepted and saved/displayed as 24-hour time, with midnight/noon examples.
+
+LibreOffice updated all editable contents tables. All 50 rendered pages were
+visually checked: Quick Start 5, User 13, Migration 19, Engineering 13. Both
+rebuilt self-contained architectures passed all 204 existing regression checks,
+including AM/PM parsing. No scheduling or other application C# behavior changed.
+The current Help is embedded in both rebuilt application executables.
+
+The four USB ZIPs and four Package Setup programs were rebuilt and audited for
+correct architecture, ZIP integrity, current binaries, eight current guide files,
+current Help and byte-identical embedded Setup ZIPs. The sanitized starter has
+14 playlist records, no configured mail credentials/recipients and the existing
+129 supplied recordings. All 120 local HTML references passed. Tommy directed
+that the two scheduling concerns from the readiness discussion be left unchanged
+and will perform the overnight test. No push, publication or D: update is part
+of this work. The Quick Start PDF was closed and its canonical local file replaced. Its hash
+matches the reviewed website and distribution copies.
+
 This is an experimental separate application. Implementation is present across the handoff domains. Verification below records only checks actually performed; it does not declare production acceptance or authorize replacement of Delphi 8.1.
 
 Evidence files: architecture-specific `domain-database-results-win-*.txt`, `audio-runtime-results-win-*.txt`, `build-results.txt`, and the source/schema inventories in this folder.

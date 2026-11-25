@@ -45,9 +45,11 @@ The November 24 documentation refresh updates the local proposed pages, their
 four guide PDFs and screenshots for fonts, annual random dates, calendar buttons,
 the player and eighteen black clock hand alternatives. Demonstration screenshots
 use Example Church. Production pages and version 8.1 remain unchanged.
-The release packages listed below predate these UI changes; rebuild and validate
-them from the approved release source before publishing. Keep the proposed pages
-marked noindex/nofollow until publication is approved.
+The local 32-bit and 64-bit New Install and Upgrade ZIPs and their matching
+Package Setup programs have now been rebuilt with the current executable, Help
+and revised guides. The package manifest records their hashes. These are local
+release candidates; no publication or URL switch has been authorized. Keep the
+proposed pages marked noindex/nofollow until publication is approved.
 
 1. After release approval, use `C:\New Delphi Projects\CarillonBells v 9_0\export\32-bit` for Windows x86 and `C:\New Delphi Projects\CarillonBells v 9_0\export\64-bit` for Windows x64. Verify the New Install and Upgrade ZIPs and their matching Package Studio Pro Setup executables. Keep private databases, logs, credentials and local music outside the public site and release.
 2. Publish the authorized v9 assets through the [v9 GitHub repository](https://github.com/tmartindub/CarillonBells-9.0). Add the confirmed download links and verified SHA-256 checksums to the New Install and Upgrade cards under `#software`. Label links by Windows version and package type. Keep an accessible route to the archived 8.1 release.

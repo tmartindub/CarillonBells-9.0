@@ -35,7 +35,7 @@ The app uses AppContext.BaseDirectory as the root for the database, logs, and pl
 
 The main close path resolves pending playlist edits, closes the separately opened clock, detaches notifications, and disposes the runtime. The runtime stops its dispatcher timer, cancels background mail, releases playback and endpoint subscriptions, and drops the Windows sleep-prevention request. App.OnExit disposes the two lock handles. Exit from the sidebar, File menu, or window close button goes through the same path.
 
-SetThreadExecutionState keeps the system awake during runtime and releases that request when the app exits cleanly. The runtime writes data\keepalive.txt on its 30-second cadence. For a stale timestamp, check the runtime log and process state. Verify amplifier output separately when testing onsite audio.
+SetThreadExecutionState keeps the system awake during runtime and releases that request when the app exits cleanly. The runtime writes data\keepalive.txt on its 30-second cadence to keep the portable drive active. The OS execution-state request and the periodic drive write are distinct measures; neither guarantees protection from physical removal, loss of power or device/driver failure. For a stale timestamp, check the runtime log and process state. Verify amplifier output separately when testing onsite audio.
 
 # Playlist and administration
 
@@ -117,7 +117,7 @@ The separate System setting enables the legacy liturgical and funeral intervals.
 
 ## Data model
 
-Microsoft.Data.Sqlite opens short-lived connections with pooling disabled. Repository statements use parameters for values and explicit transactions for compatible table writes. Full dates display in U.S. month/day/year order with slash marks; annual random-directory dates display only M/d. Normalized persisted dates use yyyy-MM-dd and play times use HH:mm:ss. The parser accepts the compatible legacy date and time representations, including OLE Automation values. Durations are intervals and can exceed one day.
+Microsoft.Data.Sqlite opens short-lived connections with pooling disabled. Repository statements use parameters for values and explicit transactions for compatible table writes. Full dates display in U.S. month/day/year order with slash marks; annual random-directory dates display only M/d. Normalized persisted dates use yyyy-MM-dd and play times use HH:mm:ss. The parser accepts the compatible legacy date and time representations, including OLE Automation values. User time entry accepts AM/PM as well as 24-hour forms. Saving normalizes to HH:mm:ss; 6:15 PM and 18:15 both become 18:15:00, while 12:00 AM is 00:00:00 and 12:00 PM is 12:00:00. Durations are intervals and can exceed one day.
 
 - playlist uses the composite playlist_name and song_name key. Its group is stored as season, and its daily times are scheduled_time1 through scheduled_time12.
 - seasonalgroups stores named date ranges and a play time. PL_SETTINGS stores one row under settings_id 1, including distinct System and Email field sets and compatible theme colors.
