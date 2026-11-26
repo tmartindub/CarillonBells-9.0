@@ -64,6 +64,8 @@
     }
   ],
   "productionPromotionApproved": true,
-  "publicationStatus": "Authorized by Tommy on 2026-11-26; package audit passed; publication in progress",
-  "installerSourceCommit": "7219e4c34cde4af81e7b0eb52b16ce90c999e796"
+  "publicationStatus": "Published on 2026-11-26; live website, release downloads, current guides and preserved 8.1 archive verified",
+  "installerSourceCommit": "7219e4c34cde4af81e7b0eb52b16ce90c999e796",
+  "releaseUrl": "https://github.com/tmartindub/CarillonBells-9.0/releases/tag/v9.0.0",
+  "websiteUrl": "https://carillon-bells.github.io/"
 }

@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-26",
+  "website": "https://carillon-bells.github.io/",
+  "release": "https://github.com/tmartindub/CarillonBells-9.0/releases/tag/v9.0.0",
+  "websiteCommit": "47c44106a83fb828ea3b57fe5673bfc4ff938a13",
+  "live_files": [
+    {
+      "url": "https://carillon-bells.github.io/downloads.html",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 20447
+    },
+    {
+      "url": "https://carillon-bells.github.io/",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 15674
+    },
+    {
+      "url": "https://carillon-bells.github.io/robots.txt",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 78
+    },
+    {
+      "url": "https://carillon-bells.github.io/sitemap.xml",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 298
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/app-overview.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 94554
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/carillon-icon.ico",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 98078
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/clock-hands.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 101764
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/fonts.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 51332
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/schedule.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 21260
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/silence.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 24922
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/site.css",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 11454
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/site.js",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 1220
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/translation-selector.js",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 1750
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/westminster.webp",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 2017072
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/engineering-guide.pdf",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 259114
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/migration-guide.pdf",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 830774
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/quick-start.pdf",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 750927
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/user-guide.pdf",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 698881
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/audio/amazing-grace.mp3",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 307823
+    },
+    {
+      "url": "https://carillon-bells.github.io/assets/audio/westminster-chimes.mp3",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 302821
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/downloads.html",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 25013
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/index.html",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 24993
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/assets/blue-domed-church.png",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 15633
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/assets/carillon-icon.ico",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 432254
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/assets/main-screen.png",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 118274
+    },
+    {
+      "url": "https://carillon-bells.github.io/v8.1/docs/pdf/MIT_License.pdf",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 184917
+    },
+    {
+      "url": "https://carillon-bells.github.io/googled7b46486c107c0d4.html",
+      "status": 200,
+      "matches_reviewed_file": true,
+      "bytes": 53
+    }
+  ],
+  "package_assets_verified": 10,
+  "external_links_verified": 30,
+  "music_zip_signatures_verified": 13,
+  "local_links_and_anchors_verified": 94,
+  "normal_and_390px_download_layouts": "PASS",
+  "v81_original_pages_assets_and_guides": "Preserved under /v8.1/; original release and source unchanged",
+  "analytics_id": "G-GPWCTFRF87",
+  "publication": "Published; all checked live files match reviewed content",
+  "announcement_graphic": "images and icons/Carillon-v9-publication.png",
+  "social_introduction": "images and icons/Carillon-v9-social-introduction.txt",
+  "live_browser_verification": "PASS v9 homepage and hero image loaded; language widget present",
+  "v81_release_assets_unchanged": true,
+  "v81_preserved_asset_count": 6,
+  "final_release_manifest_digest_verified": true,
+  "temporary_build_artifacts_removed": [
+    {
+      "folder": "export/setup-builds",
+      "bytes": 3599842247
+    },
+    {
+      "folder": "export/setup-payloads",
+      "bytes": 935739468
+    }
+  ]
+}

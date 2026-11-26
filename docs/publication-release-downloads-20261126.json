@@ -1,0 +1,75 @@
+{
+  "release": "https://github.com/tmartindub/CarillonBells-9.0/releases/tag/v9.0.0",
+  "downloads": [
+    {
+      "file": "CarillonBells_9_0_Database_Migration_Guide.pdf",
+      "status": 206,
+      "bytes": 830774,
+      "sha256": "sha256:9a11e063fba045f17735c26cd607055487c77a1bbf5be37de7452447e41fe900",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_Engineering_Guide.pdf",
+      "status": 206,
+      "bytes": 259114,
+      "sha256": "sha256:12da19de78990d36b0cadddaf804aace098874d58da22a1a913dbfa75ab985ce",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_Quick_Start_Guide.pdf",
+      "status": 206,
+      "bytes": 750927,
+      "sha256": "sha256:63af2aff9cebd2620d2c253dda157043772021828489a69db2c713fee1748805",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "status": 206,
+      "bytes": 308996229,
+      "sha256": "sha256:9d1d4e74b86aa40b883305ff2830e6d1cb5756572800c584dfad91b81fec00de",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "status": 206,
+      "bytes": 304944246,
+      "sha256": "sha256:073747c0eed95a54c08b8fe4ebde4d8c52087d104ae8005101c51f52ce1408e6",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "status": 206,
+      "bytes": 139590566,
+      "sha256": "sha256:ccd0b97b2ee79e7f563a2ab1a0e4a91a8b1f836a1119dc9a8f52e9da51da764e",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "status": 206,
+      "bytes": 131486622,
+      "sha256": "sha256:42709c918ed4848d183589e7c086661826c6be52fcbab71faf616604261b11f2",
+      "content_signature_valid": true
+    },
+    {
+      "file": "CarillonBells_9_0_User_Guide.pdf",
+      "status": 206,
+      "bytes": 698881,
+      "sha256": "sha256:010f8013a6cefb30fd95e09aab13fed4783b2926b2a34fe3ea7337319ab54499",
+      "content_signature_valid": true
+    },
+    {
+      "file": "release-manifest.json",
+      "status": 206,
+      "bytes": 4401,
+      "sha256": "sha256:04acd4386f3984574eaa291f6369a8908789d77c11f7632f7d18c0de9affbc43",
+      "content_signature_valid": true
+    },
+    {
+      "file": "SHA256SUMS.txt",
+      "status": 206,
+      "bytes": 500,
+      "sha256": "sha256:e498c4212c7ccca21035da89c1dd48c4480708d480c6806a54559e76eba12983",
+      "content_signature_valid": true
+    }
+  ]
+}

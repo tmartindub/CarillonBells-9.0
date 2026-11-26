@@ -1,0 +1,3 @@
+Version 9 of Westminster Chimes and Carillon Bells is here! Enjoy adjustable fonts, new clock hands, easier date entry, and automatic playlist updates. New-install and upgrade packages are available for 32-bit and 64-bit Windows. Version 8.1 remains available.
+
+Download: https://carillon-bells.github.io/
