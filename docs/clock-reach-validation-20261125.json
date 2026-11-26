@@ -23,7 +23,7 @@
   },
   "visualVerification": "All nineteen WPF-rendered styles reviewed over actual face at 10:10 and 3:00; same brushes used for gallery and live clock",
   "initialFailure": "First reach assertion identified the extra pen extent on outlined styles 8 and 10; their XAML transforms were corrected before final passing tests",
-  "DDeployment": "Pending: open administration window; user asked to save/cancel and close or authorize discard after automatic review blocked closure",
+  "DDeployment": "Complete: normal close without an unsaved-edit prompt after Tommy resolved the previous settings; verified backup, replaced executable, restarted from D:\\ and visually checked live clock",
   "pushed": false,
   "published": false,
   "win-x64": {
@@ -38,6 +38,12 @@
   "installerRuntime": "Unchanged installer code; previous 22-operation runtime validation retained; not rerun for clock geometry",
   "DExecutableUnchangedSha256": "5E8178E0D19F37AC11D10A2EE4A7ED79C1A84FF5165CCBCC5297443A29B27F2B",
   "DClockHandPreferenceBeforeDeployment": "3",
-  "actualClosePrompt": "Save administration changes before closing?",
-  "safeAction": "Cancelled close request; no save or discard selected; old D app still running"
+  "DDeploymentBackup": "H:\\CarillonBells v 9_0\\Before_D_Clock_Deploy_20261125.zip",
+  "DInstalledExecutableSha256": "29A51C2004EC165FD47D06248D9FACF0E023DF47245E05F0133B99341EA91EEB",
+  "DDataUnchangedDuringReplacement": true,
+  "DProcessId": 30388,
+  "DClockHandPreferenceAfterRestart": "1",
+  "liveClockVerified": true,
+  "previousClosePrompt": "Save administration changes before closing?",
+  "previousSafeAction": "Cancelled close request; no save or discard selected; old D app still running"
 }

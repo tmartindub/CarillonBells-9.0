@@ -779,3 +779,21 @@ and close, or explicitly authorize discard. The old D: app remains running.
 The pre-change source and D executable ZIP is
 H:\CarillonBells v 9_0\Before_Clock_Reach_20261125.zip. A local checkpoint ZIP
 retains the validated release. No push or publication is authorized or performed.
+
+
+## 33. Clock-hand build deployed and restarted on D November 25
+
+After Tommy authorized completing the D: update, the old app had been restarted
+with its administration window closed. Normal application Close completed without
+an unsaved-change prompt. Before replacement, a verified ZIP containing the old
+executable, closed database files and saved data preferences was created at
+H:\CarillonBells v 9_0\Before_D_Clock_Deploy_20261125.zip. Only CarillonBells.exe
+was replaced, with the tested x64 SHA256 recorded in clock-reach-validation.
+Database and saved preference hashes were unchanged during replacement.
+
+D:\CarillonBells.exe restarted as process 30388. Its normal main screen showed
+scheduling enabled and no startup error. Opening Clock displayed the corrected
+hands on the actual face. Startup and live-clock screenshots and detailed copy
+verification are under export/release-validation-clock-reach-20261125. The saved
+hand preference was preserved; the live clock is left open for Tommy's review.
+The earlier deployment block is resolved. No push or publication.
