@@ -11,7 +11,7 @@
     gtag('config', 'G-GPWCTFRF87');
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="robots" content="index, follow">
   <meta name="description" content="Find the right Westminster Chimes and Carillon Bells 9.0 package, read the setup and upgrade guides, and browse bell and hymn recordings.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Downloads | Westminster Chimes and Carillon Bells 9.0">
@@ -20,6 +20,13 @@
   <link rel="icon" href="assets/carillon-icon.ico" sizes="any">
   <link rel="stylesheet" href="assets/site.css">
   <title>Downloads | Westminster Chimes and Carillon Bells 9.0</title>
+  <link rel="canonical" href="https://carillon-bells.github.io/downloads.html">
+  <meta property="og:url" content="https://carillon-bells.github.io/downloads.html">
+  <meta property="og:image" content="https://carillon-bells.github.io/assets/westminster.webp">
+  <meta name="twitter:image" content="https://carillon-bells.github.io/assets/westminster.webp">
+  <meta name="twitter:title" content="Downloads | Westminster Chimes and Carillon Bells 9.0">
+  <meta name="twitter:description" content="Find the right Westminster Chimes and Carillon Bells 9.0 package, read the setup and upgrade guides, and browse bell and hymn recordings.">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -61,30 +68,45 @@
       <div class="wrap flow">
         <div class="section-heading">
           <h2 id="software-title">Choose a software package</h2>
-          <p>Pick <strong>New Install</strong> if youâ€™re starting from scratch or <strong>Upgrade</strong> if you already run the bells. To check which package fits your computer, open Windows <strong>Settings</strong>, choose <strong>System</strong>, then <strong>About</strong>. Look for <strong>System type</strong> to see whether your PC uses 32-bit Windows or 64-bit Windows on an x64 processor.</p>
+          <p>Pick <strong>New Install</strong> if you’re starting from scratch or <strong>Upgrade</strong> if you already run the bells. To check which package fits your computer, open Windows <strong>Settings</strong>, choose <strong>System</strong>, then <strong>About</strong>. Look for <strong>System type</strong> to see whether your PC uses 32-bit Windows or 64-bit Windows on an x64 processor.</p>
         </div>
         <div class="grid grid-two">
           <article class="card flow">
             <h3>New Install</h3>
             <p>Use an empty USB flash drive, a small storage device you plug into the computer. The package includes the program, a starter chime schedule, recordings, and instructions.</p>
-            <ul class="package-architectures">
-              <li>32-bit Windows <span class="notranslate" translate="no">(win-x86)</span></li>
-              <li>64-bit Windows <span class="notranslate" translate="no">(win-x64)</span></li>
-            </ul>
+            <div class="button-row">
+              <a class="button button-primary" href="https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip">Download 32-bit Installer ZIP (291 MB)</a>
+              <a class="button button-primary" href="https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip">Download 64-bit Installer ZIP (295 MB)</a>
+            </div>
+            <details>
+              <summary>SHA-256 checksums</summary>
+              <p>32-bit: <code class="notranslate" translate="no">073747c0eed95a54c08b8fe4ebde4d8c52087d104ae8005101c51f52ce1408e6</code></p>
+              <p>64-bit: <code class="notranslate" translate="no">9d1d4e74b86aa40b883305ff2830e6d1cb5756572800c584dfad91b81fec00de</code></p>
+            </details>
             <a class="button button-secondary" href="guides/quick-start.pdf" type="application/pdf">Read the Quick Start Guide</a>
           </article>
           <article class="card flow">
             <h3>Upgrade from 7.2.4 or 8.1</h3>
               <p>Read the <a href="guides/migration-guide.pdf">Database Migration Guide</a> and save a complete backup first. This package supports two methods: start <code class="notranslate" translate="no">CarillonBells.exe</code> to upgrade the existing database in place, or start <code class="notranslate" translate="no">CarillonMigration.exe</code> to create a separate v9 copy. Choose before starting either program. A later copy does not undo an earlier in-place upgrade. The guide explains checks and recovery for each method.</p>
-              <ul class="package-architectures">
-              <li>32-bit Windows <span class="notranslate" translate="no">(win-x86)</span></li>
-              <li>64-bit Windows <span class="notranslate" translate="no">(win-x64)</span></li>
-            </ul>
+              <div class="button-row">
+              <a class="button button-primary" href="https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip">Download 32-bit Installer ZIP (125 MB)</a>
+              <a class="button button-primary" href="https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip">Download 64-bit Installer ZIP (133 MB)</a>
+            </div>
+            <details>
+              <summary>SHA-256 checksums</summary>
+              <p>32-bit: <code class="notranslate" translate="no">42709c918ed4848d183589e7c086661826c6be52fcbab71faf616604261b11f2</code></p>
+              <p>64-bit: <code class="notranslate" translate="no">ccd0b97b2ee79e7f563a2ab1a0e4a91a8b1f836a1119dc9a8f52e9da51da764e</code></p>
+            </details>
             <a class="button button-secondary" href="guides/migration-guide.pdf" type="application/pdf">Read the Database Migration Guide</a>
           </article>
         </div>
+        <div class="notice flow" id="version-8-1">
+          <h3>Keeping version 8.1?</h3>
+          <p>Version 8.1 remains available. Its original release files and source repository are preserved.</p>
+          <p><a href="https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_8_1_Portable_Full.zip">Download the 8.1 full package</a> · <a href="https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_7_2_4_to_8_1_Upgrade.zip">Download the 7.2.4-to-8.1 upgrade</a> · <a href="v8.1/index.html">View the original 8.1 website and guides</a></p>
+        </div>
         <div class="notice flow">
-          <p>Each package includes the software the program needs to run. If youâ€™re using an older computer, check <a href="https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions">Microsoftâ€™s list of supported Windows versions</a>.</p>
+          <p>Each package includes the software the program needs to run. If you’re using an older computer, check <a href="https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions">Microsoft’s list of supported Windows versions</a>.</p>
         </div>
         <div class="card source-panel">
           <div>
@@ -206,11 +228,11 @@
       <div class="wrap flow">
         <div class="section-heading">
           <h2 id="instructions-title">Set up your flash drive</h2>
-          <p>Plug the flash drive into the computer youâ€™ll use to run the bells. Open <strong>File Explorer</strong> and look under <strong>This PC</strong> for the drive.</p>
+          <p>Plug the flash drive into the computer you’ll use to run the bells. Open <strong>File Explorer</strong> and look under <strong>This PC</strong> for the drive.</p>
         </div>
         <ol class="installation-steps">
           <li><strong>Choose a package.</strong> Use New Install for an empty flash drive or Upgrade for a drive that already runs 7.2.4 or 8.1. Download the Installer ZIP for your Windows type. It contains Setup, a PDF guide and <code class="notranslate" translate="no">START_HERE.txt</code>; no second download is needed.</li>
-          <li><strong>Put the files on the flash drive.</strong> Close the older program first if youâ€™re upgrading. Right-click the Installer ZIP and choose <strong>Extract All</strong> to unpack it into a folder on your computer. In that extracted folder, double-click the Setup EXE. Select your USB folder, click <strong>Install</strong>, then <strong>Verify</strong>. For New Install, use an empty USB. For Upgrade, select the existing folder beside databases. Do not run Setup from inside the ZIP.</li>
+          <li><strong>Put the files on the flash drive.</strong> Close the older program first if you’re upgrading. Right-click the Installer ZIP and choose <strong>Extract All</strong> to unpack it into a folder on your computer. In that extracted folder, double-click the Setup EXE. Select your USB folder, click <strong>Install</strong>, then <strong>Verify</strong>. For New Install, use an empty USB. For Upgrade, select the existing folder beside databases. Do not run Setup from inside the ZIP.</li>
           <li><strong>Start the program for your chosen method.</strong> For New Install or Method A, double-click <code class="notranslate" translate="no">CarillonBells.exe</code> in the intended USB installation. For Method B, start <code class="notranslate" translate="no">CarillonMigration.exe</code> instead and follow the guide to create a separate folder. Do not start CarillonBells.exe against the original database first if you intend to keep that database in its old format.</li>
         </ol>
         <p>Windows may still warn about a newly downloaded program after extraction. ZIP packaging does not replace a publisher signature or download reputation. If a file is blocked, check its source and ask the supplier or administrator for help. See <a href="https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation">Microsoft’s explanation of SmartScreen warnings</a>.</p>
@@ -237,7 +259,7 @@
 
   <footer class="site-footer">
     <div class="wrap footer-row">
-      <p><span class="notranslate" translate="no">Westminster Chimes and Carillon Bells</span> Â· Version 9.0</p>
+      <p><span class="notranslate" translate="no">Westminster Chimes and Carillon Bells</span> · Version 9.0</p>
       <nav aria-label="Footer navigation">
         <a href="index.html">Home</a>
         <a href="index.html#privacy">Privacy</a>

@@ -1,0 +1,33 @@
+{
+  "version": "9.0.0",
+  "packages": [
+    {
+      "name": "CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "path": "export\\downloads\\32-bit\\CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "bytes": 304944246,
+      "sha256": "073747c0eed95a54c08b8fe4ebde4d8c52087d104ae8005101c51f52ce1408e6",
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip"
+    },
+    {
+      "name": "CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "path": "export\\downloads\\64-bit\\CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "bytes": 308996229,
+      "sha256": "9d1d4e74b86aa40b883305ff2830e6d1cb5756572800c584dfad91b81fec00de",
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip"
+    },
+    {
+      "name": "CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "path": "export\\downloads\\32-bit\\CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "bytes": 131486622,
+      "sha256": "42709c918ed4848d183589e7c086661826c6be52fcbab71faf616604261b11f2",
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip"
+    },
+    {
+      "name": "CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "path": "export\\downloads\\64-bit\\CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "bytes": 139590566,
+      "sha256": "ccd0b97b2ee79e7f563a2ab1a0e4a91a8b1f836a1119dc9a8f52e9da51da764e",
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip"
+    }
+  ]
+}

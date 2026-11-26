@@ -173,3 +173,5 @@ strong { font-weight: 700; }
   .site-nav { column-gap: .75rem; }
   .link-list > li { align-items: start; flex-direction: column; }
 }
+
+audio { display: block; width: 100%; margin-block: .65rem 1rem; }

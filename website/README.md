@@ -43,19 +43,25 @@ The two MP3s are staged as untracked files in `C:\New Delphi Projects\GitHub Pag
 
 When publishing v9, add the two files to the website repository and place an audio player for each in the home page’s `#music` section. Use the relative paths above and check that both play from the published page.
 
-## Release handoff
+## Publication configuration — November 26, 2026
 
-The November 24 documentation refresh updates the local proposed pages, their
-four guide PDFs and screenshots for fonts, annual random dates, calendar buttons,
-the player and eighteen black clock hand alternatives. Demonstration screenshots
-use Example Church. Production pages and version 8.1 remain unchanged.
-The local 32-bit and 64-bit New Install and Upgrade ZIPs and their matching
-Package Setup programs have now been rebuilt with the current executable, Help
-and revised guides. The package manifest records their hashes. These are local
-release candidates; no publication or URL switch has been authorized. Keep the
-proposed pages marked noindex/nofollow until publication is approved.
+Tommy authorized the v9 release and website publication. The home and downloads
+pages are prepared for https://carillon-bells.github.io/ and downloads.html.
+The production pages use Google Analytics G-GPWCTFRF87 and floating GTranslate.
+The current canonical PDFs include Tommy's manually revised Quick Start guide.
+The two approved MP3 samples are supplied under assets/audio.
 
-1. After release approval, use `C:\New Delphi Projects\CarillonBells v 9_0\export\32-bit` for Windows x86 and `C:\New Delphi Projects\CarillonBells v 9_0\export\64-bit` for Windows x64. Verify the New Install and Upgrade ZIPs and their matching Package Studio Pro Setup executables. Keep private databases, logs, credentials and local music outside the public site and release.
-2. Publish the authorized v9 assets through the [v9 GitHub repository](https://github.com/tmartindub/CarillonBells-9.0). Add the confirmed download links and verified SHA-256 checksums to the New Install and Upgrade cards under `#software`. Label links by Windows version and package type. Keep an accessible route to the archived 8.1 release.
-3. Put the reviewed pages at their production URLs with the required relative assets, audio files, and guides. Set canonical URLs, Open Graph and Twitter URLs and image metadata to the public destinations. Remove the local `noindex` and update `robots.txt` and the sitemap for public indexing. Keep the host's verification and GitHub Pages files. Review the analytics and privacy text together if analytics are enabled.
-4. Verify both live pages on desktop and mobile. Check the old links listed above, the language selector, mail link, all guide PDFs, audio samples, and both architectures of the new-install and upgrade links.
+The four public downloads are Installer ZIPs attached to the v9.0.0 release in
+https://github.com/tmartindub/CarillonBells-9.0. The download cards provide SHA-256
+checksums; source distributions/SHA256SUMS.txt records the same values. Portable
+ZIPs under export/32-bit and export/64-bit remain installer build inputs and are
+not the normal public download route.
+
+Keep the original 8.1 HTML pages, assets and guide files under /v8.1/. Its existing
+release assets at https://github.com/tmartindub/Carillon8_1/releases/tag/v8.1.0
+remain unchanged and are linked directly from the v9 downloads page. Preserve
+the host's Google verification file, .nojekyll and Git history.
+
+Production robots.txt permits crawling and names sitemap.xml. The sitemap and
+social metadata use the production URLs. Final publication results and live-link
+verification belong in docs/publication-validation-20261126.json.

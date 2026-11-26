@@ -1,6 +1,6 @@
 # Westminster Chimes and Carillon Bells 9.0
 
-Experimental C# / WPF edition of Westminster Chimes and Carillon Bells. This is a separate application and repository. The working Delphi 8.1 source, GitHub repository, website and production downloads remain unchanged.
+Experimental C# / WPF edition of Westminster Chimes and Carillon Bells. This is a separate application and repository. The Delphi 8.1 source, GitHub repository and release downloads are preserved. The website presents v9 at its existing URL and keeps the original 8.1 pages under `/v8.1/`.
 
 The application uses the approved WPF composition, portable SQLite storage, independent managed MP3 decoding, PCM WAV playback, Windows endpoint volume/mute, scheduling, seasonal groups, annual random-directory rotation, both weekly and legacy silence systems, SMTP health reports, logs, themes, original analog clock artwork and local HTML help.
 
@@ -16,7 +16,7 @@ Read the **Database Migration Guide** before upgrading an existing installation.
 
 Choose the release for the installed Windows system type under **Settings > System > About**. Use `win-x86` for 32-bit Windows and `win-x64` for 64-bit Windows on an x64 processor. Both English builds include the .NET 10 runtime and follow the supported Windows editions in the [Microsoft .NET compatibility table](https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions).
 
-Publish the four **Installer ZIPs** from `export\downloads\32-bit` and `export\downloads\64-bit`. Each contains a self-contained Setup EXE, its PDF guide and `START_HERE.txt`. Right-click the download, choose **Extract All** onto the computer, then double-click the extracted Setup EXE and select the USB installation folder. Click **Install**, then **Verify** before starting Carillon. No separate portable ZIP is needed by the user. Upgrade Setup preserves the existing database and music.
+Download the four **Installer ZIPs** from the [v9.0.0 release](https://github.com/tmartindub/CarillonBells-9.0/releases/tag/v9.0.0). Maintainers build them from `export\downloads\32-bit` and `export\downloads\64-bit`. Each contains a self-contained Setup EXE, its PDF guide and `START_HERE.txt`. Right-click the download, choose **Extract All** onto the computer, then double-click the extracted Setup EXE and select the USB installation folder. Click **Install**, then **Verify** before starting Carillon. No separate portable ZIP is needed by the user. Upgrade Setup preserves the existing database and music.
 
 The `export\32-bit` and `export\64-bit` folders hold build inputs and advanced manual-install packages: the app and Migration Assistant EXEs and the portable New Install/Upgrade ZIPs containing loose files. Those portable ZIPs are required by `tools\build_usb_setups.py`; keep them. They are different from the public Installer ZIPs ending `_Package_Setup.zip`. Redundant loose Setup EXEs are removed after their Installer ZIPs pass validation. Windows security warnings can still appear after ZIP extraction; ZIP packaging does not confer a trusted publisher signature or SmartScreen reputation.
 
@@ -87,6 +87,6 @@ Missed events after sleep or clock jumps are skipped. A persisted dispatch ledge
 
 ## Release status
 
-Source backup publication does not authorize replacing the live 8.1 release. Multiple actual DPI settings, storage disconnection, device removal, authorized SMTP delivery and extended soak testing remain deployment acceptance checks. See the acceptance matrix. Do not label this evaluation as production-approved.
+Tommy authorized the v9 release and website publication on November 26, 2026 after his overnight and functional acceptance testing. Current release packages include his manually revised Quick Start guide. Version 8.1 remains available through its existing release and the website archive. The acceptance matrix retains the scope and limitations of individual tests; publication does not certify every hardware or deployment configuration.
 
 New code is Apache License 2.0. `NOTICE` retains the MIT notice for reused reference material. `third-party-notices` contains dependency notices. Keep working databases, credentials, logs, dumps, and personal music out of public Git and release packages. The New Install ZIP uses a sanitized starter database and the supplied `Music` collection.
