@@ -18,6 +18,10 @@ The production pages contain Google Analytics tags, Open Graph and Twitter card 
 
 ### Existing page links
 
+Both v9 pages carry the same Google Analytics measurement ID as the 8.1 site,
+`G-GPWCTFRF87`. The home page's privacy section identifies this service. Retain
+this ID when publishing v9 at the existing production URLs.
+
 Keep the public page paths and section anchors so links saved from version 8.1 still land near the intended information when v9 replaces it.
 
 | Public page and existing anchors | v9 content |
