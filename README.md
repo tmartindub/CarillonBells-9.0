@@ -83,7 +83,7 @@ Missed events after sleep or clock jumps are skipped. A persisted dispatch ledge
 - Clock hands preserves Original and supplies eighteen slender black alternatives, with the original face and preview geometry.
 - The legacy Ash Wednesday end remains stored but hidden and synchronized to the visible date. Startup repairs stale values after a database ZIP backup.
 - Search × clears the filter. Playlist refresh is automatic, maintenance logs identify pause reasons, and successful email clears a stale email-failure notice.
-- Both final native Windows builds passed 204 checks. Tommy also confirmed that the corrected Groups behavior tests well on D:. This is specific acceptance evidence, not blanket production qualification.
+- Both final native Windows builds passed 206 checks. Tommy also confirmed that the corrected Groups behavior tests well on D:. This is specific acceptance evidence, not blanket production qualification.
 
 ## Release status
 

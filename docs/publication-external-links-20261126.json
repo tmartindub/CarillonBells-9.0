@@ -1,0 +1,295 @@
+{
+  "date": "2026-11-26",
+  "results": [
+    {
+      "url": "https://carillon-bells.github.io/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "method": "HEAD",
+      "final_host": "carillon-bells.github.io"
+    },
+    {
+      "url": "https://carillon-bells.github.io/downloads.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "method": "HEAD",
+      "final_host": "carillon-bells.github.io"
+    },
+    {
+      "url": "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_7_2_4_to_8_1_Upgrade.zip",
+      "status": 206,
+      "content_type": "application/octet-stream",
+      "method": "HEAD",
+      "final_host": "release-assets.githubusercontent.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_8_1_Portable_Full.zip",
+      "status": 206,
+      "content_type": "application/octet-stream",
+      "method": "HEAD",
+      "final_host": "release-assets.githubusercontent.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/ConversionTo8_1.pdf",
+      "status": 206,
+      "content_type": "application/octet-stream",
+      "method": "HEAD",
+      "final_host": "release-assets.githubusercontent.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/Westminster_Chimes_and_Carillon_Bells_8_1_Engineering_Guide.pdf",
+      "status": 206,
+      "content_type": "application/octet-stream",
+      "method": "HEAD",
+      "final_host": "release-assets.githubusercontent.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/Westminster_Chimes_and_Carillon_Bells_8_1_User_Guide.pdf",
+      "status": 206,
+      "content_type": "application/octet-stream",
+      "method": "HEAD",
+      "final_host": "release-assets.githubusercontent.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0",
+      "status": 206,
+      "content_type": "text/html; charset=utf-8",
+      "method": "HEAD",
+      "final_host": "github.com"
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/blob/main/LICENSE",
+      "status": 206,
+      "content_type": "text/html; charset=utf-8",
+      "method": "HEAD",
+      "final_host": "github.com"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/core/install/windows#supported-versions",
+      "status": 200,
+      "content_type": "text/html",
+      "method": "HEAD",
+      "final_host": "learn.microsoft.com"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation",
+      "status": 200,
+      "content_type": "text/html",
+      "method": "HEAD",
+      "final_host": "learn.microsoft.com"
+    },
+    {
+      "url": "https://policies.google.com/privacy",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "method": "HEAD",
+      "final_host": "policies.google.com"
+    },
+    {
+      "url": "https://static.wixstatic.com/mp3/015e9d_ea38d14460bf4cc8b1fa907db9fe9404.mp3",
+      "status": 200,
+      "content_type": "audio/mpeg",
+      "method": "HEAD",
+      "final_host": "static.wixstatic.com"
+    },
+    {
+      "url": "https://static.wixstatic.com/mp3/015e9d_eb036993d99f4b89a6fea1aa9739da0a.mp3",
+      "status": 200,
+      "content_type": "audio/mpeg",
+      "method": "HEAD",
+      "final_host": "static.wixstatic.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/004bxrvmoxiw8nlcpb7ec/Bell-Music-B.zip?rlkey=m2mhqj6io8gd5v9k6epw9ac11&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc54a3ac02abde9c56561b03b1cf.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/68tultdxbn2rvofumagzb/Bell-Music-U-Z.zip?rlkey=60uwe1mxfm22iafv8q4swkr4q&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc800fca350c54d78583c1dbd7fe.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/73wsod9nxluhrugoi17et/Bell-Music-P-T.zip?rlkey=76x095baf025y18yqa1o1fdpn&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "ucc76d121bfdd6df742361f4a4d9.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/7zv0w4wmw18x6w14nenqs/Bell-Music-G-H.zip?rlkey=llrbaevwx4rjyixobwo0u4i13&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc4f2048eeed105c3100f991f706.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/9t65tywwkjsr841hsrytk/Bell-Music-C-F.zip?rlkey=fll8ks00o0xza5lncq0wgkooj&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc2916149c60be2bac185c3a15d9.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/cspc9c5d06162omf5irvg/Bell-Music-N-O.zip?rlkey=eg4fus9w0mnrnlb3zqec17o5u&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uca47a0db9cc843c20dd972eab82.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/d6wh85wxsl816ugr21tpx/Bell-Music-I-J.zip?rlkey=p8bkbuf2sx1j66rxjrcuy06qa&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "ucdc32b87e4e59a0005941672afa.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/wkubn6mmyprr8bnljsb7p/Bell-Music-K-M.zip?rlkey=5kcevbal6komae252d6yalbv3&dl=1",
+      "status": 206,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc9abfc87c0cad4d116443d41bda.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/e67x87y5wt3iyow2i232h/AHtJSukHNP2kzzUK9Q1WKWQ?rlkey=xu84ybxau4u1s2awwkxwwdhkt&dl=1",
+      "status": 200,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc5ffa4eddc31f44aa3879b04386.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/f7ikozdyy0jsp3t0qvq0m/AGEC7nsgMZrTskiD4I26AXo?rlkey=ao821dhp636oaa4igett7illo&dl=1",
+      "status": 200,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc4e24261ba216a56e799ed8693b.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/lehd4bdgwznpx6205fig3/ALPQacbnYwpRKj9rymdQ-U8?rlkey=acfxt0tjc0jdy51sbppx7i63i&dl=1",
+      "status": 200,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uca776bbc172f198cf3f9af29560.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/pvjrr673ok8xvxa1ym23o/APTU-YH9GPLVxNLKJIJKlMI?rlkey=98z9nlqa1oxdtyw6o74l2x9iw&dl=1",
+      "status": 200,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc66b57ec43a4613d7543dfe090a.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/ujxs9vdqefwqowxq3h1u4/ABqa54JK4g2_I4g-Huz0qNU?rlkey=ku2hxpaerpse62y8kq3s6ryj5&dl=1",
+      "status": 200,
+      "content_type": "application/json",
+      "method": "HEAD",
+      "final_host": "uc5e4a9ab7a10f2a9c552196116e.dl.dropboxusercontent.com"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-GPWCTFRF87",
+      "status": 200,
+      "content_type": "application/javascript; charset=UTF-8",
+      "method": "HEAD",
+      "final_host": "www.googletagmanager.com"
+    },
+    {
+      "url": "https://cdn.gtranslate.net/widgets/latest/float.js",
+      "status": 206,
+      "content_type": "application/javascript",
+      "method": "HEAD",
+      "final_host": "cdn.gtranslate.net"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-GPWCTFRF87",
+      "status": 200,
+      "content_type": "application/javascript; charset=UTF-8",
+      "method": "HEAD",
+      "final_host": "www.googletagmanager.com"
+    }
+  ],
+  "music_content_checks": [
+    {
+      "url": "https://www.dropbox.com/scl/fi/004bxrvmoxiw8nlcpb7ec/Bell-Music-B.zip?rlkey=m2mhqj6io8gd5v9k6epw9ac11&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/68tultdxbn2rvofumagzb/Bell-Music-U-Z.zip?rlkey=60uwe1mxfm22iafv8q4swkr4q&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/73wsod9nxluhrugoi17et/Bell-Music-P-T.zip?rlkey=76x095baf025y18yqa1o1fdpn&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/7zv0w4wmw18x6w14nenqs/Bell-Music-G-H.zip?rlkey=llrbaevwx4rjyixobwo0u4i13&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/9t65tywwkjsr841hsrytk/Bell-Music-C-F.zip?rlkey=fll8ks00o0xza5lncq0wgkooj&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/cspc9c5d06162omf5irvg/Bell-Music-N-O.zip?rlkey=eg4fus9w0mnrnlb3zqec17o5u&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/d6wh85wxsl816ugr21tpx/Bell-Music-I-J.zip?rlkey=p8bkbuf2sx1j66rxjrcuy06qa&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fi/wkubn6mmyprr8bnljsb7p/Bell-Music-K-M.zip?rlkey=5kcevbal6komae252d6yalbv3&dl=1",
+      "status": 206,
+      "content_type": "application/binary",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/e67x87y5wt3iyow2i232h/AHtJSukHNP2kzzUK9Q1WKWQ?rlkey=xu84ybxau4u1s2awwkxwwdhkt&dl=1",
+      "status": 200,
+      "content_type": "application/zip",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/f7ikozdyy0jsp3t0qvq0m/AGEC7nsgMZrTskiD4I26AXo?rlkey=ao821dhp636oaa4igett7illo&dl=1",
+      "status": 200,
+      "content_type": "application/zip",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/lehd4bdgwznpx6205fig3/ALPQacbnYwpRKj9rymdQ-U8?rlkey=acfxt0tjc0jdy51sbppx7i63i&dl=1",
+      "status": 200,
+      "content_type": "application/zip",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/pvjrr673ok8xvxa1ym23o/APTU-YH9GPLVxNLKJIJKlMI?rlkey=98z9nlqa1oxdtyw6o74l2x9iw&dl=1",
+      "status": 200,
+      "content_type": "application/zip",
+      "zip_signature_verified": true
+    },
+    {
+      "url": "https://www.dropbox.com/scl/fo/ujxs9vdqefwqowxq3h1u4/ABqa54JK4g2_I4g-Huz0qNU?rlkey=ku2hxpaerpse62y8kq3s6ryj5&dl=1",
+      "status": 200,
+      "content_type": "application/zip",
+      "zip_signature_verified": true
+    }
+  ]
+}
