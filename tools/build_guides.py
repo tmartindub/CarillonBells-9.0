@@ -18,7 +18,7 @@ PRODUCT_NAME = "Westminster Chimes and Carillon Bells"
 PRODUCT_VERSION = "9.0"
 GUIDES = {
     "User": ("User Guide", "Open your installed program, manage songs and schedules, and check daily operation.", datetime(2026, 11, 27)),
-    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 25)),
+    "Engineering": ("Engineering Guide", "Maintain the v9 Windows application, understand its runtime and data model, and verify a portable release.", datetime(2026, 11, 27)),
     "Migration": ("Database Migration Guide", "Choose between upgrading your existing installation and creating a separate version 9 copy. Follow the illustrated steps, protect your database and recordings, and return to version 7.2.4 or 8.1 when needed.", datetime(2026, 11, 25)),
     "QuickStart": ("Quick Start Guide", "Set up the app, play a test recording, and verify your first schedule.", datetime(2026, 11, 25)),
 }

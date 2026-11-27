@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-27",
+  "original_sha256": "a799aa32f1c3dbdd96168f5a4dfc9801df19fffce7600eb1361f864e2fa6ce93",
+  "paragraphs_revised": 87,
+  "introductions_added": 13,
+  "screenshot_preserved": true,
+  "scope": "Engineering prose, explanatory introductions, bold UI controls and code/path typography; no application changes",
+  "review_copy_only": true,
+  "pages": 16,
+  "contents_links": 34,
+  "all_pages_visually_reviewed": true,
+  "headings_preserved": true,
+  "original_screenshot_bytes_preserved": true,
+  "live_docx_contents_field_preserved": true,
+  "contents_anchors_and_page_numbers_verified": true,
+  "pdf_content_unchanged_by_links": true,
+  "technical_numbers_and_filenames_preserved": true,
+  "backup": "H:\\Project Cleanup Backups\\Carillon-before-guide-publication-and-engineering-polish-20261127-131719.zip",
+  "engineering_release_publication": "Not repackaged or published; editorial review copy",
+  "sha256": {
+    "docs\\guides\\CarillonBells_9_0_Engineering_Guide.docx": "b28bcf2167ea59efcead05ffb91b1f8ab76085b351f2fff982b4dab2a2f64f54",
+    "docs\\pdf\\CarillonBells_9_0_Engineering_Guide.pdf": "84e96db1cb352cbcf8b9ad195a584b688ea43d9ecbb103a38f66bc6f6782038e",
+    "docs\\guides\\source\\Engineering.md": "080da442e732ef0de04ff70d814bb11c533c472799879eefc39626e1a22ae325"
+  }
+}

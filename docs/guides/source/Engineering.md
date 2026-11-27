@@ -1,226 +1,309 @@
 # Release scope and design
 
+This guide is intended for developers and maintainers who need to understand the implementation before changing, diagnosing, or releasing it. It connects the editable WPF interface to the runtime, data, and packaging paths; use the User Guide for operating procedures and the Database Migration Guide for the owner’s installation and recovery steps.
+
 ## Purpose and upgrade behavior
 
-Version 9.0 of Westminster Chimes and Carillon Bells uses C# and Windows Presentation Foundation. It replaces the Delphi FireMonkey implementation while retaining the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, mail reports, and the original analog clock face.
+Version 9.0 of Westminster Chimes and Carillon Bells is implemented in C# with Windows Presentation Foundation (WPF), replacing the Delphi FireMonkey implementation while retaining the bell system’s established behavior. That behavior includes the grouped playlist, local-time schedules, seasonal dates, rotating random music, weekly and legacy silence, email reports, and original analog clock face.
 
-The single-executable release supports a new USB with a starter database and in-place upgrades of existing 7.2.4 and 8.1 installations. An in-place upgrade runs from the existing folder and uses its database and audio tree. The Database tab separately supports read-only analysis and import of a selected database into an existing v9 installation.
+The single-executable release supports both a new USB installation with a starter database and an in-place upgrade from version 7.2.4 or 8.1. An in-place upgrade runs in the existing folder and uses its database and audio tree, whereas the **Database** tab provides a separate route for read-only analysis and importing a selected database into an existing v9 installation.
 
 ## Source map
 
-- App.xaml and App.xaml.cs define WPF resources, startup mode, database setup, and exclusive file handles.
-- MainWindow.xaml and AdministrationWindow.xaml define the editable presentation. Their code-behind binds the state, routes actions, and resolves pending edits.
-- CarillonRuntime.cs coordinates scheduling, dispatch, silence, logging, and scheduled maintenance. Domain.cs holds song data, date and time normalization, path handling, and the schedule and calendar rules.
-- CarillonRepository.cs owns SQLite statements, transactions, compatibility upgrades, and backups. AudioPlayback.cs contains the playback and Windows endpoint paths.
-- EmailReports.cs and CarillonLog.cs supply reports and diagnostic evidence. ClockWindow, ClockHands.xaml, ThemeManager.cs, and Themes.xaml govern appearance and clock rendering.
-- RegressionTests.cs, AudioRegressionTests.cs, and the build and package scripts supply automated verification and deployment.
+Begin an investigation with the component that owns the behavior, then follow its calls into the runtime or repository. The responsibilities below provide a starting point without treating the historical FMX implementation as the authority for current code.
 
-Executable validation records under docs identify the checks, counts and deployment scope for each checkpoint. See migration-root-validation-20261125.json and clock-reach-validation-20261125.json. The Groups deep dive reproduced the old failure before fixing it: a copied live database marked 16 rows Modified with zero differing values. Genuine edit/revert, calendar, add/delete, Save/Cancel and prompt-free repeated D: close checks were verified; existing live group records were unchanged. See docs\UI-improvements-checkpoints.md for the dated evidence and rollback points.
+- `App.xaml` and `App.xaml.cs` define the WPF resources and startup path, including operating mode, database preparation, and acquisition of exclusive file handles.
 
-Use the versioned source to resolve behavioral questions. The FMX handoff and original 8.1 publications are useful historical references. The current acceptance matrix records which verification was actually performed and which checks still depend on the deployment environment.
+- `MainWindow.xaml` and `AdministrationWindow.xaml` contain the editable presentation, with their code-behind binding state, routing user actions, and resolving pending edits.
+
+- `CarillonRuntime.cs` coordinates scheduling, dispatch, silence, logging, and scheduled maintenance, while `Domain.cs` supplies the song model, date and time normalization, path handling, and schedule and calendar rules.
+
+- `CarillonRepository.cs` owns SQLite statements, transactions, compatibility changes, and backups; `AudioPlayback.cs` handles playback and the Windows audio-endpoint integration.
+
+- `EmailReports.cs` and `CarillonLog.cs` provide reporting and diagnostic evidence, while `ClockWindow`, `ClockHands.xaml`, `ThemeManager.cs`, and `Themes.xaml` govern appearance and clock rendering.
+
+- `RegressionTests.cs`, `AudioRegressionTests.cs`, and the build and packaging scripts provide the automated checks used to verify application behavior and prepare deployment artifacts.
+
+The executable validation records under `docs` identify the checks, counts, and deployment scope for each checkpoint, including `migration-root-validation-20261125.json` and `clock-reach-validation-20261125.json`. For the Groups correction, a copied live database reproduced the original failure by reporting 16 Modified rows even though no column values differed.
+
+Validation then covered genuine edits and reversions, calendar interaction, adding and deleting rows, **Save** and **Cancel**, and repeated prompt-free closes of the D: installation, with its existing group records unchanged. Refer to `docs\UI-improvements-checkpoints.md` for the dated evidence and rollback points.
+
+Use the versioned source when resolving questions about current behavior, treating the FMX handoff and original 8.1 publications as historical references. The acceptance matrix distinguishes checks already performed from those that still depend on the deployment environment, so an earlier passing result should be read in the context of the checkpoint it describes.
 
 # Startup and process lifetime
 
+Startup establishes which installation owns the data and audio activity, while shutdown must release that ownership cleanly. Review both paths when changing initialization, lock handling, background work, or endpoint subscriptions so that a second process or late callback does not inherit an ambiguous state.
+
 ## Opening an installation
 
-Application startup sets the short-date format to en-US MM/dd/yyyy. It handles --self-test and --audio-test before normal initialization, so those modes use dedicated test paths. Normal startup obtains exclusive handles for Carillon.lock beside the executable and carillon.db.lock beside the database. A lock file can remain on disk after an earlier session. Check the process holding the file handle when diagnosing a startup lock.
+Startup establishes the `en-US` short-date format, `MM/dd/yyyy`, and handles `--self-test` and `--audio-test` before normal initialization so those modes can use dedicated test paths. For normal operation it acquires exclusive handles for `Carillon.lock` beside the executable and `carillon.db.lock` beside the database; because the files can remain after an earlier session, diagnose a startup lock by checking handle ownership rather than file presence alone.
 
-The new USB package supplies databases\carillon.db and its time-marking recordings. The single-executable launch reads the database in its own installation folder. A 7.2.4 database triggers one confirmation before conversion and opens a review session with scheduling paused and automatic mail suppressed. A compatible 8.1 database opens directly with the normal runtime; the application backs up the file before initializing any missing dispatch metadata.
+A New Install package supplies `databases\carillon.db` and the time-marking recordings, while the single-executable launch always reads the database in its own installation folder. Detecting a 7.2.4 database leads to one conversion confirmation and a review session with scheduling paused and automatic mail suppressed. A compatible 8.1 database opens through the normal runtime, with a backup taken before any missing dispatch metadata is initialized.
 
-After the database is ready, startup loads the palette, displays the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash uses the Westminster artwork, title, and portable edition caption. The approved three-bell icon is embedded in the executable and used by the app windows.
+Once the database is ready, startup loads the palette, shows the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash carries the Westminster artwork, product title, and portable-edition caption, while the approved three-bell icon is embedded in the executable and used by the application windows.
 
-The app uses AppContext.BaseDirectory as the root for the database, logs, and playback, including when launched from a shortcut with a different working directory. The single executable opens its embedded HTML Help from a temporary PC copy. Separate copies on a disk and a USB drive keep independent data. Run a single scheduling instance on a Windows audio endpoint in normal operation. Two copies with independent queues can both dispatch on the same device.
+All database, log, and playback paths are rooted at `AppContext.BaseDirectory`, including when a shortcut supplies a different working directory. Embedded HTML Help is opened from a temporary copy on the PC, and separate installations on a disk and USB retain independent data.
+
+Use one scheduling instance per Windows audio endpoint during normal operation, since separate copies have independent queues and can both dispatch to the same device.
 
 ## Shutdown and power management
 
-The main close path resolves pending playlist edits, closes the separately opened clock, detaches notifications, and disposes the runtime. The runtime stops its dispatcher timer, cancels background mail, releases playback and endpoint subscriptions, and drops the Windows sleep-prevention request. App.OnExit disposes the two lock handles. Exit from the sidebar, File menu, or window close button goes through the same path.
+The main close path first resolves pending playlist edits, then closes the separate clock window, detaches notifications, and disposes the runtime. Runtime disposal stops the dispatcher timer, cancels background mail, releases playback and endpoint subscriptions, and removes the Windows sleep-prevention request, while `App.OnExit` releases both lock handles. The sidebar’s **Exit** button, the **File** menu, and the window close button all follow this shutdown path.
 
-SetThreadExecutionState keeps the system awake during runtime and releases that request when the app exits cleanly. The runtime writes data\keepalive.txt on its 30-second cadence to keep the portable drive active. The OS execution-state request and the periodic drive write are distinct measures; neither guarantees protection from physical removal, loss of power or device/driver failure. For a stale timestamp, check the runtime log and process state. Verify amplifier output separately when testing onsite audio.
+While the runtime is active, `SetThreadExecutionState` requests that Windows stay awake and the 30-second maintenance cadence writes `data\keepalive.txt` to help keep the portable drive active. The operating-system request is released on a clean exit, but neither measure protects against physical removal, loss of power, or device or driver failure. If the timestamp appears stale, inspect the runtime log and process state, and verify the amplifier output separately during onsite audio testing.
 
 # Playlist and administration
 
+The interface keeps selected records and staged edits separate from persisted state. Changes to selection, saving, or pending-edit checks therefore need to preserve both the user’s place in the list and the schedule state that existed before maintenance began.
+
 ## Playlist state and editing
 
-MainWindow shows the next-song card, today's counts, active silence, grouped Songs list, Play schedule editor, and player. The title bar reports calendar-unit uptime from the application's last start. Organization and date/time use separate wrapping XAML controls in an automatically growing header. The next-song card puts the time above its wrapping title and shows the repeat count when an event repeats. The footer rebuilds the recorded count from the play log and normally displays Songs played today. A runtime error can occupy that status line.
+`MainWindow` brings together the next-song card, daily counts, active silence, grouped **Songs** list, **Play schedule** editor, and player. Its title bar shows calendar-unit uptime from the last start, while separate wrapping XAML controls give the organization name and date/time room in an automatically growing header. The next-song card places the time above a wrapping title and includes a repeat count when applicable; the footer normally shows **Songs played today**, reconstructed from the play log, although a runtime error can occupy that status line.
 
-A selected song is identified by the composite playlist_name and song_name key. The editor holds a cloned Song and uses a fingerprint to identify pending changes. PLAYER binds to runtime.LastPlayed: it records the actual recording when playback starts, independently of grid selection, including the resolved random track. Before any play it reports No songs played this session. Its fixed 118.5-unit gap after the playback buttons reflects the approved 2.5 cm right adjustment; titles wrap before the separate System Volume boundary. Schedule input receives focus at the start of an edit session, which pauses an enabled queue. Save validates the editor, persists the row, and reloads the collection. Cancel restores the selected row's saved values. The earlier schedule state is restored after an edit, so a queue that was already paused remains paused.
+Selection is tracked by the composite `playlist_name` and `song_name` key, while the editor works on a cloned `Song` and uses a fingerprint to detect pending changes. This keeps the selected database record distinct from the in-progress edit.
 
-Collection reloads preserve the selected key, search, group expansion, and scroll offset where possible. The effective key can change after edits to a playlist row. Navigation uses the visible records under the current filter. Add files reads the duration through the normal decoder. Delete removes the row and leaves the audio file in place.
+The **PLAYER** display binds to `runtime.LastPlayed`, recording the actual audio item when playback starts rather than following the current grid selection; for random music it records the resolved track. Before the first play it shows **No songs played this session**. A fixed 118.5-unit gap after the playback buttons preserves the approved 2.5 cm rightward adjustment, and long titles wrap before the separate **System Volume** boundary.
+
+At the start of an edit session, schedule input receives focus and an enabled queue pauses. **Save** validates and persists the row before reloading the collection, whereas **Cancel** restores the selected row’s saved values; finishing the edit restores the preceding schedule state, including leaving an already paused queue paused.
+
+When the collection reloads, the window preserves the selected key, search, group expansion, and scroll offset where possible, allowing for the effective key to change after a playlist edit. Navigation follows the visible records under the current filter, **Add files** reads duration through the normal decoder, and **Delete** removes only the playlist row while retaining the audio file.
 
 ## Administration state
 
-The Administration window uses tab-specific DataTable views for groups, settings, random folders, and weekly silence. Before Save, it commits active grid cell and row edits and validates dates, enabled silence windows, and other required fields. Settings writes are restricted to the changed columns owned by System and Email. The three owned data grids use transactional writes per table. Treat the administration window as staged UI state and verify any reported save failure before continuing.
+`Administration` presents tab-specific `DataTable` views for groups, settings, random folders, and weekly silence, treating those views as staged UI state. Before **Save**, it commits active cell and row edits and validates dates, enabled silence windows, and other required fields. Settings updates are limited to changed columns owned by **System** and **Email / reports**, while each of the three owned data grids writes transactionally per table; inspect a reported save failure before continuing rather than assuming every pending table was committed.
 
-Opening most administrative pages pauses scheduling. Themes, Clock hands and Fonts are exceptions when visited without moving to another administrative tab that requires a pause. The clock and log windows can stay open while background work continues. Cancel changes reloads committed data, and the close flow prompts when changes are pending. Theme selection applies to open windows and persists separately. Clock hand selection previews immediately and uses Save to commit the choice.
+Most Administration pages pause scheduling, with **Themes**, **Clock hands**, and **Fonts** remaining exceptions when opened without moving to another tab that requires a pause. The clock and log windows can remain open while background work continues, and **Cancel changes** reloads committed data before the close flow checks for remaining edits. Theme choices apply to open windows and persist separately, whereas clock-hand choices preview immediately and use **Save** to commit.
 
 ## Calendar buttons and real pending edits
 
-The shared DatePicker ControlTemplate keeps PART_TextBox, PART_Button, PART_Root and PART_Popup. The 24-unit button column stays reserved, and the 22-unit button uses Visibility Hidden at rest. Template triggers show it for IsMouseOver, IsKeyboardFocusWithin or IsDropDownOpen. The existing native calendar handles selection; the symbol is an editable XAML path. This applies to playlist and group dates without runtime hover handlers.
+The shared `DatePicker` control template retains `PART_TextBox`, `PART_Button`, `PART_Root`, and `PART_Popup`, reserving a 24-unit column for a 22-unit button that is `Visibility Hidden` at rest. Template triggers reveal it for `IsMouseOver`, `IsKeyboardFocusWithin`, or `IsDropDownOpen`, leaving selection to the native calendar and the symbol to an editable XAML path. Both playlist and group dates use this template, so the hover behavior requires no runtime hover handlers.
 
-CommitEditors still validates group date text, updates bindings, and commits grid cells and rows. A binding write of the same date can mark a DataRow Modified without changing any values. Groups therefore determines pending work from Added/Deleted rows or column differences between Current and Original versions of Modified rows. It does not use GetChanges alone for Groups, erase real edits with AcceptChanges, or bypass the close prompt. Saving or cancelling establishes the next clean view. Other administration tables retain their existing change checks.
+`CommitEditors` continues to validate group date text, update bindings, and commit grid cells and rows. A binding can write the same date back to a `DataRow` and mark it `Modified` without changing any values, which is why Groups cannot use `GetChanges` alone as its pending-edit test.
+
+Instead, Groups recognizes `Added` and `Deleted` rows and compares columns between the `Current` and `Original` versions of Modified rows. The implementation neither clears real changes with `AcceptChanges` nor bypasses the close prompt; saving or cancelling establishes the next clean view, while the other administration tables keep their existing change checks.
 
 ## Font resources and validation
 
-App.xaml supplies BodyFontFamily, HeadingFontFamily and size resources. Original uses Bahnschrift and Georgia; alternate families are Bahnschrift, Segoe UI, Arial, Tahoma, Verdana and Calibri. The integer base range is 14–20 with an original base of 18; supporting labels and headings scale proportionately.
+Font selection is driven by the `BodyFontFamily`, `HeadingFontFamily`, and size resources in `App.xaml`. **Original** retains Bahnschrift for body text and Georgia for headings, with Bahnschrift, Segoe UI, Arial, Tahoma, Verdana, and Calibri offered as alternatives. The integer base-size range is 14 through 20, with 18 as the original base and supporting labels and headings scaled proportionately.
 
-ThemeManager.CheckFonts applies candidate resources only to appearance-preview copies of existing XAML windows. Preview constructors suppress scheduling/disposal side effects. The checker completes deferred layout and measures full text using FormattedText at minimum supported client sizes, the display work area and current DPI. It covers song field values, administration tabs/rows, visible and masked passwords, date calendars, schedule overlay, recent log entries, clock menu and splash. Input overflow, clipping and ellipses do not count as fitting; read-only reports retain vertical scrolling. A candidate is refused as a whole when any check fails.
+`ThemeManager.CheckFonts` applies candidate resources to appearance-preview copies of the existing XAML windows, whose preview constructors suppress scheduling and disposal side effects. After completing deferred layout, the checker measures full text with `FormattedText` at the minimum supported client sizes, available display work area, and current DPI.
 
-Apply rechecks current data, writes data\fonts.json through a temporary sibling and atomic replacement, then updates the active resources. The confirmation names the applied font and size and states that it is already saved; the Fonts report and ResultLabel retain the status. Candidate changes invalidate prior approval. Pending administration edits must be resolved before checking. Startup and main-window DPI changes revalidate custom saved choices; invalid choices restore Original with a notice. Original 18 remains the reset escape path. Appearance checks do not replace deployment testing at other physical display densities.
+The checks cover song values, administration tabs and rows, visible and masked passwords, date calendars, the schedule overlay, recent log entries, clock menu, and splash. Overflow, clipping, and ellipses do not qualify as fitting, although read-only reports retain vertical scrolling; a failure anywhere rejects the candidate as a whole.
+
+**Apply checked font** rechecks current data, writes `data\fonts.json` through a temporary sibling and atomic replacement, and updates the active resources. Its confirmation names the font and size and states that they are already saved, with the Fonts report and `ResultLabel` retaining that status; changing the candidate invalidates the previous approval, and pending administration edits must be resolved before checking.
+
+Startup and main-window DPI changes revalidate a saved custom choice, restoring **Original** with a notice if it no longer fits. **Original** at size 18 remains the reset path, but these appearance checks do not replace deployment testing at other physical display densities.
 
 # Scheduling and maintenance
 
+Building the day’s schedule and dispatching its occurrences are separate operations, with reports and the live queue using different views of the same rules. Keep that distinction explicit when investigating an omitted event, an apparent duplicate, or maintenance around midnight and clock changes.
+
 ## Compiling a day
 
-ScheduleBuilder selects records whose inclusive From and Until dates cover the day and whose weekday flag is enabled. A record has twelve available daily times. Empty values are absent, midnight is a valid time, and duplicate time values in one row collapse into one occurrence. Ordering is by time, then ordinal playlist and path. Simultaneous events for different songs remain distinct, and the player services queued events sequentially.
+`ScheduleBuilder` selects records whose inclusive **From** and **Until** dates cover the requested day and whose weekday flag is enabled. Each row offers twelve daily time slots: blanks are absent, midnight is valid, and repeated values within one row collapse into one occurrence. Results are ordered by time, then ordinal playlist and path, so simultaneous events for different songs remain distinct and are serviced sequentially by the player.
 
-The full-day schedule and remaining queue have different lifetimes. The full-day snapshot can show earlier events and remains available when dispatch is paused. Rebuilding a live queue excludes events before the current time and applies the dispatch ledger. Weekly silence exclusions use an inclusive end during compilation. Legacy liturgical and funeral checks also affect playback through the live silence coordinator.
+The full-day snapshot remains available when dispatch is paused and can include events earlier in the day, whereas a rebuilt live queue excludes times before now and applies the dispatch ledger. Weekly silence has an inclusive end during compilation, while the legacy liturgical and funeral checks also affect playback through the live silence coordinator; keep these separate lifetimes and checks in mind when comparing the displayed day with the remaining queue.
 
 ## Dispatch and clock changes
 
-CarillonRuntime uses a one-second WPF DispatcherTimer with a reentrancy guard. It compares wall-clock movement with monotonic elapsed time. A timer gap longer than ten seconds, an absolute clock discrepancy greater than two seconds, or a date change triggers a queue rebuild when scheduling is enabled. Detected discontinuities skip missed events. Ordinary playback contention leaves queued events available for sequential dispatch.
+`CarillonRuntime` uses a one-second WPF `DispatcherTimer` with a reentrancy guard, comparing wall-clock movement with monotonic elapsed time. When scheduling is enabled, a timer gap longer than ten seconds, an absolute discrepancy greater than two seconds, or a date change triggers a queue rebuild that skips missed occurrences. Ordinary contention from a busy player instead leaves events available for sequential dispatch.
 
-The event identifier combines the local yyyyMMddHHmmss timestamp with the song's composite key. Carillon9_Dispatched stores the identifier and event date. Each scheduled event is recorded before playback, including one skipped for live silence. The ledger prevents duplicate dispatch on re-enable or restart and treats a repeated local clock time during the autumn clock change as the same occurrence. A recorded dispatch followed by a playback failure requires separate handling.
+Each event identifier combines its local `yyyyMMddHHmmss` timestamp with the song’s composite key and is stored with the event date in `Carillon9_Dispatched` before playback, including an event skipped for live silence. This ledger prevents duplicate dispatch after re-enabling or restarting and treats a repeated local time during the autumn clock change as the same occurrence. Because the record precedes playback, a subsequent playback failure requires separate handling.
 
-The title bar computes uptime using completed calendar months from startup, divided into years and months, followed by weeks, days, hours, minutes, and seconds. The display clamps a wall-clock value earlier than startup to zero. Clock artwork has its own window timer, so closing the clock leaves the scheduling timer active.
+The title bar calculates uptime from completed calendar months since startup, divides those into years and months, and then reports the remaining weeks, days, hours, minutes, and seconds. Values are clamped to zero if the wall clock moves earlier than startup, while clock artwork uses its own window timer so closing the clock does not stop scheduling.
 
 ## Background timing
 
-- At startup, the runtime trims the play log and reconstructs the recorded count for the current day.
+Scheduled maintenance shares the running process with playback rather than depending on which page is visible. The timings below identify when work becomes due and which startup or once-per-day guards prevent it from being repeated.
+
+- At startup, the runtime trims the play log and reconstructs the current day’s recorded-play count, giving the new session its local history.
+
 - At or after 00:05, daily schedule and count maintenance runs once per running day while scheduling is enabled.
-- At or after 00:10, the log is trimmed when the runtime reaches a new day. This is independent of the playback logging setting.
-- January maintenance recalculates liturgical dates from January 2 at 00:15 and seasonal group dates from January 3 at 00:02. The running process tracks completion by year. These checks operate in January, independently of which view is open.
-- The automatic morning report becomes due at or after 05:00 once per running day. A process started at or after 05:00 marks the startup date as already handled.
+
+- At or after 00:10, reaching a new day triggers log trimming independently of the playback-logging setting.
+
+- January maintenance recalculates liturgical dates from January 2 at 00:15 and seasonal group dates from January 3 at 00:02, with the running process tracking completion by year. These checks operate during January regardless of which view is open.
+
+- The automatic morning report becomes due at or after 05:00 once per running day, while a process started at or after 05:00 treats that startup date as already handled.
 
 # Seasonal playback and silence
 
+Seasonal group synchronization changes song dates and first play times, random rotation chooses a folder, and silence coordinates exclusions and endpoint mute. Follow those responsibilities separately when diagnosing which recording was selected or why an otherwise eligible event was quiet.
+
 ## Seasonal synchronization
 
-CalendarRules calculates Gregorian Easter and recognizes fixed and movable holiday groups. Christmas spans December 22 through December 26, Memorial Day uses the last Monday of May, and Thanksgiving uses the fourth Thursday in November. Recalculation updates recognized names and advances past occurrences. Custom group names are preserved.
+`CalendarRules` calculates Gregorian Easter and recognizes fixed and movable holiday groups, including Christmas from December 22 through December 26, Memorial Day on the last Monday in May, and Thanksgiving on the fourth Thursday in November. Recalculation updates recognized names and advances past occurrences while preserving custom group names.
 
-When synchronization runs, it matches trimmed seasonal names case-insensitively and excludes Daily List. For matching seasonal rows, the group's dates and first play time replace the row's dates and first time, and the other eleven times are cleared. Engineers investigating a seasonal row whose hand-entered slot disappeared should inspect its group first.
+Synchronization matches trimmed seasonal names without regard to case and excludes **Daily List**. For matching rows, the group’s dates and first play time replace the song’s dates and first time, and the remaining eleven time fields are cleared, so investigate the assigned group before treating a disappeared hand-entered seasonal slot as a separate save failure.
 
 ## Random directory selection
 
-Random-directory date editing uses M/d, for example 10/1 through 10/31. DataFormats.AnnualDate rejects year-bearing input, dashes and impossible dates; a leap-capable reference year supports February 29. Repository normalization retains ISO storage, using year 2000 for newly entered month/day values while accepting existing ISO dates. The matcher ignores the stored year. Slot 1 is the everyday fallback. The empty test schema gives it .\random_songs. Slots 2 through 7 are evaluated in order. The first nonempty folder whose annual date range matches wins. Calendar matching uses month and day, handles a range that crosses New Year, and includes both boundaries. Edits use the Browse button in the intended row. The chosen folder must resolve within the portable installation and is stored as a relative path.
+Random-directory date entry uses `M/d`, such as 10/1 through 10/31, with `DataFormats.AnnualDate` rejecting years, dashes, and impossible dates. A leap-capable reference year allows February 29, while repository normalization continues to store ISO dates, using year 2000 for newly entered month/day values and accepting existing ISO values; matching ignores the stored year.
 
-For a song title containing Random Music Generator, the player resolves the active folder at playback and chooses a random MP3 from that directory. The scan uses files directly inside the folder. A missing folder or one without an eligible file causes a playback error. Check the override that was active on the date of the failure before changing the fallback.
+Slot 1 is the everyday fallback and receives `.\random_songs` in the empty test schema. Slots 2 through 7 are evaluated in order, selecting the first nonempty folder with a matching annual range; both boundaries are included, and a range may cross New Year. The row’s **Browse** button selects a folder that must resolve within the portable installation and is stored as a relative path.
+
+When a song title contains **Random Music Generator**, playback resolves the active folder and chooses a random MP3 directly inside it. A missing folder or one without an eligible recording produces a playback error, so check the override that applied on the failure date before changing the fallback folder.
 
 ## Silence coordination
 
-Silence windows holds twelve reusable weekly records. The weekday on a rule that crosses midnight is its starting weekday. Equal start and end times are inactive. Scheduled compilation excludes the exact weekly end time, while live evaluation releases the window at that end instant. A 22:00–06:00 Friday rule therefore continues into Saturday morning.
+**Silence windows** stores twelve reusable weekly rules, with an overnight rule assigned to its starting weekday and equal start and end times treated as inactive. A Friday rule from 22:00 to 06:00 therefore extends into Saturday morning. Compilation excludes the exact weekly end time, even though live evaluation releases the window at that instant.
 
-Purpose entry uses measured text width with an M-width reserve, using the editor's font and display density. Oversized additions and multiline pastes are refused without truncating the prior accepted value; existing long descriptions can be shortened incrementally. Start/End columns are 105 units each, returning space to Purpose; those editors have no redundant inner padding.
+**Purpose** entry is measured using the editor’s font and display density, with an M-width reserve to leave spare space. Oversized additions and multiline pastes are rejected without truncating the previously accepted value, while an existing long description can be shortened incrementally. The **Start** and **End** columns each use 105 units and omit redundant inner padding, leaving the remaining space for Purpose.
 
-The separate System setting enables the legacy liturgical and funeral intervals. Ash Wednesday and All Souls run from 02:05 to 23:55 on their configured dates. The Holy Thursday through Holy Saturday interval runs from 02:05 on the configured Thursday to 23:55 on the configured Saturday. The Ash Wednesday end editor remains in XAML with Visibility Collapsed. ash_wed_begin is authoritative; manual saves and recalculation copy it to ash_wed_end. SaveSettings enforces synchronization transactionally, including NULL clearing and legacy-end-only writes. EnsureCompatibleSchema detects a stale end, makes the normal ZIP backup and repairs it to match the start. An already synchronized database takes the existing fast path. Funeral silence needs complete dates and times, with the end strictly later than the start. The runtime combines active reasons, applies muting on startup or schedule edits, and retains the requested manual mute through overlapping rules.
+The separate **System** setting enables the legacy liturgical and funeral intervals. Ash Wednesday and All Souls run from 02:05 to 23:55 on their configured dates, while the Holy Thursday through Holy Saturday interval extends from 02:05 on the configured Thursday to 23:55 on the configured Saturday.
+
+The Ash Wednesday end editor remains in XAML with `Visibility Collapsed`, with `ash_wed_begin` authoritative and manual saves and recalculation copying it to `ash_wed_end`. `SaveSettings` enforces this relationship transactionally, including NULL clearing and legacy-end-only writes; `EnsureCompatibleSchema` detects a stale end, makes the normal ZIP backup, and repairs it to match the start, while an already synchronized database uses the existing fast path.
+
+Funeral silence requires complete dates and times with the end strictly later than the start. The runtime combines active reasons, applies mute on startup or schedule edits, and preserves the requested manual mute through overlapping rules.
 
 # SQLite data migration and recovery
 
+Compatibility work operates on persistent installation data, so its entry points must be understood before changing a schema or replacing a file. The following sections distinguish normal storage, startup conversion, analysis and import, and recovery, including the backup boundaries that protect each route.
+
 ## Data model
 
-Microsoft.Data.Sqlite opens short-lived connections with pooling disabled. Repository statements use parameters for values and explicit transactions for compatible table writes. Full dates display in U.S. month/day/year order with slash marks; annual random-directory dates display only M/d. Normalized persisted dates use yyyy-MM-dd and play times use HH:mm:ss. The parser accepts the compatible legacy date and time representations, including OLE Automation values. User time entry accepts AM/PM as well as 24-hour forms. Saving normalizes to HH:mm:ss; 6:15 PM and 18:15 both become 18:15:00, while 12:00 AM is 00:00:00 and 12:00 PM is 12:00:00. Durations are intervals and can exceed one day.
+The repository is the boundary between UI values and their stored representation. Treat display formatting, legacy parsing, normalized storage, and transactional writes as related parts of that contract rather than changing one representation in isolation.
 
-- playlist uses the composite playlist_name and song_name key. Its group is stored as season, and its daily times are scheduled_time1 through scheduled_time12.
-- seasonalgroups stores named date ranges and a play time. PL_SETTINGS stores one row under settings_id 1, including distinct System and Email field sets and compatible theme colors.
-- PL_RAND_DIR_ROTATION stores slots 1 through 7 with rand_music_dir, frm_date, and to_date. PL_RAND_DIR_ROTATION_WIDE_BACKUP is a preserved historical layout.
-- silence_schedule stores a rule ID, enabled flag, purpose, times, and weekday flags. Carillon9_Dispatched stores the persistent local-date dispatch ledger.
+`Microsoft.Data.Sqlite` uses short-lived connections with pooling disabled, parameterized values, and explicit transactions for compatible table writes. Full dates display in U.S. month/day/year order with slashes, annual random-directory dates display as `M/d`, and persisted dates and play times are normalized to `yyyy-MM-dd` and `HH:mm:ss` respectively.
 
-The empty schema resource at samples\empty-schema.sql supplies a baseline for disposable databases. The release starter is packaged as databases\carillon.db with basic time-marking entries whose relative paths resolve under Music. The repository's compatibility checks also apply to a separately imported database.
+The parser accepts compatible legacy representations, including OLE Automation values, while time entry accepts AM/PM and 24-hour forms. Saving 6:15 PM or 18:15 yields 18:15:00, with 12:00 AM becoming 00:00:00 and 12:00 PM becoming 12:00:00; durations remain intervals and can exceed one day.
+
+- `playlist` identifies a song by the composite `playlist_name` and `song_name` key, stores its group in `season`, and holds daily times in `scheduled_time1` through `scheduled_time12`.
+
+- `seasonalgroups` stores named date ranges and a play time, while `PL_SETTINGS` holds the row keyed by `settings_id` 1, including distinct System and Email field sets and compatible theme colors.
+
+- `PL_RAND_DIR_ROTATION` stores slots 1 through 7 in `rand_music_dir`, `frm_date`, and `to_date`, with the historical wide layout retained as `PL_RAND_DIR_ROTATION_WIDE_BACKUP`.
+
+- `silence_schedule` holds the rule ID, enabled flag, purpose, times, and weekday flags, while `Carillon9_Dispatched` holds the persistent local-date dispatch ledger.
+
+The `samples\empty-schema.sql` resource provides a baseline for disposable databases, while the release starter is packaged as `databases\carillon.db` with basic time-marking entries whose relative paths resolve under Music. The same repository compatibility checks also apply to a separately imported database.
 
 ## In-place upgrade
 
-The user-facing Method A is implemented inside CarillonBells.exe: App.OnStartup calls the linked MigrationEngine.UpgradeLocalDatabase directly. It does not launch CarillonMigration.exe. Installing the Upgrade files preserves the existing database; starting the main executable can change it. Method B explicitly runs CarillonMigration.exe to stage a separate installation. It does not undo a previous Method A upgrade or synchronize later edits between the two databases.
+Method A is implemented inside `CarillonBells.exe`, where `App.OnStartup` calls the linked `MigrationEngine.UpgradeLocalDatabase` directly rather than launching the assistant. Installing Upgrade files preserves the database, but starting the main executable can change it; Method B explicitly runs `CarillonMigration.exe` to stage a separate installation and neither reverses an earlier Method A upgrade nor synchronizes later edits between databases.
 
-For 7.2.4, startup detects the wide random-directory schema and requests confirmation before converting it. It saves a verified carillon_before_upgrade_*.zip beside the working database. The converted schema retains the original wide table and fills missing compatibility fields and silence slots. It preserves the stored schedule times and the existing audio. A normal start of a compatible 8.1 database adds Carillon9_Dispatched when needed and places the pre-change ZIP beside the database.
+For version 7.2.4, startup detects the wide random-directory schema, requests conversion approval, and saves a verified `carillon_before_upgrade_*.zip` beside the working database. Conversion retains the original wide table, fills missing compatibility fields and silence slots, and preserves stored schedule times and existing audio. A compatible 8.1 startup adds `Carillon9_Dispatched` when needed and likewise places its pre-change ZIP beside the database.
 
-The in-place ZIP contains carillon.db. For release verification, use disposable legacy installations and confirm the preserved snapshot, readable working database, and unchanged existing music before resuming on-site playback.
+The in-place backup ZIP contains `carillon.db`, so qualify the upgrade on disposable legacy installations and confirm the preserved snapshot, readable working database, and unchanged music before resuming onsite playback.
 
 ## Analysis and import
 
-Separate-folder migration permits the old installation and the v9 template to share a drive root, while requiring a new direct child such as E:\V9. The drive root itself, existing destinations, reserved data folders and children of a non-root source/template remain rejected. The assistant auto-fills Source when its database is beside the executable; Browse database identifies the installation through carillon.db. Destination separates an existing parent from a single new folder name and displays a read-only composed path. Migration creates that folder only after validation and staging succeeds.
+The separate-folder assistant and the Administration database tools serve different purposes: one stages another installation, while the other analyzes or replaces the current installation’s database. Verify the source, template, and destination involved before following either code path.
 
-Template copying includes the v9 executables and versioned Documentation guides. Single-file templates exclude older loose Help and unrelated programs/DLLs. Multifile dependencies are selected from the v9 deps.json declarations rather than copying every executable or DLL from the shared root. Root-drive regression cases cover 7.2.4 conversion, 8.1 preservation, source hashes, Documentation, dependency filtering, existing/nested destinations, changed-source rejection and cancellation. The optional CARILLON_MIGRATION_TEST_ROOT environment variable must name an empty disposable drive root for those tests; never point it at a working USB.
+Separate-folder migration allows the old installation and v9 template to share a drive root but requires a new direct child destination such as `E:\V9`. The drive root itself, an existing destination, a reserved data folder, and a child of a non-root source or template are rejected.
 
-Analyze source database opens the selected file read-only, runs SQLite quick_check, and reports whether the rotation table is row-based. The scrollable report includes definitions from sqlite_schema for tables, indexes, views, and triggers. SQLite-generated objects without separate SQL receive an explanatory line. Save report exports text. Schema names and definitions can still be private, so review a report before sharing it.
+The assistant fills **Source** automatically when the database is beside the executable, and **Browse database** identifies an installation through `carillon.db`. **Destination** separates an existing parent from a single new folder name and shows the composed path read-only, creating the folder only after validation and staging succeed.
+
+Template copying includes the v9 executables and versioned Documentation guides, with single-file templates excluding older loose Help and unrelated programs or DLLs. For a multifile template, dependencies come from the v9 `deps.json` declarations instead of every executable or DLL in the shared root.
+
+Root-drive regression cases cover 7.2.4 conversion, 8.1 preservation, source hashes, Documentation, dependency filtering, existing and nested destinations, changed-source rejection, and cancellation. The optional `CARILLON_MIGRATION_TEST_ROOT` variable must point to an empty disposable drive root; never use a working USB for these tests.
+
+**Analyze source database** opens the selected file read-only, runs SQLite `quick_check`, and reports whether the rotation table uses the row-based layout. Its scrollable report includes table, index, view, and trigger definitions from `sqlite_schema`, explains SQLite-generated objects without separate SQL, and can be exported with **Save report**. Review the output before sharing it, because schema names and definitions may still be private.
 
 ![The report shows the rotation table definition, including its slot number constraint and directory and date columns.](figures/analysis.png)
 
-Choose and import a database copy first resolves pending admin changes. The source is opened read-only and SQLite's backup API creates a local candidate. Compatibility changes add required columns, establish a unique settings key, preserve extra tables, and fill required standard slots where needed. Wide rotation data is renamed to a preserved backup and converted to the slot layout. The import stops for review when it finds multiple settings rows. Legacy time normalization applies to the candidate.
+**Choose and import a database copy** first resolves pending administration edits, then opens the source read-only and uses SQLite’s backup API to create a local candidate. Compatibility work adds required columns, establishes a unique settings key, preserves extra tables, fills standard slots as needed, and converts a wide rotation table after renaming it to a preserved backup. Multiple settings rows stop the import for review, and legacy time normalization is applied to the candidate.
 
-A consistent ZIP of the current local database precedes replacement. The app validates the candidate's songs, silence, and settings, releases active playback, replaces the local database, and reloads. If replacement or subsequent initialization fails after the local backup is taken, it can restore the prior snapshot. The final conversion report records the snapshot path and normalized values count. Copy the music separately and verify the corresponding paths under the destination executable.
+Before replacement, the application saves a consistent ZIP of the current local database and validates the candidate’s songs, silence, and settings. It then releases active playback, replaces the database, and reloads, with the prior snapshot available for restoration if replacement or subsequent initialization fails after backup. The final report records the snapshot path and normalized-value count; music must still be copied separately and checked against the paths under the destination executable.
 
 ## Recovery and backups
 
-The Migration Guide gives separate recovery paths: resume an untouched Method B source; restore a verified original 7.2.4 database with Restore 7.2.4; or recover 8.1 from its complete pre-upgrade ZIP, with a carefully identified database-only alternative. A later complete v9 ZIP must be retained first because restoring an older snapshot does not merge later edits. A database ZIP alone cannot restore old executables or lost recordings.
+The Database Migration Guide distinguishes resuming an untouched Method B source, restoring a verified original 7.2.4 database with **Restore 7.2.4**, and recovering 8.1 from its complete pre-upgrade ZIP or a carefully identified database-only alternative. Preserve a later complete v9 ZIP first, because restoring an older snapshot does not merge subsequent edits, and a database ZIP alone cannot recover old executables or missing recordings.
 
-The 32-bit and 64-bit builds of CarillonMigration.exe provide the same **Restore 7.2.4…** workflow. The assistant lists dated carillon_before_upgrade_*.zip backups beside the selected installation's database and accepts a ZIP from another location. It checks the original 7.2.4 schema and SQLite integrity before installing the saved database. The ZIP contains carillon.db at its root or under databases.
+The 32-bit and 64-bit builds of `CarillonMigration.exe` provide the same **Restore 7.2.4** workflow, listing dated `carillon_before_upgrade_*.zip` files beside the selected database and accepting a ZIP from another location. Before installation, the assistant checks the original 7.2.4 schema and SQLite integrity, accepting `carillon.db` either at the ZIP root or under `databases`.
 
-Close both Carillon.exe and CarillonBells.exe before restoration. The assistant checks that the target database is eligible and available, verifies a dated carillon_before_restore_*.zip of the current database, and replaces only databases\carillon.db. It rechecks the database fingerprints before replacement and stops if either database changed after review. Users open Carillon.exe themselves when ready to check the schedule and audio. The existing audio, executable files, and upgrade backup stay available.
+Close both `Carillon.exe` and `CarillonBells.exe` before restoration so the assistant can check that the target is eligible and available, create and verify a dated `carillon_before_restore_*.zip`, and replace only `databases\carillon.db`. Database fingerprints are checked again before replacement, stopping the operation if either file changed after review. The existing audio, executables, and upgrade backup remain available, and the user starts `Carillon.exe` when ready to check the restored schedule and sound.
 
-Database import saves its local snapshots under databases\backup. For recovery of a v9 import, close the app and preserve the current database before replacing it with the selected snapshot. When reopening a v9 database, use Evaluation mode to verify the settings, paths, and upcoming events before resuming onsite operation.
+Database import writes its local snapshots under `databases\backup`. To recover a v9 import, close the application and preserve the current database before replacing it with the chosen snapshot, then use **Evaluation** mode to check settings, paths, and upcoming events before resuming onsite operation.
 
 # Audio output and clock visuals
 
+Playback spans managed decoding, callback ownership, and the Windows audio endpoint, so successful scheduling alone does not prove that sound reached the intended hardware. The clock is a separate display surface whose timers and shared resources must remain independent of playback lifetime.
+
 ## Decoding and playback lifecycle
 
-AudioPlayback opens MP3 through Mp3FileReaderBase with NLayer's frame decompressor. Both duration reading and playback use that decoder. WAV files use WaveFileReader for PCM, IEEE float, or extensible audio. The samples feed NAudio WaveOutEvent through a 16-bit PCM provider. The runtime receives any decoder or playback faults for logging and display.
+`AudioPlayback` uses `Mp3FileReaderBase` with NLayer’s frame decompressor for both MP3 duration reading and playback. WAV input is handled by `WaveFileReader` for PCM, IEEE float, or extensible audio, with samples delivered to NAudio `WaveOutEvent` through a 16-bit PCM provider. Decoder and playback faults return to the runtime for logging and display.
 
-The playback controller owns one stream and output object. Play stops and disposes the previous one, begins the selected item, and clamps repeats to 1–5. PlaybackStopped is marshalled to the dispatcher. The callback checks output ownership, rewinds for remaining repeats, and releases resources at completion. Stop clears ownership and unsubscribes before stopping, so the ownership check rejects late playback callbacks. Songs played today counts recorded starts, with all repeats grouped under the same start.
+The controller owns one stream and output object, so **Play** stops and disposes the previous item before starting the next and clamps repeats to 1 through 5. `PlaybackStopped` is marshalled to the dispatcher, where ownership is checked before rewinding for remaining repeats or releasing resources at completion. **Stop** clears ownership and unsubscribes before stopping, allowing that ownership check to reject late callbacks; recorded starts contribute to **Songs played today**, with all repeats grouped under the same start.
 
-SystemAudio observes the default Windows multimedia render endpoint, subscribes to Core Audio notifications, and rebinds after endpoint changes. The slider and Mute operate on the Windows master endpoint. Managed silence maintains the user's requested manual mute and restores it after the final reason ends. Refresh checks the actual endpoint while the app runs. Include an endpoint and a safe test audio path in playback qualification.
+`SystemAudio` observes the default Windows multimedia render endpoint, subscribes to Core Audio notifications, and rebinds when the endpoint changes. The slider and **Mute** act on the Windows master endpoint, while managed silence retains the user’s requested manual mute and restores it after the final reason ends. Refresh checks the actual endpoint during operation, so playback qualification needs both an endpoint and a safe reference-audio path.
 
 ## Clock styles and themes
 
-ClockWindow scales the original face with a Viewbox. Its 1680 × 864 canvas has a pivot at 840,430. ClockHands.xaml defines Original and eighteen black numbered alternatives. The original drawing remains intact; the alternatives use narrower shafts, a black 15-unit hub, and minute tips reaching the original minute-marker radius of 217 units and hour tips reaching the original Roman numeral depth of 170 units. XAML Y transforms set these lengths without widening the shafts; outlined tips account for their stroke thickness. The selection gallery uses five columns and smaller cards while retaining the right preview geometry. The 460-pixel style tiles use pivot 230,230 and are offset by 610,200 on the live face. The minute hand advances six degrees per minute. The hour hand advances thirty degrees per hour plus a half-degree per minute. The gallery previews the same drawings at 10:10. A saved style updates the open live clock through a shared resource.
+`ClockWindow` scales the original face through a `Viewbox` over a 1680 × 864 canvas whose pivot is 840,430. `ClockHands.xaml` retains **Original** and eighteen numbered black alternatives with narrower shafts and a 15-unit black hub, using XAML Y transforms to reach the original 217-unit minute-marker radius and 170-unit Roman-numeral depth without widening the shafts. Outlined tips include their stroke thickness in that length calculation.
 
-The portable installation stores the selected ID in data\clock-hands.txt. The valid range is 0–18, with 0 as Original when the file is absent or invalid. Save writes a temporary sibling and replaces the target. Existing numbered preferences select the same slot when a design is revised. Themes.xaml and ThemeManager control palettes, legacy-compatible stored colors, and separate card tints. These properties and the clock geometry are editable in XAML.
+The gallery uses five columns and compact cards while retaining the right-hand preview geometry. Its 460-pixel style tiles pivot at 230,230 and are offset by 610,200 on the live face; the minute hand advances six degrees per minute, and the hour hand advances thirty degrees per hour plus half a degree per minute. The gallery previews those same drawings at 10:10, and saving a style updates an open live clock through the shared resource.
+
+The selected style ID is stored in `data\clock-hands.txt`, accepting 0 through 18 and falling back to 0, **Original**, when the file is absent or invalid. **Save** writes a temporary sibling before replacing the target, and an existing numbered preference continues to select the same slot when its design is revised. `Themes.xaml` and `ThemeManager` govern palettes, legacy-compatible colors, and separate card tints, leaving these properties and clock geometry editable in XAML.
 
 # Reporting and log diagnosis
 
+Reports and logs provide evidence for operational checks without taking ownership of the live playback queue. Diagnose local report generation, SMTP delivery, and recorded playback separately so that a failure in one is not mistaken for a scheduling or audio failure.
+
 ## Mail and health reporting
 
-Email / reports owns the enable flag, SMTP host and STARTTLS port, credentials, sender, and separate recipients for alerts, tests, and the morning report. MailKit connects using explicit STARTTLS, authenticates, sends, and records success after the transport operation returns. Invalid configuration, connection failure, and rejected recipients surface as errors. Address checks name the relevant recipient/sender field; Test recipient is required only for its test-send action. A successful send clears a stale Email failed status while preserving unrelated errors. SMTP username need not itself be an email address. Manual sends ask for confirmation. Evaluation suppresses automatic delivery, while real playback, endpoint controls, and local reporting remain active.
+**Email / reports** owns the enable flag, SMTP host and STARTTLS port, credentials, sender, and separate alert, test, and morning-report recipients. MailKit connects with explicit STARTTLS, authenticates, sends, and records success only after the transport operation returns, exposing invalid settings, connection failures, and rejected recipients as errors.
 
-An HTML health report uses an independent full-day schedule and includes the upcoming events, recorded plays, playlist duration, portable and system drive space, boot and runtime uptime, physical memory, audio output, recent maintenance, and missing-file checks. Preview report saves a local HTML file. Inspect that output first. Test actual SMTP only with authorized recipients and credentials on the intended network.
+Address checks identify the relevant sender or recipient field, with **Test recipient** required only by its test-send action and the SMTP username permitted to differ from an email address. A successful send clears a stale **Email failed** status while preserving unrelated errors, and manual sends require confirmation. **Evaluation** suppresses automatic delivery while leaving real playback, endpoint controls, and local reporting active.
+
+The HTML health report builds an independent full-day schedule and includes upcoming events, recorded plays, playlist duration, portable and system drive space, boot and runtime uptime, physical memory, audio output, recent maintenance, and missing-file checks. Use **Preview report** to inspect the local HTML first, then test actual SMTP delivery only with authorized recipients and credentials on the intended network.
 
 ## Logs and fault isolation
 
-CarillonLog serializes file access and recognizes both current en-US and historical ISO-style timestamps. Played Song entries reconstruct the recorded count. Schedule state transitions log specific reasons, such as song, group, random-music, silence, email or database maintenance. Switching maintenance tabs while already paused records the reason without a duplicate state transition. Log entries wrap for full reading. A repeat stays part of one play, and a separate completion message is unnecessary. Trimming removes old valid dates after the thirty-day cutoff while retaining malformed historical entries. The Log window reads latest entries and can refresh while playback remains active.
+`CarillonLog` serializes file access and accepts current `en-US` and historical ISO-style timestamps, with **Played Song** entries rebuilding the recorded count and each repeat remaining part of a single recorded play. Schedule-state transitions identify the maintenance reason, including song, group, random-music, silence, email, or database work; switching tabs while already paused records the new reason without duplicating the state transition.
 
-- For an unavailable track, compare the resolved filename with the executable's folder, then verify the active seasonal slot and the relative path.
-- For a missing scheduled event, inspect dates, weekdays, times, current queue, silence, time discontinuities, and the dispatch ledger before creating a new event.
-- For silent playback, inspect the actual endpoint, endpoint volume and mute, current silence reasons, and decoder or path errors.
-- For startup failure, verify the intended installation's writability, runtime architecture, exclusive handle ownership, and SQLite integrity. Use the archive for recovery after confirming which copy is affected.
+The **Log** window wraps long entries and can refresh while playback continues, without requiring a separate completion entry for each play. Trimming removes entries with valid dates older than the thirty-day cutoff while preserving malformed historical entries for diagnosis.
+
+- For an unavailable track, compare its resolved filename with the executable’s folder, then check the active seasonal slot and relative path before changing stored references.
+
+- For a missing scheduled event, inspect its dates, weekdays, times, queue position, silence rules, time discontinuities, and dispatch-ledger entry before creating another event.
+
+- For silent playback, follow the actual audio endpoint through volume, mute, and active silence reasons, then check for decoder or path errors.
+
+- For startup failure, check the intended installation’s write access, runtime architecture, exclusive handle ownership, and SQLite integrity, identifying the affected copy before selecting an archive for recovery.
 
 # Build and release
 
+A deployable USB package combines the correct architecture’s executables with documentation and, for New Install, starter data and recordings. Keep building, behavioral qualification, payload assembly, and publication as distinct checkpoints, with recorded hashes linking the artifacts that were actually tested.
+
 ## Project and build commands
 
-Open CarillonBells.sln in a Windows IDE with .NET 10 and WPF support. CarillonBells.csproj targets net10.0-windows. Directory.Build.props routes project intermediates into dcu and excludes local output, tools, and private directories from compilation. The executable icon, splash and clock assets are WPF resources. In the single-executable release, local HTML Help is embedded so upgrades can use it immediately. The new USB package also includes a Help folder for direct access.
+Open `CarillonBells.sln` in a Windows IDE with .NET 10 and WPF support; `CarillonBells.csproj` targets `net10.0-windows`, and `Directory.Build.props` directs intermediates into `dcu` while excluding local output, tools, and private directories from compilation. The icon, splash, and clock assets are WPF resources, with HTML Help embedded in the single-executable edition for immediate use after an upgrade and also supplied as a Help folder in New Install packages.
 
-Run tools\build.ps1 with Release or Debug. Publish the main executable with -Publish, -SingleExe, and -Runtime win-x86 or -Runtime win-x64. Each executable bundles the matching .NET 10 Desktop runtime and native SQLite component. The script uses tools\dotnet when installed and otherwise uses the system dotnet executable. It directs CLI settings and NuGet packages into project-local caches. The lock file and project file identify dependency versions.
+Run `tools\build.ps1` with Release or Debug, publishing the main executable with `-Publish`, `-SingleExe`, and `-Runtime win-x86` or `-Runtime win-x64`. Each published executable bundles the matching .NET 10 Desktop runtime and native SQLite component. The script prefers `tools\dotnet` when present, otherwise uses the system `dotnet`, and directs CLI settings and NuGet packages into project-local caches, with dependency versions recorded in the lock file and project file.
 
-Publish CarillonMigration.exe with -MigrationSingleExe, -Publish, and the same runtime selection. The staging folder is export\staging-migration-single-win-x86 or export\staging-migration-single-win-x64. Place it beside the matching CarillonBells.exe so the assistant has the payload for a separate v9 installation. The Restore 7.2.4 workflow runs directly from the migration executable.
+To publish `CarillonMigration.exe`, use `-MigrationSingleExe` with `-Publish` and the same runtime selection, producing `export\staging-migration-single-win-x86` or `export\staging-migration-single-win-x64`. Place the resulting assistant beside the matching `CarillonBells.exe` so it has the payload for a separate v9 installation; **Restore 7.2.4** runs directly from the migration executable.
 
-Use an approved pre-change ZIP before updating a working installation. Close the app and validate the application build first. The -PortableRoot option applies to an initialized v9 destination on the multi-file publish path. It copies and hash-verifies application files while preserving the database, audio, logs, and data directory. For the public single-executable USB release, extract the Installer ZIP on the computer and run its Setup, selecting the existing installation folder. Only the advanced manual portable Upgrade ZIP supplies loose files for copying directly beside databases. To relocate a working installation, close it and copy the complete folder.
+Before updating a working installation, make the approved pre-change ZIP, close the application, and validate the build. On the multifile publish path, `-PortableRoot` targets an initialized v9 destination and copies and hash-verifies application files while preserving its database, audio, logs, and data directory.
+
+For the public single-executable USB route, extract the Installer ZIP on the computer and run Setup against the existing installation folder. Loose files for copying directly beside `databases` belong to the advanced manual portable Upgrade ZIP; relocating a working installation instead requires closing it and copying the complete folder.
 
 ## Validation and packaging
 
-Run CarillonBells.exe --self-test on disposable data before deployment and on each updated installation. Verify the generated regression-results.txt and failure count alongside the process exit code. Run --audio-test followed by a local reference MP3 to test decoding, quiet WAV playback, serial repeats, pause and stop, dispatch with Clock open, time discontinuity, silence, endpoint mute, and cleanup. Audio tests exercise actual Windows audio, so run them in a safe test setting. Review audio-regression-results.txt. Exercise exact layouts, deployed resources, save and cancel, database import and restoration, and portability under a different working directory when those surfaces change.
+Run `CarillonBells.exe --self-test` on disposable data before deployment and on each updated installation, checking `regression-results.txt`, its failure count, and the process exit code together. Use `--audio-test` followed by a local reference MP3 to exercise decoding, quiet WAV playback, serial repeats, pause and stop, dispatch while **Clock** is open, time discontinuity, silence, endpoint mute, and cleanup.
 
-Public downloads are the four Installer ZIPs under export\downloads\32-bit and export\downloads\64-bit. Each name ends Package_Setup.zip and contains one self-contained Setup EXE, the relevant PDF guide and START_HERE.txt. Users extract that download on the computer, then run Setup to install directly into the selected USB folder. No loose Setup EXE is needed beside the download. New Install supplies the starter database and music; Upgrade preserves existing data and recordings.
+These tests use real Windows audio, so run them in a safe test setting and review `audio-regression-results.txt`. When a change affects layouts, resources, editing, database import or restoration, or portability, also exercise those surfaces, including save and cancel and startup from a different working directory.
 
-The export\32-bit and export\64-bit folders retain the app and Migration Assistant EXEs and the manual portable ZIPs. Those ZIPs contain loose application files and remain required inputs to the Setup build. Do not delete them as duplicates or publish them as Installer ZIPs. They can serve as an explicitly labelled advanced manual-install option. The default website route uses Installer ZIPs only.
+The four public downloads are Installer ZIPs under `export\downloads\32-bit` and `export\downloads\64-bit`, each ending in `Package_Setup.zip` and containing a self-contained Setup EXE, relevant PDF guide, and `START_HERE.txt`. Users extract the ZIP on the computer and run Setup to install directly into their selected USB folder, without needing a separate loose Setup EXE. **New Install** supplies a starter database and music, whereas **Upgrade** preserves the existing database and recordings.
 
-The manual portable New Install ZIP contains CarillonBells.exe plus data, databases, Documentation, Help, logs, and Music. Verify that each starter recording resolves inside Music and that the database contains only the intended time-marking rows. The manual portable Upgrade ZIP contains CarillonBells.exe, the matching CarillonMigration.exe, and Documentation for extraction beside the existing database.
+Keep the application and Migration Assistant executables and manual portable ZIPs in `export\32-bit` and `export\64-bit`, because the portable ZIPs supply required inputs to the Setup build. They may be offered as an explicitly labelled advanced manual-install option, but should not be deleted as duplicates or confused with the Installer ZIPs used by the default website route.
 
-Run tools\build_usb_setups.py after preparing the current portable ZIPs. It stages their files under export\setup-payloads, builds Setup and writes the public Installer ZIPs under export\downloads. The auditor checks both ZIP layers, the extracted installer hash, the supplied guide and every embedded application file. All four Setups share one installation identity so Upgrade can update New Install. Install, Repair, Verify and Uninstall use the displayed folder. Verify checks the files supplied by that package; use it before starting Carillon. Non-Windows local drive roots and subfolders are supported; the Windows drive root, Windows directories and network-share roots remain protected.
+The manual portable New Install ZIP contains `CarillonBells.exe` and the `data`, `databases`, `Documentation`, `Help`, `logs`, and `Music` folders. Check that its starter database contains only the intended time-marking rows and that every referenced recording resolves under Music. The manual portable Upgrade ZIP instead supplies `CarillonBells.exe`, the matching `CarillonMigration.exe`, and Documentation for extraction beside the existing database.
 
-ZIP delivery does not eliminate Windows security warnings. SmartScreen considers publisher signatures and file reputation, and Windows can retain download-origin information after extraction. These packages are unsigned; do not claim that ZIP wrapping makes them trusted or advise disabling Windows protection. Consult Microsoft's SmartScreen reputation and Attachment Manager guidance when planning code signing and publication.
+After preparing the current portable ZIPs, run `tools\build_usb_setups.py` to stage their files under `export\setup-payloads`, build Setup, and write the public Installer ZIPs under `export\downloads`. The auditor verifies both ZIP layers, the extracted installer hash, the supplied guide, and every embedded application file, while a shared installation identity allows all four Setups to update a New Install with Upgrade.
 
-Check the architecture and hashes of both main and migration executables, both ZIPs and every individual file embedded in each corresponding Setup. Test new installs at a non-Windows drive root and a subfolder, Verify after selecting a different destination and reopening Setup, deliberate missing or damaged files, and upgrades that preserve database and music hashes. Match the package to the installed Windows system type. Both builds use the same USB folder layout. The Windows support baseline follows Microsoft's .NET 10 support table for Windows 10 LTSC or Enterprise and Windows 11.
+**Install**, **Repair**, **Verify**, and **Uninstall** all use the displayed destination folder, with Verify checking the files supplied by that package before Carillon is started. Setup accepts a non-system local drive root or an appropriate subfolder, while protecting the Windows drive root, Windows directories, and network-share roots.
 
-Keep private working databases, credentials, music libraries, diagnostic logs, backups, and scratch output out of the distribution. Record physical endpoint removal, USB disconnect behavior, real SMTP delivery, diverse monitor scaling, and long-running operation as separate deployment evidence when checked.
+ZIP packaging does not digitally sign these installers or remove Windows security warnings: SmartScreen considers publisher signatures and reputation, and download-origin information can survive extraction. Describe the packages as unsigned rather than trusted by their ZIP wrapper, avoid advising users to disable Windows protection, and consult Microsoft’s SmartScreen reputation and Attachment Manager guidance when planning signing or publication.
+
+Qualification should compare the architectures and hashes of the main and migration executables, both ZIP layers, and every corresponding embedded Setup file. Exercise New Install at a non-system drive root and subfolder, **Verify** after changing destinations and reopening Setup, deliberately missing or damaged files, and Upgrade while checking that database and music hashes are preserved. Both architectures use the same USB layout, but must match the installed Windows system type; check Windows 10 LTSC or Enterprise and Windows 11 installations against Microsoft’s current .NET 10 support table.
+
+Exclude private working databases, credentials, music libraries, diagnostic logs, backups, and scratch output from the public distribution. Keep deployment evidence for physical endpoint removal, USB disconnection, real SMTP delivery, monitor scaling, and long-running operation separate, recording the conditions under which each was actually checked.
 
 ## Maintain the guides
 
-The editable manuscripts are under docs\guides\source. Run tools\build_guides.py with an output folder to generate the DOCX drafts. In LibreOffice Writer, update each table of contents, save the DOCX, and export the PDF from that document. Check the dotted leaders, page numbers, and links after updating the contents. The USB package collects the finished DOCX guides from docs\guides and their PDFs from docs\pdf into Documentation.
+Documentation is part of the release payload, so compare the current editable DOCX with its manuscript before regenerating a guide, particularly when the owner has made manual revisions. The manuscripts live under `docs\guides\source`; use `tools\build_guides.py` with a separate output folder to generate drafts, preserving approved wording and layout rather than overwriting a newer canonical document.
+
+In LibreOffice Writer, refresh the table of contents, save the DOCX, and export its companion PDF, checking dotted leaders, page numbers, navigation links, and every rendered page. Keep the approved DOCX files in `docs\guides` and PDFs in `docs\pdf`, from which the portable package collects Documentation.
+
+When publishing a guide revision, update the website and standalone release PDF as well as the DOCX/PDF copies inside every affected portable ZIP and installer payload. Rebuild the installers, refresh their checksums and manifest, and compare all active copies with the approved canonical files before declaring the documentation update complete.
