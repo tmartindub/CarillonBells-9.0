@@ -1,10 +1,14 @@
 # Westminster Chimes and Carillon Bells 9.0
 
-Version 9.0 is the new C# / WPF edition for Windows. It includes automatic playlist refresh, annual seasonal music dates, clearer schedule maintenance, adjustable fonts with layout checks, hover calendar buttons, and eighteen slender black clock-hand alternatives alongside Original. Scheduled reports, silence windows, playback, and schedule rebuilding were exercised in Tommy's overnight acceptance test.
+Version 9.0 is the new C# / WPF edition for Windows. It includes automatic playlist refresh, annual seasonal music dates, clearer schedule maintenance, adjustable fonts with layout checks, hover calendar buttons, and eighteen slender black clock-hand alternatives alongside Original. Scheduled reports, silence windows, playback, and schedule rebuilding were exercised in overnight acceptance testing.
 
 ## User Guide refresh November 27 2026
 
 The User Guide now includes feature introductions, smoother prose, and emphasized control names. The standalone PDF, website copy, and DOCX/PDF copies in all four portable packages and all four installer payloads use the approved revision. Application binaries are unchanged; SHA256SUMS.txt contains the new installer checksums.
+
+## Engineering Guide refresh November 27 2026
+
+The Engineering Guide now gives maintainers repeatable validation steps and a generic database schema example. The website PDF, standalone PDF, and documentation inside each installer use the approved revision. The updated SHA256SUMS.txt lists the new installer checksums.
 
 ## Downloads
 
@@ -12,7 +16,7 @@ Choose one Installer ZIP for New Install or Upgrade and your Windows architectur
 
 Upgrade users: read the Database Migration Guide before starting either program and make a complete pre-upgrade backup. CarillonBells.exe works against the existing installation; CarillonMigration.exe creates a separate v9 copy. Keep the original program and backup for rollback.
 
-The four PDFs include Tommy's current, manually revised Quick Start guide. SHA256SUMS.txt lists the installer download hashes. GitHub's source-code ZIP contains C# and XAML source, not a ready-to-run installation.
+The four PDFs include the current Quick Start Guide. SHA256SUMS.txt lists the installer download hashes. GitHub's source-code ZIP contains C# and XAML source, not a ready-to-run installation.
 
 ## Version 8.1 remains available
 

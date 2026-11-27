@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-27",
+  "backup": "Carillon-before-engineering-guide-publication-20261127-140750.zip",
+  "approvedGuideCommit": "0f132d545bc4e77923fd6be61a957e82575238b5",
+  "websiteCommit": "070aaee7981d547cfdab2c204210c5f142ba21f5",
+  "engineeringGuideDocxSha256": "347a38a8da45a862b5b4cf2eb9a95c98872a856ba4e185fe292c7fc2f3411aa6",
+  "engineeringGuidePdfSha256": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+  "packageAudit": "All four portable ZIPs and all four installer payloads contain byte-identical approved guides.",
+  "nonDocumentationPayloadUnchanged": true,
+  "downloadPageMatchesPublishedSource": true,
+  "archiveLinksChecked": [
+    "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_8_1_Portable_Full.zip",
+    "https://github.com/tmartindub/Carillon8_1/releases/download/v8.1.0/CarillonBells_7_2_4_to_8_1_Upgrade.zip",
+    "v8.1/index.html"
+  ],
+  "verifiedPublicFiles": [
+    {
+      "url": "https://carillon-bells.github.io/guides/engineering-guide.pdf",
+      "sha256": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+      "bytes": 224733
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/engineering-guide.pdf?v=49a38b122dd4",
+      "sha256": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+      "bytes": 224733
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_Engineering_Guide.pdf",
+      "sha256": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+      "bytes": 224733
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "sha256": "d08018377fc45d72bd9bdcd7914af9b52d68ef86422e9dce3a0e5512a104c715",
+      "bytes": 308767567
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "sha256": "763c96828541bcf36304ab7d1947b1d9eead39d0a8a6a1205c1ccb3e8a041cc3",
+      "bytes": 304715531
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "sha256": "161e00186172a908ea9f421acf8f7d8599567d3904c223c410bab5d23c508a6e",
+      "bytes": 139361830
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "sha256": "011a83fca47ce31cd53e3bf07eafc0e981835562445b3676786015ad0781c4f2",
+      "bytes": 131257901
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/SHA256SUMS.txt",
+      "sha256": "f80e6324e2f7b9c0ee97652d67f71a92707cb5609ad87aff37c7c9cd61c605c7",
+      "bytes": 500
+    },
+    {
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/release-manifest.json",
+      "sha256": "13f2c05910dedf207475012c277bdc730973eccde9b79cdad1fd566d26f524a5",
+      "bytes": 5035
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tmartindub/CarillonBells-9.0/0f132d545bc4e77923fd6be61a957e82575238b5/docs/guides/CarillonBells_9_0_Engineering_Guide.docx",
+      "sha256": "347a38a8da45a862b5b4cf2eb9a95c98872a856ba4e185fe292c7fc2f3411aa6",
+      "bytes": 41603
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tmartindub/CarillonBells-9.0/0f132d545bc4e77923fd6be61a957e82575238b5/docs/pdf/CarillonBells_9_0_Engineering_Guide.pdf",
+      "sha256": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+      "bytes": 224733
+    }
+  ]
+}

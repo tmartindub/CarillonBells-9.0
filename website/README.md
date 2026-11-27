@@ -72,3 +72,7 @@ The approved User Guide now includes feature introductions, smoother prose and
 bold control names. The website PDF, standalone release PDF, and DOCX/PDF copies
 inside every portable package and installer payload use the same canonical files.
 Installer checksums were refreshed; the application binaries remain unchanged.
+
+## Engineering Guide refresh November 27 2026
+
+The website PDF and release downloads use the approved Engineering Guide revision. The download cards and SHA256SUMS.txt list the checksums for the refreshed installers.
