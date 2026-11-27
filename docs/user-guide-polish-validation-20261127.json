@@ -1,0 +1,35 @@
+{
+  "revised_original_paragraphs": 78,
+  "control_label_emphasis_runs": 221,
+  "preserved_images": 7,
+  "preserved_sections": 1,
+  "manual_additions_retained": [
+    "continuous operation",
+    "V9 installation folder example",
+    "original drive as backup",
+    "music folder organization",
+    "Daily List default group",
+    "seasonal group explanation",
+    "annual random folder instructions"
+  ],
+  "clarifications_verified_against_source": [
+    "schedule restores previous state",
+    "simultaneous songs follow generated schedule order",
+    "clock hand lengths follow Original"
+  ],
+  "source_file": "C:\\New Delphi Projects\\CarillonBells v 9_0\\docs\\guides\\CarillonBells_9_0_User_Guide.docx",
+  "candidate": "C:\\New Delphi Projects\\CarillonBells v 9_0\\tools\\guide-qa\\user-polish-20261127\\CarillonBells_9_0_User_Guide.docx",
+  "date": "2026-11-27",
+  "backup": "H:\\Project Cleanup Backups\\Carillon-before-User-Guide-polish-20261127-090953.zip",
+  "pages": 15,
+  "visual_review": "All 15 pages inspected; changed pages checked again after final refinements; no clipping, overlap, missing screenshots or blank pages found",
+  "contents_entries_and_pdf_links_verified": 33,
+  "updateable_docx_toc_preserved": true,
+  "inherited_missing_random_music_bookmark_repaired": true,
+  "headings_and_seven_original_screenshots_preserved": true,
+  "user_local_edits_preserved_and_polished": true,
+  "pdf_page_content_matches_reviewed_render": true,
+  "publication": "Local review only; no push, website, release-package or D: update",
+  "docx_sha256": "888279cb10a0b637976405827e22ce0904a723f16e644d50d02d6d897cf938f7",
+  "pdf_sha256": "a28ef7eb3d078397af33f200847a259acbadb2cc4e5dd41372cb13ca8f1c3d02"
+}
