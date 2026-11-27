@@ -6,6 +6,8 @@ Once you have checked the schedule and settings, the program is designed to run 
 
 ## Open the correct copy
 
+A USB drive or computer may hold more than one copy of the bell program, each with its own database and recordings. Before you review a schedule or make changes, identify the installation you intend to use so that you are working with the correct bell system.
+
 1. Plug in the USB that holds your installation, then click **File Explorer**, the folder icon on the Windows taskbar, and choose **This PC** to find the drive. Double-click the USB and, if you keep the installation in a folder such as V9, double-click that folder as well.
 
 2. Find **CarillonBells.exe** alongside the databases folder and your music folders, then double-click it to start the program. Windows may hide the .exe ending and display the name as **CarillonBells**, so check that you are starting the installed version rather than an older program or a copy still inside a downloaded ZIP.
@@ -26,7 +28,11 @@ Before adding a recording to the song list, place it in the Music folder or crea
 
 # Read the main window
 
+The main window is your daily view of the bell system, bringing the music list, schedule, playback controls, and current status together. A quick review here helps you see what is due to play, whether a quiet period is active, and where to go when you need to make a change.
+
 ## Status and navigation
+
+After starting the program, use the header and status cards to confirm that the installation is showing the information you expect. They provide a useful first check before you leave the system running on its own, or whenever the bells appear to be behaving differently from the schedule you intended.
 
 The title bar identifies Westminster Chimes and Carillon Bells and shows how long the current session has been running, from years down to seconds. Below it, the main header gives your organization name its own line, allowing it to wrap when necessary, with the current date and time underneath.
 
@@ -50,7 +56,11 @@ The main window starts maximized to provide room for the music list and schedule
 
 # Add and schedule songs
 
+A recording needs a playlist entry and a schedule before the program can play it automatically. The playlist identifies the music you want to use, while the schedule determines the dates, weekdays, and times when each entry is eligible to play; the following procedures take you from adding a recording to checking its scheduled appearance.
+
 ## Add music and find a song
+
+Adding music creates an entry that points to an audio file already stored in your installation. Keeping the recordings within that installation lets them travel with the USB, and organizing them into meaningful folders makes a larger collection easier to maintain.
 
 1. Copy your MP3 or WAV files into Music, or another music folder you have created within the installation, before adding them to the list. WAV recordings must use PCM or IEEE-float audio.
 
@@ -63,6 +73,8 @@ The main window starts maximized to provide room for the music list and schedule
 5. New songs are assigned to **Daily List** by default, so expand that group to find a recording you have just added. Select it there to set its dates and play times, or choose a different **Group** when the recording belongs to a seasonal collection.
 
 ## Enter the schedule
+
+Use the song editor to turn a playlist entry into a regular appointment for the bells, choosing its active date range, weekdays, play times, and repeat count. Decide when you want the recording to be heard before filling in these fields, and review the seasonal-group instructions if several songs should share the same dates and first play time.
 
 1. Select the song you want to schedule, then use the weekday checkboxes in **Play schedule** to choose the days on which it may play.
 
@@ -82,11 +94,17 @@ After an edit or import, the music list updates automatically and keeps the sele
 
 ## Remove a playlist entry
 
+When a recording is no longer part of your bell program, you can remove its playlist entry without erasing the audio file. This is useful when retiring an old selection or reorganizing the schedule, because the recording remains available if you decide to add it again later.
+
 To remove an entry, select the song, click **Delete** beneath **Play schedule**, and confirm the named recording. This removes it from the playlist while leaving the audio file in its folder, and the list selects a neighboring entry when one is available. If an expected song seems to be missing after another change, clear the search and expand its group before checking the entries again.
 
 # Run the schedule and player
 
+The program can play music automatically at scheduled times or let you start a recording yourself. Automatic playback is intended for normal unattended operation, while manual playback is useful for checking a new recording, confirming the sound level, or testing the connection to your audio system.
+
 ## Check scheduled playback
+
+During automatic operation, eligible recordings enter a queue, or waiting list, as their scheduled times arrive. Reviewing **Today's schedule** after an edit helps you confirm what is planned for the day and what still remains to play before you leave the system unattended.
 
 Select **Schedule enabled** to run scheduled playback, or clear it when you want to pause the schedule. **Today's schedule** lets you review the full day and the remaining queue, with songs falling within weekly silence windows excluded from the full-day schedule; it can also show weekly silence intervals that have not yet ended. When you have finished reviewing the list, click **Back to playlist** to return.
 
@@ -96,6 +114,8 @@ If the computer sleeps or its clock changes, the program skips missed play times
 
 ## Use manual playback and Windows volume
 
+Manual playback lets you hear a selected recording without waiting for its scheduled time. It uses the computer's actual audio output, so check the connected amplifier or speakers and the intended sound level before starting a test, particularly when the bells can be heard outside the building.
+
 To test a recording, select it and click **Play**, or double-click its row in the music list; manual playback is available even while scheduling is paused. **Pause** switches between pausing and resuming the recording, **Stop** ends playback, and the progress bar shows how far the recording has played.
 
 Under **PLAYER**, **Last song played** identifies the recording that most recently started, so selecting a different song in the list does not change that display. For random playback it shows the actual recording chosen, while **No songs played this session** appears before the first play. Long names wrap within the player area to keep them clear of **System volume**.
@@ -104,7 +124,11 @@ Under **PLAYER**, **Last song played** identifies the recording that most recent
 
 # Manage groups and random music
 
+Seasonal groups and random music offer two ways to manage collections of recordings. A group gives named songs a shared seasonal timetable, while random music chooses an MP3 from a folder that applies to the current date; choose the approach that suits whether you want particular songs or a changing selection.
+
 ## Work in Administration
+
+The **Administration** window brings related settings together in tabs, allowing you to work on the installation without losing your place in the main music list. Before changing operational settings, it helps to understand when the schedule pauses, how changes are saved, and what happens when you close the window.
 
 **Music groups**, **Random music**, **Silence windows**, **System**, **Email / reports**, and **Database import** open their settings in the **Administration** window and pause an enabled schedule while you work. Closing **Administration** restores the previous schedule state. **Themes**, **Clock hands**, and **Fonts** can be opened on their own without pausing playback, but switching from an appearance tab to operational settings pauses the queue until **Administration** closes.
 
@@ -113,6 +137,8 @@ Click **Save** to apply pending settings, or **Cancel changes** to reload the la
 Appearance settings have their own save behavior: choosing a palette or applying custom colors saves the choice immediately, while a clock-hand selection is applied with **Save**. **Font settings** confirms when a checked font has been applied and saved.
 
 ## Set seasonal group dates and times
+
+A seasonal group lets related songs follow one date range and first play time, so you can prepare Christmas, Easter, or another season without editing every recording individually. Use this shared timetable for songs that belong together, while keeping individually scheduled selections in **Daily List**.
 
 Click **Music groups** to manage seasonal group names, their **From** and **Until** dates, and the group's **Play time**. You can enter a time in either 24-hour or AM/PM form, with saved values displayed in hours, minutes, and seconds. To choose a date from a calendar, point at its field and click the calendar button that appears, or reach the field with the keyboard; when you save, date and time changes apply to the matching songs in that seasonal group.
 
@@ -125,6 +151,8 @@ Use **Add group** to create a row that you can name and complete, or **Delete gr
 To prepare for the coming year, click **Recalculate dates for upcoming year**, review the proposed changes, and click **Save** when you are satisfied. This updates recognized seasonal dates while preserving any custom group dates you have entered, with Christmas set to run from December 22 through December 26.
 
 ## Choose folders for random music
+
+Random music provides variety by choosing a recording from a folder rather than always playing one named song. The **Random Music Generator** playlist entry uses your regular collection for most dates and can switch to seasonal folders during annual date ranges, making it useful when you want the selection to change while keeping a predictable schedule.
 
 1. Place your MP3 files directly in the folders you want to use, rather than in subfolders within them. For example, you might keep your regular collection in Random_songs and your Advent collection in **Songs**\Advent, so the program can choose music from the appropriate folder.
 
@@ -140,7 +168,11 @@ The **Fallback random directory (legacy)** field in **System** remains for compa
 
 # Configure silence and system settings
 
+Silence settings let you keep the bells quiet for services, rehearsals, solemn observances, and other occasions without repeatedly changing individual song schedules. Weekly windows handle recurring commitments, while the date-based settings in **System** cover liturgical observances and funeral periods.
+
 ## Set a weekly silence window
+
+A weekly silence window repeats on the weekdays you choose, making it suitable for a regular service or rehearsal. Decide which days and times should remain quiet, including whether the interval crosses midnight, before completing a row.
 
 **Silence windows** provides twelve reusable rows for regular quiet periods. Begin with an unused row and enter a short **Purpose**, such as Thursday rehearsal, that will help you recognize the rule in the display and log. The program leaves a little spare room in this field and refuses typing or pasted text that would overflow it, while keeping the text already accepted and leaving existing descriptions unchanged.
 
@@ -154,6 +186,8 @@ When silence rules overlap, **Silence Window** shows the active reasons and the 
 
 ## Set liturgical and funeral silence
 
+Some quiet periods follow calendar dates rather than a weekly routine. The liturgical settings allow the system to observe the specified church dates, while funeral silence provides a beginning and ending date and time for a particular occasion; review those dates before enabling the periods you intend to use.
+
 Open **System** to set the organization name, **Playback logging**, and liturgical or funeral silence, then select **Enable liturgical and funeral silence** if you want those periods to apply. Ash Wednesday and All Souls Day remain quiet from 02:05 to 23:55 on their configured dates, while the Holy Thursday through Holy Saturday period runs from 02:05 on the configured Thursday until 23:55 on the configured Saturday.
 
 Click **Recalculate Easter / All Souls** to propose the seasonal dates, review the displayed values, and click **Save** when they are correct. Version 9 shows one Ash Wednesday date and keeps its hidden compatibility end date synchronized when you save or recalculate; if an older database contains a stale end value, the program first backs up the database and then repairs that value to match the visible date.
@@ -162,7 +196,13 @@ For funeral silence, enter the complete beginning and ending dates and times, ma
 
 # Review reports and logs
 
+Reports and logs help you follow the bell system's operation even when you are not beside the computer. Email can deliver alerts and a morning summary to designated people, while the local log provides recorded playback and maintenance details that you can consult when checking an event or investigating a problem.
+
 ## Configure email and preview a report
+
+Email notifications let the program send alerts and reports through an account you provide, helping the people responsible for the bells stay informed. An account reserved for your organization can keep this correspondence separate from personal mail, although a separate account is not required by the program.
+
+Before filling in the settings, have your mail provider's sending-server details and sign-in information ready, including an app password if your provider requires one. The account must allow SMTP sending, and the bell computer needs an internet connection to deliver messages; you can still preview a report locally without sending email.
 
 In **Email / reports**, enter your mail provider's **SMTP host**, **STARTTLS port**, username, password or app password, and **From address**. Use **Alert recipients** for alerts and **Morning report recipients** for the daily report, while **Test recipient** is used only by **Send test message** and may be left blank when you do not intend to send a test.
 
@@ -176,6 +216,8 @@ The automatic morning report becomes due at 05:00 when the program is already ru
 
 ## Read recorded activity and maintenance
 
+The log is the program's local record of playback and maintenance activity, giving you a place to check what was recorded around a particular time. It is useful when a song appears to have been missed, a schedule was paused, or a report could not be sent, and you do not need to configure email to read it.
+
 Open **Log** to read the newest 1,000 entries from logs\CarillonPlayLog.txt, and use **Refresh** within that window when you want to load newly recorded events. This button updates the log only; the music list refreshes automatically. Long entries wrap for easier reading, and schedule-pause messages identify the reason, such as song maintenance or **Groups** maintenance.
 
 Recorded playback appears as **Played Song** entries, which the program uses to reconstruct the day's count after a restart. If **Playback logging** is turned off for part of the day, the count reflects only the plays recorded while logging was enabled.
@@ -184,7 +226,11 @@ While running, the program asks Windows to stay awake and writes to data\keepali
 
 # Set the clock and appearance
 
+The clock display and appearance settings let you adapt the program to the way it is viewed in your installation. You can show the analog clock, choose a hand style, or change the color palette while retaining the bell system's existing schedules.
+
 Click **Clock** to display the live analog clock, whose face scales as you resize or maximize the window. Scheduling continues while the clock is open, and you can return to the playlist by choosing **File**, then **Close**, in the clock window.
+
+The hand gallery lets you compare styles against the original clock face before choosing one for the live display. Use the large preview to judge readability, especially if the clock will be viewed from a distance.
 
 Click **Clock hands** below **Clock** in the sidebar, then select a style to see it in the large preview at 10:10. **Original** keeps the classic hands, while eighteen slender black alternatives include Taper, Spade, Breguet, Twin scroll, Lyre, Vienna, and Nouveau. The alternatives use the original hands as their length guide, with the minute hand reaching the minute marks and the hour hand extending slightly past the bottom of the Roman numerals.
 
@@ -192,9 +238,13 @@ The compact selection cards make room for more choices without changing the orig
 
 ![Select a hand style to inspect it in the large preview before saving, with Original always available at the start of the gallery.](figures/hands.png)
 
+A color theme changes the appearance of the program's windows, allowing you to choose a palette that is comfortable for the display and lighting where it will be used. Ready-made palettes are available, or you can supply your own background and text colors.
+
 Open **Themes** from the main window or its **Administration** tab and choose a palette to apply and save it immediately. To create your own color combination, enter six-digit values such as #EFF3F6 for the background and #173650 for the text, then click **Apply and save custom colors**.
 
 # Choose a readable font
+
+Text that is comfortable at one desk may be difficult to read on another screen or from farther away. Font settings lets you choose a typeface and size for the program, with a fit check that helps keep labels and field values readable before the new choice is applied.
 
 ## Check a font before applying it
 
@@ -216,15 +266,21 @@ The sizes in the list are choices to test, because fonts vary in width and longe
 
 ## Restore or move your font choice
 
+Your preferred font may need another look when the USB is moved to a computer with a different display or scaling setting. The saved choice travels with the installation, and the default appearance gives you a familiar starting point if you want to choose again.
+
 Click **Restore defaults** whenever you want to return to the original appearance. A saved font choice travels with the portable installation and is checked again at startup and when the main window's display scaling changes; if it no longer fits, the program restores **Original** and explains why. Review the **Fonts** page on the computer that will actually run the bells to confirm the choice there.
 
 # Open Help and close the program
+
+The local Help guide is available when you need a reminder while using the program, including when the computer is offline. When your work is finished, the normal exit controls give you a chance to resolve pending edits before the program closes.
 
 Click **Help** to read the local HTML guide in your default browser. The single-executable edition includes the guide inside the program, and the New Install USB package also provides an HTML copy in **Help**, so the instructions are available offline; only the optional GTranslate translation widget needs internet access.
 
 When you have finished using the program, choose **Exit**, use **File** then **Exit**, or click the window's close button. All three follow the same shutdown procedure and check for pending edits before the program closes.
 
 # Import and recover a database
+
+The database contains the playlist and operating settings, so importing or restoring one changes the information used by the current installation. Import brings in a separate database copy, whereas restoration returns to an earlier saved state; these are maintenance procedures for a deliberate transfer or recovery, not steps required for everyday startup.
 
 ## Inspect and import a copy
 
@@ -242,13 +298,19 @@ Use **Database import** when you need to bring a separate carillon.db into an ex
 
 ## Restore an earlier local database
 
+Restoring a backup can help you recover a known set of settings after an unwanted change or import. Choose the backup carefully, because returning to its saved state can replace work completed since it was made, and preserve the current database before you begin.
+
 Before restoring a database, note the backup ZIP path shown in the import report, close the program, and preserve the current local database under another name or in a separate backup. Extract carillon.db from the chosen ZIP into the installation's databases folder, then restart the program and check the playlist, settings, and next scheduled song. Keep the ZIP and any reports securely with your other backup copies.
 
 ## Return to an older version
 
+You may want to resume an earlier version while you check a new installation or investigate an operating problem. Keeping the old executable is only part of that preparation: the program and database must be suitable for the version you are returning to, so use the recovery method that matches your upgrade.
+
 Follow the **Database Migration Guide** when returning to version 7.2.4 or 8.1, because the recovery procedure depends on the version and upgrade method you used. Restoring an earlier backup can replace changes made since that backup; the older program names and Migration Assistant procedures described in that guide are recovery tools, rather than programs you need for everyday version 9 operation.
 
 # Troubleshoot common problems
+
+When something does not behave as expected, begin with the symptom you can observe and work through the relevant checks below. The current schedule, silence status, file location, and log often help you narrow down the cause before making further changes to an otherwise working installation.
 
 - **No sound.** Begin with **Silence Window** and the Windows output device, mute setting, and volume, then use **Play** to test a known local recording. If the player reports a missing file, compare the full path in the message with the recording's actual folder and filename.
 
