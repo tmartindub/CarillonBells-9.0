@@ -24,11 +24,11 @@ Begin an investigation with the component that owns the behavior, then follow it
 
 - `RegressionTests.cs`, `AudioRegressionTests.cs`, and the build and packaging scripts provide the automated checks used to verify application behavior and prepare deployment artifacts.
 
-The executable validation records under `docs` identify the checks, counts, and deployment scope for each checkpoint, including `migration-root-validation-20261125.json` and `clock-reach-validation-20261125.json`. For the Groups correction, a copied live database reproduced the original failure by reporting 16 Modified rows even though no column values differed.
+Use the automated tests and release-validation records to identify the behavior checked for a particular source revision. A useful record identifies the build, test conditions, expected outcome, and observed result so another engineer can repeat the check without access to the original installation.
 
-Validation then covered genuine edits and reversions, calendar interaction, adding and deleting rows, **Save** and **Cancel**, and repeated prompt-free closes of the D: installation, with its existing group records unchanged. Refer to `docs\UI-improvements-checkpoints.md` for the dated evidence and rollback points.
+For **Groups**, verify both unchanged and modified records: open and close the page without editing, make and reverse a real edit, use the calendar, add and delete rows, and exercise **Save** and **Cancel**. Closing an unchanged page must not produce a save prompt; accepting or cancelling edits must preserve the expected stored records. Run these checks against a disposable installation and compare the database before and after each case.
 
-Use the versioned source when resolving questions about current behavior, treating the FMX handoff and original 8.1 publications as historical references. The acceptance matrix distinguishes checks already performed from those that still depend on the deployment environment, so an earlier passing result should be read in the context of the checkpoint it describes.
+Use the versioned source as the reference for current behavior, consulting earlier releases only when investigating compatibility. Record environment-dependent checks, such as audio output, display scaling, email delivery, and removable-drive operation, separately from automated results; a passing result applies to the build and conditions recorded for that test.
 
 # Startup and process lifetime
 
@@ -40,7 +40,7 @@ Startup establishes the `en-US` short-date format, `MM/dd/yyyy`, and handles `--
 
 A New Install package supplies `databases\carillon.db` and the time-marking recordings, while the single-executable launch always reads the database in its own installation folder. Detecting a 7.2.4 database leads to one conversion confirmation and a review session with scheduling paused and automatic mail suppressed. A compatible 8.1 database opens through the normal runtime, with a backup taken before any missing dispatch metadata is initialized.
 
-Once the database is ready, startup loads the palette, shows the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash carries the Westminster artwork, product title, and portable-edition caption, while the approved three-bell icon is embedded in the executable and used by the application windows.
+Once the database is ready, startup loads the palette, shows the splash, initializes the runtime, selects the locally saved clock style, and opens the main window. The splash carries the Westminster artwork, product title, and portable-edition caption, while the three-bell icon is embedded in the executable and used by the application windows.
 
 All database, log, and playback paths are rooted at `AppContext.BaseDirectory`, including when a shortcut supplies a different working directory. Embedded HTML Help is opened from a temporary copy on the PC, and separate installations on a disk and USB retain independent data.
 
@@ -62,7 +62,7 @@ The interface keeps selected records and staged edits separate from persisted st
 
 Selection is tracked by the composite `playlist_name` and `song_name` key, while the editor works on a cloned `Song` and uses a fingerprint to detect pending changes. This keeps the selected database record distinct from the in-progress edit.
 
-The **PLAYER** display binds to `runtime.LastPlayed`, recording the actual audio item when playback starts rather than following the current grid selection; for random music it records the resolved track. Before the first play it shows **No songs played this session**. A fixed 118.5-unit gap after the playback buttons preserves the approved 2.5 cm rightward adjustment, and long titles wrap before the separate **System Volume** boundary.
+The **PLAYER** display binds to `runtime.LastPlayed`, recording the actual audio item when playback starts rather than following the current grid selection; for random music it records the resolved track. Before the first play it shows **No songs played this session**. A fixed 118.5-unit gap separates this display from the playback buttons, and long titles wrap before the separate **System Volume** boundary.
 
 At the start of an edit session, schedule input receives focus and an enabled queue pauses. **Save** validates and persists the row before reloading the collection, whereas **Cancel** restores the selected row’s saved values; finishing the edit restores the preceding schedule state, including leaving an already paused queue paused.
 
@@ -200,7 +200,9 @@ Root-drive regression cases cover 7.2.4 conversion, 8.1 preservation, source has
 
 **Analyze source database** opens the selected file read-only, runs SQLite `quick_check`, and reports whether the rotation table uses the row-based layout. Its scrollable report includes table, index, view, and trigger definitions from `sqlite_schema`, explains SQLite-generated objects without separate SQL, and can be exported with **Save report**. Review the output before sharing it, because schema names and definitions may still be private.
 
-![The report shows the rotation table definition, including its slot number constraint and directory and date columns.](figures/analysis.png)
+**Schema example:** In the row-based `PL_RAND_DIR_ROTATION` table, `slot_no` is the primary key and is constrained to values 1 through 7. `rand_music_dir` stores a directory of up to 150 characters, and `frm_date` and `to_date` store the seasonal boundaries. In an analysis report, inspect the table definition and its constraints to distinguish this layout from the legacy wide table with numbered directory and date columns.
+
+This example describes the standard row-based schema. Analyze the selected database to confirm its actual table definition before planning compatibility changes.
 
 **Choose and import a database copy** first resolves pending administration edits, then opens the source read-only and uses SQLite’s backup API to create a local candidate. Compatibility work adds required columns, establishes a unique settings key, preserves extra tables, fills standard slots as needed, and converts a wide rotation table after renaming it to a preserved backup. Multiple settings rows stop the import for review, and legacy time normalization is applied to the candidate.
 
@@ -274,7 +276,7 @@ Run `tools\build.ps1` with Release or Debug, publishing the main executable with
 
 To publish `CarillonMigration.exe`, use `-MigrationSingleExe` with `-Publish` and the same runtime selection, producing `export\staging-migration-single-win-x86` or `export\staging-migration-single-win-x64`. Place the resulting assistant beside the matching `CarillonBells.exe` so it has the payload for a separate v9 installation; **Restore 7.2.4** runs directly from the migration executable.
 
-Before updating a working installation, make the approved pre-change ZIP, close the application, and validate the build. On the multifile publish path, `-PortableRoot` targets an initialized v9 destination and copies and hash-verifies application files while preserving its database, audio, logs, and data directory.
+Before updating a working installation, create and verify a pre-change ZIP, close the application, and validate the build. On the multifile publish path, `-PortableRoot` targets an initialized v9 destination and copies and hash-verifies application files while preserving its database, audio, logs, and data directory.
 
 For the public single-executable USB route, extract the Installer ZIP on the computer and run Setup against the existing installation folder. Loose files for copying directly beside `databases` belong to the advanced manual portable Upgrade ZIP; relocating a working installation instead requires closing it and copying the complete folder.
 
@@ -302,7 +304,7 @@ Exclude private working databases, credentials, music libraries, diagnostic logs
 
 ## Maintain the guides
 
-Documentation is part of the release payload, so compare the current editable DOCX with its manuscript before regenerating a guide, particularly when the owner has made manual revisions. The manuscripts live under `docs\guides\source`; use `tools\build_guides.py` with a separate output folder to generate drafts, preserving approved wording and layout rather than overwriting a newer canonical document.
+Documentation is part of the release payload, so compare the current editable DOCX with its manuscript before regenerating a guide, particularly when either has received separate editorial revisions. The manuscripts live under `docs\guides\source`; use `tools\build_guides.py` with a separate output folder to generate drafts, preserving reviewed wording and layout rather than overwriting a newer canonical document.
 
 In LibreOffice Writer, refresh the table of contents, save the DOCX, and export its companion PDF, checking dotted leaders, page numbers, navigation links, and every rendered page. Keep the approved DOCX files in `docs\guides` and PDFs in `docs\pdf`, from which the portable package collects Documentation.
 

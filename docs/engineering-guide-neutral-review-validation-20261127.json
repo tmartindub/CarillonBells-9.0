@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-27",
+  "scope": "Replace personal and development-session context with self-contained engineering reference material",
+  "passages_replaced": 7,
+  "screenshot_replacement": "Editable neutral schema example checked against samples/empty-schema.sql",
+  "headings_preserved": true,
+  "docx_metadata_reviewed": true,
+  "private_reference_scan_docx_and_pdf": "passed",
+  "pages": 16,
+  "contents_links": 34,
+  "all_pages_visually_reviewed": true,
+  "pdf_page_content_preserved_when_adding_links": true,
+  "backup": "H:\\Project Cleanup Backups\\Carillon-before-engineering-guide-neutral-review-20261127-135754.zip",
+  "release_publication": "Awaiting engineering guide review; website and installer packages unchanged",
+  "sha256": {
+    "docs\\guides\\CarillonBells_9_0_Engineering_Guide.docx": "347a38a8da45a862b5b4cf2eb9a95c98872a856ba4e185fe292c7fc2f3411aa6",
+    "docs\\pdf\\CarillonBells_9_0_Engineering_Guide.pdf": "49a38b122dd4b60ff4eff0067d2cdfdc03b306aa65a5aef42829ac28ee907889",
+    "docs\\guides\\source\\Engineering.md": "b49cebe9ad8043a58136cf32e15995dc8312352c7dc49b8cf8bb421ece102c52"
+  }
+}
