@@ -65,3 +65,10 @@ the host's Google verification file, .nojekyll and Git history.
 Production robots.txt permits crawling and names sitemap.xml. The sitemap and
 social metadata use the production URLs. Final publication results and live-link
 verification belong in docs/publication-validation-20261126.json.
+
+## User Guide refresh November 27 2026
+
+The approved User Guide now includes feature introductions, smoother prose and
+bold control names. The website PDF, standalone release PDF, and DOCX/PDF copies
+inside every portable package and installer payload use the same canonical files.
+Installer checksums were refreshed; the application binaries remain unchanged.

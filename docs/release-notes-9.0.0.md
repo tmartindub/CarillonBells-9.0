@@ -2,6 +2,10 @@
 
 Version 9.0 is the new C# / WPF edition for Windows. It includes automatic playlist refresh, annual seasonal music dates, clearer schedule maintenance, adjustable fonts with layout checks, hover calendar buttons, and eighteen slender black clock-hand alternatives alongside Original. Scheduled reports, silence windows, playback, and schedule rebuilding were exercised in Tommy's overnight acceptance test.
 
+## User Guide refresh November 27 2026
+
+The User Guide now includes feature introductions, smoother prose, and emphasized control names. The standalone PDF, website copy, and DOCX/PDF copies in all four portable packages and all four installer payloads use the approved revision. Application binaries are unchanged; SHA256SUMS.txt contains the new installer checksums.
+
 ## Downloads
 
 Choose one Installer ZIP for New Install or Upgrade and your Windows architecture. Right-click the downloaded ZIP, choose Extract All on your computer, read the included guide, then double-click the extracted Setup program and select the USB installation folder. The .NET runtime is included. ZIP packaging does not digitally sign the installers or remove Windows security warnings.

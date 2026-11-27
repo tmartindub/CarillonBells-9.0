@@ -1,0 +1,154 @@
+{
+  "date": "2026-11-27",
+  "backup": "H:\\Project Cleanup Backups\\Carillon-before-guide-publication-and-engineering-polish-20261127-131719.zip",
+  "approvedGuideCommit": "0919282a318b6a6048bdd487495f2a3af537e31c",
+  "userGuideDocxSha256": "f47404033990614bf0e38188523ba3bcc0cd4d05a9533b56c9b6cd20221a96ac",
+  "userGuidePdfSha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+  "packageAudit": "PASS four portable ZIPs and four self-contained installer ZIPs, including every embedded payload file and all eight current guides",
+  "testedApplicationBinariesUnchanged": true,
+  "packages": [
+    {
+      "runtime": "win-x86",
+      "kind": "New_Install",
+      "file": "export\\32-bit\\CarillonBells_9_0_USB_New_Install_win-x86.zip",
+      "bytes": 299864632,
+      "sha256": "F37E9741DFDBB0FDCCB1A34EB91F84F54CF9E44910C5573E994E188C90B63D7C",
+      "setup": "export\\downloads\\32-bit\\CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "setupSha256": "F17EED526056E5484AD990FB791AE810EA08A9B3995F6D4734313906B77EC891",
+      "setupBytes": 304979394,
+      "installerFile": "CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.exe",
+      "installerSha256": "3C673E820CF303E346715F6041434FDA463D3ED8D3459A61263C94908F390D59",
+      "applicationSha256": "E78B28BD6CEAEFC9403E55A3391B4238AED47ED5B3C71E66BDB7CDBEED69CC87",
+      "migrationSha256": "7723D9B5314E02DC0A7D0417A61E01D94C87B55AB700884AA50AB4B68585DF97",
+      "verification": "PASS PE architecture, portable and installer ZIP CRCs, current guides, instructions and matching individual direct-install Setup files"
+    },
+    {
+      "runtime": "win-x86",
+      "kind": "Upgrade",
+      "file": "export\\32-bit\\CarillonBells_9_0_USB_Upgrade_win-x86.zip",
+      "bytes": 126469636,
+      "sha256": "851B413209E9848DDFD1EC98DBE91FCEC9EBC1F7C3006AFAB6D7A7B23698B5D5",
+      "setup": "export\\downloads\\32-bit\\CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "setupSha256": "D34338E4ED954C5637D4631A66945F04FA136B2A9A0B5076747A3D01752D97CD",
+      "setupBytes": 131521684,
+      "installerFile": "CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.exe",
+      "installerSha256": "5D2A3356F43339A1E9EDEE656602E20E8384BBD64F5DE6E8E649538AD6FB678B",
+      "applicationSha256": "E78B28BD6CEAEFC9403E55A3391B4238AED47ED5B3C71E66BDB7CDBEED69CC87",
+      "migrationSha256": "7723D9B5314E02DC0A7D0417A61E01D94C87B55AB700884AA50AB4B68585DF97",
+      "verification": "PASS PE architecture, portable and installer ZIP CRCs, current guides, instructions and matching individual direct-install Setup files"
+    },
+    {
+      "runtime": "win-x64",
+      "kind": "New_Install",
+      "file": "export\\64-bit\\CarillonBells_9_0_USB_New_Install_win-x64.zip",
+      "bytes": 303914080,
+      "sha256": "1860EE4DA9BA9152023F196AE8762024AFB39A2E5E71A4E78FBF04C76D5D9498",
+      "setup": "export\\downloads\\64-bit\\CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "setupSha256": "C67912312A4BB70DEF1E7EB848F1604718DC412E8FC23769AA18D1EE6AAAF0C3",
+      "setupBytes": 309031387,
+      "installerFile": "CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.exe",
+      "installerSha256": "9A7832646110028709EACD81E1CE50FE2D5ADC5F756A730B947A773A51F5C8F2",
+      "applicationSha256": "29A51C2004EC165FD47D06248D9FACF0E023DF47245E05F0133B99341EA91EEB",
+      "migrationSha256": "49F3DB998FFBC43A17CC38BC012B7DC99D5F79620EE0812A77588D64E951F821",
+      "verification": "PASS PE architecture, portable and installer ZIP CRCs, current guides, instructions and matching individual direct-install Setup files"
+    },
+    {
+      "runtime": "win-x64",
+      "kind": "Upgrade",
+      "file": "export\\64-bit\\CarillonBells_9_0_USB_Upgrade_win-x64.zip",
+      "bytes": 134569041,
+      "sha256": "2BA9B06889FAF7C3E3F3587879EDF6A9A3A3D6C120FF1485D9F4E0D3D5A5B6F7",
+      "setup": "export\\downloads\\64-bit\\CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "setupSha256": "04FB2D014203D8603F8432E4457F547C1D25DE7496E868D3684DFAEF318F80F3",
+      "setupBytes": 139625605,
+      "installerFile": "CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.exe",
+      "installerSha256": "39096A143F4E607A0149B8E5FC13D10C59356B49984EA631E1F70905DB81C13B",
+      "applicationSha256": "29A51C2004EC165FD47D06248D9FACF0E023DF47245E05F0133B99341EA91EEB",
+      "migrationSha256": "49F3DB998FFBC43A17CC38BC012B7DC99D5F79620EE0812A77588D64E951F821",
+      "verification": "PASS PE architecture, portable and installer ZIP CRCs, current guides, instructions and matching individual direct-install Setup files"
+    }
+  ],
+  "publication": "Published and verified; all active User Guide copies match the approved canonical DOCX/PDF",
+  "websiteCommit": "06f2d267bc336e38eb604fe7d5d58d36af5d9cde",
+  "liveWebsiteGuideChecks": [
+    {
+      "url": "https://carillon-bells.github.io/guides/user-guide.pdf",
+      "status": 200,
+      "sha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+      "matches_canonical": true
+    },
+    {
+      "url": "https://carillon-bells.github.io/guides/user-guide.pdf?v=20261127",
+      "status": 200,
+      "sha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+      "matches_canonical": true
+    }
+  ],
+  "liveGitHubGuideChecks": [
+    {
+      "copy": "source_docx",
+      "url": "https://raw.githubusercontent.com/tmartindub/CarillonBells-9.0/main/docs/guides/CarillonBells_9_0_User_Guide.docx",
+      "sha256": "f47404033990614bf0e38188523ba3bcc0cd4d05a9533b56c9b6cd20221a96ac",
+      "matches_canonical": true
+    },
+    {
+      "copy": "source_pdf",
+      "url": "https://raw.githubusercontent.com/tmartindub/CarillonBells-9.0/main/docs/pdf/CarillonBells_9_0_User_Guide.pdf",
+      "sha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+      "matches_canonical": true
+    },
+    {
+      "copy": "release_pdf",
+      "url": "https://github.com/tmartindub/CarillonBells-9.0/releases/download/v9.0.0/CarillonBells_9_0_User_Guide.pdf",
+      "sha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+      "matches_canonical": true
+    }
+  ],
+  "liveReleaseAssetChecks": [
+    {
+      "name": "CarillonBells_9_0_USB_New_Install_win-x86_Package_Setup.zip",
+      "sha256": "f17eed526056e5484ad990fb791ae810ea08a9b3995f6d4734313906b77ec891",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "CarillonBells_9_0_USB_Upgrade_win-x86_Package_Setup.zip",
+      "sha256": "d34338e4ed954c5637d4631a66945f04fa136b2a9a0b5076747a3d01752d97cd",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "CarillonBells_9_0_USB_New_Install_win-x64_Package_Setup.zip",
+      "sha256": "c67912312a4bb70def1e7eb848f1604718dc412e8fc23769aa18d1ee6aaaf0c3",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "CarillonBells_9_0_USB_Upgrade_win-x64_Package_Setup.zip",
+      "sha256": "04fb2d014203d8603f8432e4457f547c1d25de7496e868d3684dfaef318f80f3",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "CarillonBells_9_0_User_Guide.pdf",
+      "sha256": "762ea1a92acff55ce50755b619b1d4fe2caa1a6f435d1ba96b70bc69904e8731",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "sha256": "5bcd257c7e362b21b048e8f4a235c2eb8bde6b4f59ae0d82154ec746a27a349a",
+      "status": 206,
+      "uploaded_digest_matches": true
+    },
+    {
+      "name": "release-manifest.json",
+      "sha256": "8ea55a6deac22b57c7e5df549c0e21209ac7ed8a473748b05a16596b5d64b7be",
+      "status": 206,
+      "uploaded_digest_matches": true
+    }
+  ],
+  "previousReleaseAssetsBackedUpAndRemoved": 7,
+  "v81": "Existing source, release and archived pages unchanged",
+  "canonicalCopiesChecked": "Source DOCX/PDF; repository raw DOCX/PDF; standalone release PDF; both local website copies and live PDF; four portable DOCX/PDF pairs; four installer-embedded DOCX/PDF pairs"
+}
